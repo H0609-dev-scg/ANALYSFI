@@ -1,5 +1,48 @@
 # Journal des versions
 
+## 16.0.1.12.1
+
+**Manuel d’utilisation**
+
+- Guide consultant : `doc/MANUEL_UTILISATION.md` (parcours de mission, saisie et
+  import, lecture des ratios, options de rapport, configuration, FAQ).
+
+## 16.0.1.12.0
+
+**Lecture croisée des ratios**
+
+Les cinquante ratios étaient commentés un par un. Un consultant ne lit pas
+ainsi : il cherche les contradictions et l'ordre de lecture.
+
+- Nouvel onglet **Lecture des ratios** sur la période, menu *Analyses*.
+- **Ordre de lecture** : les huit indicateurs qui déterminent le diagnostic,
+  classés par gravité.
+- **Constats croisés** : bénéfice sans trésorerie, liquidité générale
+  portée par les stocks, EBE positif et résultat net négatif, levier sans
+  dette bancaire, activité sous le seuil de rentabilité, ROE gonflé par
+  des fonds propres trop faibles, etc.
+- **Synthèse par famille** : une phrase d'ensemble pour la structure, la
+  liquidité, l'activité, la rentabilité, la VA et la couverture.
+- Repris en tête de la section 4 du rapport PDF.
+
+## 16.0.1.11.0
+
+**Import de la saisie depuis un tableur**
+
+La saisie manuelle des 76 rubriques est le goulet d'étranglement du dossier.
+Les états arrivent presque toujours en Excel : l'export existait, l'import
+manquait.
+
+- Assistant **Importer un tableur** sur la période (CSV ou Excel).
+- Première colonne = code de rubrique (`AC_STOCK`, `PL_VENTE_MSE`…). Le
+  fichier produit par l'export du module est accepté tel quel.
+- **Aperçu préalable** : chaque ligne est reconnue, inconnue ou hors saisie.
+  Le consultant coche ce qu'il importe et peut corriger un montant avant
+  écriture.
+- Option **Écraser les montants déjà saisis** désactivée par défaut : une
+  valeur déjà saisie n'est jamais remplacée à l'insu du consultant.
+- Modèle CSV téléchargeable, une ligne par rubrique du référentiel.
+
 ## 16.0.1.10.0
 
 **Fiabilisation des informations complémentaires**

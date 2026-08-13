@@ -14,3 +14,4 @@ from . import fa_conclusion
 from . import fa_cashflow
 from . import fa_equity
 from . import fa_extra_check
+from . import fa_ratio_insight

@@ -443,6 +443,18 @@ class FaStatement(models.Model):
         records.action_generate_lines()
         return records
 
+    def action_open_import(self):
+        """Ouvre l'assistant d'import tableur sur cette période."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Importer la saisie"),
+            'res_model': 'fa.import.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_statement_id': self.id},
+        }
+
     def action_copy_structure(self):
         """Duplique la période en conservant la structure, sans les montants."""
         self.ensure_one()
@@ -494,6 +506,7 @@ class FaStatement(models.Model):
                 rec.action_confirm()
             rec._compute_aggregate_records()
             rec._compute_ratio_records()
+            rec._compute_ratio_insights()
             rec._run_extra_checks()
             rec._compute_cashflow_records()
             rec._compute_equity_records()

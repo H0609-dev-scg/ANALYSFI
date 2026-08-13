@@ -3,6 +3,8 @@
 Module Odoo 16 pour cabinets de conseil : saisie des états financiers, bilan financier,
 soldes intermédiaires de gestion, ratios, commentaires et recommandations automatiques.
 
+**Manuel d’utilisation (consultants)** : [doc/MANUEL_UTILISATION.md](doc/MANUEL_UTILISATION.md)
+
 ## Installation
 
 ```bash
@@ -25,10 +27,15 @@ créer la base avec l'option « données de démonstration » activée.
 2. Onglet *Périodes* — ajouter une période (ex. « Exercice 2025 », 01/01 au 31/12).
    Les 76 lignes de saisie sont générées automatiquement.
 3. Saisir le bilan (onglets Actif / Passif), le compte de résultat, puis les
-   informations complémentaires. Le bandeau de contrôle affiche en permanence
-   l'écart Actif − Passif : il doit être nul pour pouvoir valider.
+   informations complémentaires — ou bouton **Importer un tableur** pour charger
+   un CSV / Excel dont la première colonne porte les codes de rubrique.
+   Un aperçu permet de vérifier chaque ligne avant écriture ; les montants
+   déjà saisis ne sont pas écrasés par défaut. Le bandeau de contrôle affiche
+   en permanence l'écart Actif − Passif : il doit être nul pour pouvoir valider.
 4. Bouton **Analyser** — calcule agrégats, ratios, commentaires et recommandations.
-5. Consulter les onglets *Bilan financier & SIG* et *Ratios & recommandations*.
+5. Consulter d'abord l'onglet *Lecture des ratios* (ordre de lecture et
+   contradictions entre familles), puis *Bilan financier & SIG* et
+   *Ratios & recommandations*.
 6. **Imprimer > Rapport d'analyse financière** pour le PDF d'une période,
    ou **Action > Exporter en Excel** pour le classeur multi-onglets.
 7. Depuis le dossier, bouton **Rapport comparatif PDF** : génère le comparatif de
@@ -274,7 +281,7 @@ rendu identique en PDF et à l'écran.
 | Agrégats calculés | 35 |
 | Secteurs d'activité | 8 |
 | Normes sectorielles | 71 |
-| Tests unitaires | 114 |
+| Tests unitaires | 160 |
 | Modèles de scoring | 3 |
 
 ## Comparaison de plusieurs périodes
@@ -329,11 +336,7 @@ quartiles observés et propose de les convertir en seuils :
 - le premier quartile devient le seuil de vigilance, le troisième le seuil de
   confort — en respectant le sens de lecture de chaque ratio ;
 - la médiane observée devient le repère affiché dans les rapports ;
-- les ratios dont l'échantillon est inférieur au minimum fixé sont écartés ;
-- chaque proposition est modifiable ligne par ligne avant application ;
-- la norme calibrée conserve la taille de l'échantillon et la date de calibrage.
-
-Recommandation : filtrer sur les exercices de 12 mois et exiger au moins 5 à 10
+- les ratios dont l'échantillon est inférieur  au moins 5 à 10
 dossiers par secteur. Recalibrez une fois par an. Après deux ou trois exercices
 de pratique, vos normes vaudront mieux que n'importe quelle référence importée.
 
@@ -521,5 +524,8 @@ mais encore cités dans une vue.
 |---|---|
 | Ordre de chargement | `External ID not found in the system` |
 | Syntaxe Odoo 16 | `column_invisible`, `<list>`, expressions dans `invisible` — syntaxes Odoo 17 |
+| Champs des vues | `Définition de vue invalide` après renommage ou suppression d'un champ |
+| Intégrité générale | Fichiers absents, modules non importés, droits manquants, doublons d'identifiant |
+ssions dans `invisible` — syntaxes Odoo 17 |
 | Champs des vues | `Définition de vue invalide` après renommage ou suppression d'un champ |
 | Intégrité générale | Fichiers absents, modules non importés, droits manquants, doublons d'identifiant |

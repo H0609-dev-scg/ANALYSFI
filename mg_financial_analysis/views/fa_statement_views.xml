@@ -105,6 +105,9 @@
                             help="Ajoute les lignes correspondant aux rubriques du référentiel non encore présentes."/>
                     <button name="action_copy_structure" string="Dupliquer la structure"
                             type="object"/>
+                    <button name="action_open_import" string="Importer un tableur"
+                            type="object" states="draft,confirmed"
+                            help="Charge un CSV ou Excel dont la première colonne porte les codes de rubrique."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,analyzed"/>
                 </header>
                 <sheet>
@@ -114,6 +117,11 @@
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Ratios</span>
                             </div>
+                        </button>
+                        <button name="action_open_insights" type="object" class="oe_stat_button"
+                                icon="fa-search" states="analyzed">
+                            <field name="insight_alert_count" widget="statinfo"
+                                   string="Lectures"/>
                         </button>
                         <button name="action_open_cashflow" type="object"
                                 class="oe_stat_button" icon="fa-exchange" states="analyzed">
@@ -378,6 +386,33 @@
                                            widget="monetary" optional="hide"/>
                                     <field name="amount_annualized" string="Annualisé (12 mois)"
                                            widget="monetary" optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page string="Lecture des ratios" name="insights"
+                              attrs="{'invisible': [('state', '!=', 'analyzed')]}">
+                            <div class="alert alert-info" role="alert">
+                                Les commentaires individuels restent dans l'onglet suivant.
+                                Ici, les ratios sont <strong>lus ensemble</strong> : ordre
+                                de lecture, contradictions entre familles, synthèse par
+                                famille. C'est le diagnostic à ouvrir en premier.
+                            </div>
+                            <field name="insight_ids" nolabel="1" readonly="1">
+                                <tree create="0" delete="0" default_order="sequence"
+                                      decoration-danger="severity == 'alert'"
+                                      decoration-warning="severity == 'watch'"
+                                      decoration-success="severity == 'ok'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="kind"/>
+                                    <field name="severity" widget="badge"
+                                           decoration-danger="severity == 'alert'"
+                                           decoration-warning="severity == 'watch'"
+                                           decoration-success="severity == 'ok'"/>
+                                    <field name="name"/>
+                                    <field name="message"/>
+                                    <field name="ratio_codes" string="Ratios"/>
+                                    <field name="family" optional="hide"/>
                                 </tree>
                             </field>
                         </page>
