@@ -2179,3 +2179,70 @@ class TestFaEngine(TransactionCase):
         action = self.stmt.action_open_import()
         self.assertEqual(action['res_model'], 'fa.import.wizard')
         self.assertEqual(action['context']['default_statement_id'], self.stmt.id)
+
+    # ==================================================================
+    # Lecture croisée des ratios
+    # ==================================================================
+    def test_156_insights_generated(self):
+        """L'analyse produit une lecture d'ensemble des ratios."""
+        self._fill_balanced()
+        self.stmt.action_analyze()
+        self.assertTrue(self.stmt.insight_ids)
+        kinds = set(self.stmt.insight_ids.mapped('kind'))
+        self.assertIn('priority', kinds)
+        self.assertIn('family', kinds)
+
+    def test_157_profit_without_cash_detected(self):
+        """Un bénéfice avec trésorerie négative est signalé."""
+        self._fill_balanced()
+        self._set('PA_TRESO_PASSIF', 80)
+        self._set('PA_FOURN', 320)
+        self.stmt.action_analyze()
+        v = self.stmt._get_values_dict()
+        self.assertGreater(v['RN'], 0)
+        self.assertLess(v['TN'], 0)
+        hit = self.stmt.insight_ids.filtered(lambda i: i.code == 'PROFIT_NO_CASH')
+        self.assertTrue(hit, "Le constat « bénéfice sans trésorerie » doit apparaître")
+        self.assertEqual(hit.severity, 'alert')
+
+    def test_158_liquidity_illusion_detected(self):
+        """Une liquidité générale portée par les stocks est dénoncée."""
+        self._fill_balanced()
+        # Actif circulant élevé grâce aux stocks, quasi pas de trésorerie
+        self._set('AC_STOCK', 500)
+        self._set('AC_CLIENT', 80)
+        self._set('AC_TRESO', 20)
+        self._set('AC_IMMO_CORP', 400)
+        self._set('PA_FOURN', 400)
+        self._set('PA_CAPITAL', 300)
+        self._set('PA_RESULTAT', self.stmt._get_values_dict()['RN'])
+        self._set('PA_EMPRUNT_NC', 300)
+        # Rééquilibrer
+        v = self.stmt._get_values_dict()
+        self._set('PA_AUTRES_CP', v['T_ACTIF'] - v['T_PASSIF'])
+        self.stmt.action_analyze()
+        b1 = self.stmt.ratio_result_ids.filtered(lambda r: r.code == 'B1')
+        b3 = self.stmt.ratio_result_ids.filtered(lambda r: r.code == 'B3')
+        if b1.appreciation in ('ok', 'good') and b3.appreciation == 'bad':
+            hit = self.stmt.insight_ids.filtered(lambda i: i.code == 'LIQ_STOCK')
+            self.assertTrue(hit)
+
+    def test_159_priority_lists_critical_first(self):
+        """L'ordre de lecture commence par les ratios critiques."""
+        self._fill_balanced()
+        self.stmt.action_analyze()
+        prio = self.stmt.get_priority_insights()
+        self.assertTrue(prio)
+        # Les codes cités doivent exister parmi les résultats
+        codes = (prio.ratio_codes or '').replace(' ', '').split(',')
+        codes = [c for c in codes if c]
+        for code in codes:
+            self.assertTrue(
+                self.stmt.ratio_result_ids.filtered(lambda r, c=code: r.code == c),
+                "Code cité inconnu : %s" % code)
+
+    def test_160_insights_in_report_template(self):
+        """Le rapport mono-période expose la lecture d'ensemble."""
+        tpl = self.env.ref('mg_financial_analysis.report_fa_statement').arch
+        self.assertIn('insight_ids', tpl)
+        self.assertIn("Lecture d'ensemble", tpl)

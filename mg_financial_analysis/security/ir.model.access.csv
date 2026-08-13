@@ -58,3 +58,6 @@ access_fa_reload_data,fa.reload.data,model_fa_reload_data,group_fa_manager,1,1,1
 access_fa_extra_check_ro,fa.extra.check readonly,model_fa_extra_check,group_fa_readonly,1,0,0,0
 access_fa_extra_check_user,fa.extra.check user,model_fa_extra_check,group_fa_user,1,1,1,1
 access_fa_extra_check_mgr,fa.extra.check manager,model_fa_extra_check,group_fa_manager,1,1,1,1
+access_fa_ratio_insight_ro,fa.ratio.insight readonly,model_fa_ratio_insight,group_fa_readonly,1,0,0,0
+access_fa_ratio_insight_user,fa.ratio.insight user,model_fa_ratio_insight,group_fa_user,1,1,1,1
+access_fa_ratio_insight_mgr,fa.ratio.insight manager,model_fa_ratio_insight,group_fa_manager,1,1,1,1

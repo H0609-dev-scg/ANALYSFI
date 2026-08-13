@@ -1,5 +1,23 @@
 # Journal des versions
 
+## 16.0.1.12.0
+
+**Lecture croisée des ratios**
+
+Les cinquante ratios étaient commentés un par un. Un consultant ne lit pas
+ainsi : il cherche les contradictions et l'ordre de lecture.
+
+- Nouvel onglet **Lecture des ratios** sur la période, menu *Analyses*.
+- **Ordre de lecture** : les huit indicateurs qui déterminent le diagnostic,
+  classés par gravité.
+- **Constats croisés** : bénéfice sans trésorerie, liquidité générale
+  portée par les stocks, EBE positif et résultat net négatif, levier sans
+  dette bancaire, activité sous le seuil de rentabilité, ROE gonflé par
+  des fonds propres trop faibles, etc.
+- **Synthèse par famille** : une phrase d'ensemble pour la structure, la
+  liquidité, l'activité, la rentabilité, la VA et la couverture.
+- Repris en tête de la section 4 du rapport PDF.
+
 ## 16.0.1.11.0
 
 **Import de la saisie depuis un tableur**

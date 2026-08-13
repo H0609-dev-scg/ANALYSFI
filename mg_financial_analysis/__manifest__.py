@@ -36,7 +36,7 @@ Analyse avancée
     'author': "Cabinet de conseil financier",
     'website': "https://www.example.mg",
     'category': 'Accounting/Accounting',
-    'version': '16.0.1.11.0',
+    'version': '16.0.1.12.0',
     'license': 'LGPL-3',
     'depends': ['base', 'mail', 'web'],
     'data': [
@@ -53,6 +53,7 @@ Analyse avancée
         'views/fa_statement_views.xml',
         'views/fa_analysis_views.xml',
         'views/fa_ratio_views.xml',
+        'views/fa_insight_views.xml',
         'views/fa_score_views.xml',
         'views/fa_cashflow_views.xml',
         'views/fa_equity_views.xml',

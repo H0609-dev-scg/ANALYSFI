@@ -335,6 +335,23 @@
                     <!-- ============ 4. RATIOS ============ -->
                     <h2 style="color:#1F3A5F;">4. Analyse par les ratios</h2>
 
+                    <t t-if="doc.insight_ids">
+                        <h4 class="mt-3">4.0 Lecture d'ensemble</h4>
+                        <p class="text-muted"><small>
+                            Les ratios ne se lisent pas un par un. Les constats ci-dessous
+                            croisent les familles et indiquent par où commencer.
+                        </small></p>
+                        <t t-foreach="doc.insight_ids.filtered(lambda i: i.kind in ('priority','cross'))"
+                           t-as="ins">
+                            <p style="font-size:9px;">
+                                <strong t-field="ins.name"/>
+                                <span t-if="ins.ratio_codes" class="text-muted">
+                                    (<span t-field="ins.ratio_codes"/>)</span>
+                                — <span t-field="ins.message"/>
+                            </p>
+                        </t>
+                    </t>
+
                     <t t-foreach="grouped_ratios(doc)" t-as="fam">
                         <h4 class="mt-4" style="color:#1F3A5F;"><span t-esc="fam['label']"/></h4>
                         <p class="text-muted"><small>

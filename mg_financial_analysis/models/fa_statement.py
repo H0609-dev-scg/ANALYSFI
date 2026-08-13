@@ -506,6 +506,7 @@ class FaStatement(models.Model):
                 rec.action_confirm()
             rec._compute_aggregate_records()
             rec._compute_ratio_records()
+            rec._compute_ratio_insights()
             rec._run_extra_checks()
             rec._compute_cashflow_records()
             rec._compute_equity_records()

@@ -31,7 +31,9 @@ créer la base avec l'option « données de démonstration » activée.
    déjà saisis ne sont pas écrasés par défaut. Le bandeau de contrôle affiche
    en permanence l'écart Actif − Passif : il doit être nul pour pouvoir valider.
 4. Bouton **Analyser** — calcule agrégats, ratios, commentaires et recommandations.
-5. Consulter les onglets *Bilan financier & SIG* et *Ratios & recommandations*.
+5. Consulter d'abord l'onglet *Lecture des ratios* (ordre de lecture et
+   contradictions entre familles), puis *Bilan financier & SIG* et
+   *Ratios & recommandations*.
 6. **Imprimer > Rapport d'analyse financière** pour le PDF d'une période,
    ou **Action > Exporter en Excel** pour le classeur multi-onglets.
 7. Depuis le dossier, bouton **Rapport comparatif PDF** : génère le comparatif de
@@ -277,7 +279,7 @@ rendu identique en PDF et à l'écran.
 | Agrégats calculés | 35 |
 | Secteurs d'activité | 8 |
 | Normes sectorielles | 71 |
-| Tests unitaires | 114 |
+| Tests unitaires | 160 |
 | Modèles de scoring | 3 |
 
 ## Comparaison de plusieurs périodes

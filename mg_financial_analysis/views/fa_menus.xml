@@ -21,6 +21,8 @@
               parent="menu_fa_results" action="action_fa_cashflow" sequence="25"/>
     <menuitem id="menu_fa_ratios_result" name="Ratios &amp; marges"
               parent="menu_fa_results" action="action_fa_ratio_result" sequence="30"/>
+    <menuitem id="menu_fa_insights" name="Lecture des ratios"
+              parent="menu_fa_results" action="action_fa_ratio_insight" sequence="32"/>
     <menuitem id="menu_fa_comparison" name="Comparatif multi-périodes"
               parent="menu_fa_results" action="action_fa_comparison" sequence="40"/>
     <menuitem id="menu_fa_extra_check" name="Contrôles de saisie"
