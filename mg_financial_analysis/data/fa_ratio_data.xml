@@ -1,0 +1,995 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Catalogue des ratios financiers -->
+
+        <record id="ratio_a1" model="fa.ratio">
+            <field name="code">A1</field>
+            <field name="name">Autonomie financière</field>
+            <field name="family">structure</field>
+            <field name="sequence">10</field>
+            <field name="formula">ST_CP / T_PASSIF if T_PASSIF else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">20</field>
+            <field name="threshold_watch">30</field>
+            <field name="threshold_good">40</field>
+            <field name="norm_label">&gt; 30 %</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Capitaux propres rapportés au total du bilan. Les capitaux propres retenus sont ceux inscrits au passif, avant retraitement.</field>
+            <field name="threshold_rationale">Le seuil de 30 % correspond à la référence bancaire usuelle : en dessous, un établissement de crédit considère que l'actionnaire ne prend pas une part suffisante du risque. Le seuil critique de 20 % marque le point où la marge de négociation disparaît pratiquement. En négoce, ces seuils sont abaissés car l'actif est peu immobilisé et rapidement liquidable.</field>
+            <field name="limits">Un ratio élevé n'est pas toujours favorable : il peut traduire une sous-utilisation du levier financier. À lire avec la rentabilité économique.</field>
+            <field name="interpretation">Mesure la part des ressources appartenant en propre à l'entreprise. Plus elle est élevée, plus l'entreprise est indépendante de ses créanciers et capable d'encaisser un choc.</field>
+        </record>
+
+        <record id="ratio_a2" model="fa.ratio">
+            <field name="code">A2</field>
+            <field name="name">Ratio d'endettement (Debt to Equity)</field>
+            <field name="family">structure</field>
+            <field name="sequence">20</field>
+            <field name="formula">DETTES_FIN / ST_CP if ST_CP &gt; 0 else 0</field>
+            <field name="applicability">ST_CP &gt; 0</field>
+            <field name="na_message">Ratio sans objet : les capitaux propres sont négatifs ou nuls. La situation nette étant détériorée, le rapport entre dettes et fonds propres perd toute signification. C'est la reconstitution des capitaux propres qui constitue l'enjeu, non le niveau d'endettement relatif.</field>
+            <field name="unit">times</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">2</field>
+            <field name="threshold_watch">1.5</field>
+            <field name="threshold_good">1</field>
+            <field name="norm_label">&lt; 1,5</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Dettes financières, incluant les concours bancaires courants et le crédit-bail retraité, rapportées aux capitaux propres. Les dettes d'exploitation en sont exclues.</field>
+            <field name="threshold_rationale">Le seuil de 1 signifie que l'entreprise doit autant aux banques qu'à ses actionnaires. Au-delà de 1,5, la structure devient fragile en cas de retournement. Ces seuils supposent une activité non financière : la microfinance dispose de normes prudentielles distinctes.</field>
+            <field name="limits">Sans dette financière, le ratio vaut zéro et paraît excellent, alors que l'entreprise peut être fortement dépendante du crédit fournisseur. Le levier financier A8 apporte l'éclairage complémentaire.</field>
+            <field name="interpretation">Rapporte les dettes financières aux capitaux propres. Au-delà de 1, l'entreprise doit plus aux banques qu'à ses actionnaires.</field>
+        </record>
+
+        <record id="ratio_a3" model="fa.ratio">
+            <field name="code">A3</field>
+            <field name="name">Taux d'endettement global</field>
+            <field name="family">structure</field>
+            <field name="sequence">30</field>
+            <field name="formula">DETTES_TOTALES / T_PASSIF if T_PASSIF else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">80</field>
+            <field name="threshold_watch">70</field>
+            <field name="threshold_good">60</field>
+            <field name="norm_label">&lt; 70 %</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Ensemble des dettes, financières et d'exploitation, rapporté au total du passif. Complément à cent de l'autonomie financière.</field>
+            <field name="threshold_rationale">Le seuil de 70 % est le miroir de l'autonomie financière à 30 %. Au-delà de 80 %, l'actif est très majoritairement financé par des tiers.</field>
+            <field name="limits">Ce ratio mêle des dettes de nature très différente : un crédit fournisseur à 60 jours n'a pas le même poids qu'un emprunt à 5 ans.</field>
+            <field name="interpretation">Part de l'ensemble des dettes dans le total du bilan.</field>
+        </record>
+
+        <record id="ratio_a4" model="fa.ratio">
+            <field name="code">A4</field>
+            <field name="name">Capacité de remboursement</field>
+            <field name="family">structure</field>
+            <field name="sequence">40</field>
+            <field name="formula">DETTE_FIN_NETTE / CAF if CAF &gt; 0 else 0</field>
+            <field name="applicability">CAF &gt; 0</field>
+            <field name="na_message">Ratio sans objet : la capacité d'autofinancement est négative ou nulle. Aucune durée de remboursement ne peut être calculée puisque l'activité ne dégage aucune ressource pour rembourser. Ce constat est en soi plus grave qu'un ratio dégradé.</field>
+            <field name="unit">years</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">4</field>
+            <field name="threshold_good">3</field>
+            <field name="norm_label">&lt; 4 ans</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Dette financière nette, soit les dettes financières diminuées de la trésorerie et des placements, rapportée à la capacité d'autofinancement.</field>
+            <field name="threshold_rationale">Le seuil de 3 ans est le critère central de l'analyse bancaire : au-delà, un nouveau concours devient difficile à obtenir. Le seuil critique de 5 ans est généralement rédhibitoire. Ces durées correspondent à la maturité moyenne des crédits d'équipement.</field>
+            <field name="limits">Non calculable si la capacité d'autofinancement est négative, ce qui constitue en soi un signal plus grave. Un résultat négatif signifie que la trésorerie excède les dettes financières.</field>
+            <field name="interpretation">Nombre d'années de capacité d'autofinancement nécessaires pour rembourser la dette financière nette. Critère central de l'analyse bancaire.</field>
+        </record>
+
+        <record id="ratio_a5" model="fa.ratio">
+            <field name="code">A5</field>
+            <field name="name">Couverture des emplois stables</field>
+            <field name="family">structure</field>
+            <field name="sequence">50</field>
+            <field name="formula">CAPITAUX_PERMANENTS / AI if AI else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0.9</field>
+            <field name="threshold_watch">1</field>
+            <field name="threshold_good">1.2</field>
+            <field name="norm_label">&gt; 1</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Capitaux permanents, soit capitaux propres retraités augmentés des dettes financières à plus d'un an, rapportés à l'actif immobilisé net retraité.</field>
+            <field name="threshold_rationale">Le seuil de 1 traduit la règle d'or du financement : les emplois durables doivent être couverts par des ressources durables. En dessous, une partie de l'outil est financée à court terme, ce qui expose à un risque de renouvellement.</field>
+            <field name="limits">Le retraitement des dividendes à distribuer réduit les capitaux permanents et peut faire basculer le ratio sous 1 alors que la structure comptable paraît saine.</field>
+            <field name="interpretation">Vérifie la règle d'or du financement : les emplois durables doivent être financés par des ressources durables.</field>
+        </record>
+
+        <record id="ratio_a6" model="fa.ratio">
+            <field name="code">A6</field>
+            <field name="name">Financement propre des immobilisations</field>
+            <field name="family">structure</field>
+            <field name="sequence">60</field>
+            <field name="formula">ST_CP / AI if AI else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0.4</field>
+            <field name="threshold_watch">0.6</field>
+            <field name="threshold_good">1</field>
+            <field name="norm_label">&gt; 0,6</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Capitaux propres rapportés à l'actif immobilisé net. Mesure la part de l'outil financée sans recours à l'emprunt.</field>
+            <field name="threshold_rationale">Un ratio de 1 signifie que l'outil est intégralement autofinancé, situation prudente mais rare. Le seuil de vigilance à 0,6 correspond à un financement propre des deux tiers, complété par emprunt, ce qui est la configuration la plus courante.</field>
+            <field name="limits">Un ratio supérieur à 1 en activité peu capitalistique n'a guère de signification : les capitaux propres financent alors surtout le cycle d'exploitation.</field>
+            <field name="interpretation">Part de l'outil de production financée par les seuls capitaux propres.</field>
+        </record>
+
+        <record id="ratio_a7" model="fa.ratio">
+            <field name="code">A7</field>
+            <field name="name">Solvabilité générale</field>
+            <field name="family">structure</field>
+            <field name="sequence">70</field>
+            <field name="formula">T_ACTIF / DETTES_TOTALES if DETTES_TOTALES else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.25</field>
+            <field name="threshold_good">1.5</field>
+            <field name="norm_label">&gt; 1,25</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Total de l'actif rapporté à l'ensemble des dettes. Mesure la capacité théorique à rembourser en réalisant l'actif.</field>
+            <field name="threshold_rationale">Le seuil de 1 marque la frontière de la situation nette positive. En dessous, l'actif ne couvre plus les dettes, ce qui correspond à une faillite virtuelle. Le seuil de confort à 1,5 laisse une marge d'abattement sur la valeur de réalisation des actifs.</field>
+            <field name="limits">Raisonne en valeur comptable, non en valeur de marché. Un stock déprécié ou des créances douteuses réduisent la couverture réelle.</field>
+            <field name="interpretation">Capacité de l'entreprise à rembourser l'ensemble de ses dettes par la réalisation de son actif.</field>
+        </record>
+
+        <record id="ratio_a8" model="fa.ratio">
+            <field name="code">A8</field>
+            <field name="name">Levier financier</field>
+            <field name="family">structure</field>
+            <field name="sequence">80</field>
+            <field name="formula">T_ACTIF / ST_CP if ST_CP &gt; 0 else 0</field>
+            <field name="applicability">ST_CP &gt; 0</field>
+            <field name="na_message">Ratio sans objet : les capitaux propres sont négatifs ou nuls, le multiplicateur ne peut être calculé.</field>
+            <field name="unit">times</field>
+            <field name="direction">range</field>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.5</field>
+            <field name="threshold_good">2.5</field>
+            <field name="threshold_max">2.5</field>
+            <field name="norm_label">1,5 à 2,5</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Total du bilan rapporté aux capitaux propres. Mesure de combien les fonds propres sont multipliés par l'ensemble des financements.</field>
+            <field name="threshold_rationale">La fourchette de 1,5 à 2,5 correspond à un endettement raisonnable. Un levier élevé amplifie la rentabilité des capitaux propres, mais aussi les pertes en cas de retournement.</field>
+            <field name="limits">Un levier élevé sans dette financière traduit un financement par le crédit fournisseur, situation à lire différemment d'un surendettement bancaire : le module adapte alors son commentaire.</field>
+            <field name="interpretation">Multiplicateur des capitaux propres. Un levier élevé amplifie la rentabilité mais aussi le risque.</field>
+        </record>
+
+        <record id="ratio_a9" model="fa.ratio">
+            <field name="code">A9</field>
+            <field name="name">Immobilisation de l'actif</field>
+            <field name="family">structure</field>
+            <field name="sequence">90</field>
+            <field name="formula">AI / T_ACTIF if T_ACTIF else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">range</field>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">20</field>
+            <field name="threshold_good">70</field>
+            <field name="threshold_max">70</field>
+            <field name="norm_label">selon secteur</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Actif immobilisé net retraité rapporté au total de l'actif. Décrit la rigidité de la structure.</field>
+            <field name="threshold_rationale">Il n'existe pas de norme universelle : la plage retenue dépend entièrement du secteur. En négoce, 10 à 40 % est usuel ; en industrie, 40 à 75 % ; en transport, jusqu'à 85 % du fait de la flotte.</field>
+            <field name="limits">Une part faible n'est pas un défaut en négoce ou en services. Une part très élevée signale en revanche une structure peu liquide et difficile à redimensionner.</field>
+            <field name="interpretation">Part de l'actif immobilisé dans le total. Structurellement élevé en industrie, faible en négoce.</field>
+        </record>
+
+        <record id="ratio_a10" model="fa.ratio">
+            <field name="code">A10</field>
+            <field name="name">Vétusté de l'outil de production</field>
+            <field name="family">structure</field>
+            <field name="sequence">100</field>
+            <field name="formula">AMORT_CUMUL / IMMO_BRUT if IMMO_BRUT else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">75</field>
+            <field name="threshold_watch">60</field>
+            <field name="threshold_good">40</field>
+            <field name="norm_label">&lt; 60 %</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Amortissements cumulés rapportés aux immobilisations corporelles brutes. Exige que ces deux données soient renseignées dans les informations complémentaires.</field>
+            <field name="threshold_rationale">Au-delà de 60 %, l'outil entre en phase de vieillissement et un cycle de renouvellement devient prévisible. Le seuil critique de 75 % annonce des besoins d'investissement lourds à court terme.</field>
+            <field name="limits">Une politique d'amortissement accéléré gonfle artificiellement le ratio. À rapprocher de l'âge réel des équipements et du taux d'investissement.</field>
+            <field name="interpretation">Degré d'amortissement des immobilisations corporelles. Un taux élevé signale un outil vieillissant.</field>
+        </record>
+
+        <record id="ratio_b1" model="fa.ratio">
+            <field name="code">B1</field>
+            <field name="name">Liquidité générale</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">10</field>
+            <field name="formula">ST_AC / ST_PC if ST_PC else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.2</field>
+            <field name="threshold_good">1.5</field>
+            <field name="norm_label">&gt; 1,2</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Actif courant rapporté au passif courant, tels qu'ils figurent au bilan sans retraitement.</field>
+            <field name="threshold_rationale">Le seuil de 1 marque l'équilibre : en dessous, l'actif circulant ne couvre pas les dettes à moins d'un an. La norme de 1,2 ménage une marge d'abattement sur les stocks et créances, dont la réalisation à leur valeur comptable n'est jamais certaine.</field>
+            <field name="limits">Ne tient pas compte des échéances réelles : un actif courant à 90 jours face à des dettes à 30 jours pose problème même avec un ratio supérieur à 1.</field>
+            <field name="interpretation">Capacité de l'actif circulant à couvrir les dettes à moins d'un an. Indicateur central du risque de cessation de paiements.</field>
+        </record>
+
+        <record id="ratio_b2" model="fa.ratio">
+            <field name="code">B2</field>
+            <field name="name">Liquidité réduite (quick ratio)</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">20</field>
+            <field name="formula">(ST_AC - AC_STOCK) / ST_PC if ST_PC else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0.6</field>
+            <field name="threshold_watch">0.8</field>
+            <field name="threshold_good">1</field>
+            <field name="norm_label">&gt; 0,8</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Actif courant diminué des stocks, rapporté au passif courant. Écarte l'actif le moins rapidement mobilisable.</field>
+            <field name="threshold_rationale">Le seuil de 0,8 admet qu'une partie des dettes courantes soit couverte par l'écoulement des stocks. En dessous de 0,6, la solvabilité à court terme dépend entièrement de la vente du stock, ce qui est risqué en cas de retournement.</field>
+            <field name="limits">Pénalise mécaniquement les activités à stock élevé comme le négoce, où un stock important est structurel et non un défaut de gestion.</field>
+            <field name="interpretation">Liquidité hors stocks, ces derniers étant les actifs les moins rapidement mobilisables.</field>
+        </record>
+
+        <record id="ratio_b3" model="fa.ratio">
+            <field name="code">B3</field>
+            <field name="name">Liquidité immédiate</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">30</field>
+            <field name="formula">(AC_TRESO + AC_PLACEMENT) / ST_PC if ST_PC else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">range</field>
+            <field name="threshold_bad">0.05</field>
+            <field name="threshold_watch">0.1</field>
+            <field name="threshold_good">0.3</field>
+            <field name="threshold_max">0.3</field>
+            <field name="norm_label">0,1 à 0,3</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Trésorerie et placements rapportés au passif courant. Mesure la part des dettes immédiatement couvrable.</field>
+            <field name="threshold_rationale">La fourchette de 0,1 à 0,3 traduit un arbitrage : trop peu expose à l'incident de paiement, trop signale des liquidités dormantes non rémunérées. Une entreprise n'a pas vocation à couvrir en cash l'intégralité de ses dettes courantes.</field>
+            <field name="limits">Fortement dépendant de la date de clôture. Un ratio faible n'est pas alarmant si le passif courant est constitué de crédit fournisseur négocié plutôt que de dettes exigibles à date fixe.</field>
+            <field name="interpretation">Part des dettes courantes immédiatement couvrable par la trésorerie disponible.</field>
+        </record>
+
+        <record id="ratio_b4" model="fa.ratio">
+            <field name="code">B4</field>
+            <field name="name">Excédent du fonds de roulement sur le BFR (en jours de CA)</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">40</field>
+            <field name="formula">(FRNG - BFR) * 360 / CA if CA else 0</field>
+            <field name="unit">days</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">10.0</field>
+            <field name="threshold_good">25.0</field>
+            <field name="norm_label">&gt; 10 jours</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Écart entre le fonds de roulement et le besoin en fonds de roulement, rapporté au chiffre d'affaires et exprimé en jours. Équivaut à la trésorerie nette exprimée en jours d'activité.</field>
+            <field name="threshold_rationale">Le seuil de 0 marque la frontière entre trésorerie positive et recours aux concours bancaires. Une réserve de 10 jours permet d'absorber une variation saisonnière du cycle ; 25 jours constituent un matelas confortable.</field>
+            <field name="limits">Un excédent très élevé peut signaler des ressources stables mal employées, laissées en compte courant non rémunéré.</field>
+            <field name="interpretation">Écart entre le fonds de roulement et le besoin en fonds de roulement, exprimé en jours de chiffre d'affaires. Il correspond à la trésorerie nette rapportée à l'activité : positif, le financement stable couvre le cycle d'exploitation et laisse un matelas ; négatif, l'écart est comblé par des concours bancaires courants. Cette formulation permet une lecture directe, là où le fonds de roulement seul ne dit rien sans son besoin.</field>
+        </record>
+
+        <record id="ratio_b5" model="fa.ratio">
+            <field name="code">B5</field>
+            <field name="name">BFR en jours de CA</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">50</field>
+            <field name="formula">BFR * 360 / CA if CA else 0</field>
+            <field name="unit">days</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">90</field>
+            <field name="threshold_watch">60</field>
+            <field name="threshold_good">30</field>
+            <field name="norm_label">le plus bas possible</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Besoin en fonds de roulement rapporté au chiffre d'affaires, exprimé en jours. Mesure le financement que le cycle d'exploitation consomme en permanence.</field>
+            <field name="threshold_rationale">Il n'existe pas de norme absolue : le besoin dépend du secteur et des délais négociés. Au-delà de 60 jours, le cycle pèse lourdement sur la trésorerie ; au-delà de 90, il devient un enjeu de survie.</field>
+            <field name="limits">Un besoin négatif est favorable mais fragile : il signifie que les fournisseurs financent l'activité, position qui dépend du maintien de leurs conditions.</field>
+            <field name="interpretation">Nombre de jours de chiffre d'affaires immobilisés dans le cycle d'exploitation. C'est le financement que l'activité consomme en permanence.</field>
+        </record>
+
+        <record id="ratio_b6" model="fa.ratio">
+            <field name="code">B6</field>
+            <field name="name">Trésorerie nette</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">60</field>
+            <field name="formula">TN</field>
+            <field name="unit">amount</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0.0</field>
+            <field name="threshold_watch">0.0</field>
+            <field name="threshold_good">0.0</field>
+            <field name="norm_label">&gt; 0 (positive)</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Fonds de roulement diminué du besoin en fonds de roulement. Contrôlé par la différence entre trésorerie active et passive.</field>
+            <field name="threshold_rationale">La lecture est binaire : positive, la trésorerie est excédentaire ; négative, l'écart est comblé par des concours bancaires courants, ressources coûteuses et révocables sans préavis.</field>
+            <field name="limits">Photographie à la date de clôture. Une trésorerie positive au 31 décembre peut masquer des tensions en cours d'année.</field>
+            <field name="interpretation">Différence entre le fonds de roulement et le besoin en fonds de roulement. C'est le solde réel de trésorerie disponible.</field>
+        </record>
+
+        <record id="ratio_b7" model="fa.ratio">
+            <field name="code">B7</field>
+            <field name="name">Poids des concours bancaires courants</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">70</field>
+            <field name="formula">CBC / DETTES_TOTALES if DETTES_TOTALES else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">25</field>
+            <field name="threshold_watch">15</field>
+            <field name="threshold_good">5</field>
+            <field name="norm_label">&lt; 15 %</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Concours bancaires courants rapportés à l'ensemble des dettes. Mesure la dépendance aux financements révocables.</field>
+            <field name="threshold_rationale">Au-delà de 15 %, l'entreprise dépend de ressources que la banque peut interrompre sans préavis. Le seuil critique de 25 % traduit une situation où le découvert est devenu un financement structurel.</field>
+            <field name="limits">Un ratio nul est favorable mais ne signifie pas absence de risque : le crédit fournisseur peut jouer le même rôle de financement court terme.</field>
+            <field name="interpretation">Part des découverts et crédits court terme dans l'endettement total. Ces financements sont chers et révocables sans préavis.</field>
+        </record>
+
+        <record id="ratio_b8" model="fa.ratio">
+            <field name="code">B8</field>
+            <field name="name">Couverture du BFR par le FR</field>
+            <field name="family">liquidity</field>
+            <field name="sequence">80</field>
+            <field name="formula">FRNG / BFR if BFR &gt; 0 else 0</field>
+            <field name="applicability">BFR &gt; 0</field>
+            <field name="na_message">Ratio sans objet : le besoin en fonds de roulement est négatif, autrement dit le cycle d'exploitation dégage de la trésorerie au lieu d'en consommer. Il n'y a donc aucun besoin à couvrir par le fonds de roulement. Cette situation, fréquente dans le commerce de détail et la distribution, résulte d'un crédit fournisseur supérieur à la somme des stocks et du crédit client. Elle est favorable, mais elle rend l'entreprise dépendante du maintien de ses conditions d'achat : un durcissement des délais fournisseurs se traduirait immédiatement par un besoin de financement.</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0.7</field>
+            <field name="threshold_watch">0.9</field>
+            <field name="threshold_good">1</field>
+            <field name="norm_label">&gt;= 1</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Fonds de roulement rapporté au besoin en fonds de roulement. Mesure la part du cycle financée par des ressources stables.</field>
+            <field name="threshold_rationale">Le seuil de 1 signifie que les ressources stables couvrent intégralement le besoin d'exploitation. En dessous, le solde repose sur la trésorerie court terme.</field>
+            <field name="limits">Sans objet lorsque le besoin en fonds de roulement est négatif : il n'y a alors rien à couvrir. Le module neutralise automatiquement le ratio dans ce cas.</field>
+            <field name="interpretation">Mesure dans quelle proportion les ressources stables financent le cycle d'exploitation.</field>
+        </record>
+
+        <record id="ratio_c1" model="fa.ratio">
+            <field name="code">C1</field>
+            <field name="name">Délai d'écoulement des stocks</field>
+            <field name="family">activity</field>
+            <field name="sequence">10</field>
+            <field name="formula">(IN_STOCK_MOYEN or AC_STOCK) * 360 / (PL_ACHATS + PL_ACHAT_MSE) if (PL_ACHATS + PL_ACHAT_MSE) else 0</field>
+            <field name="unit">days</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">120</field>
+            <field name="threshold_watch">75</field>
+            <field name="threshold_good">45</field>
+            <field name="norm_label">&lt; 75 jours</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Stock moyen, ou stock de clôture à défaut, multiplié par 360 et rapporté au total des achats consommés et des achats de marchandises. Le stock moyen se saisit dans les informations complémentaires.</field>
+            <field name="threshold_rationale">Le seuil de 75 jours correspond à une rotation trimestrielle, référence courante. En négoce malgache, le seuil est porté à 60 jours mais les délais d'importation justifient couramment 50 à 70 jours sur les produits importés.</field>
+            <field name="limits">Un stock moyen non renseigné fait retenir le stock de clôture, ce qui fausse le ratio pour les activités saisonnières.</field>
+            <field name="interpretation">Durée moyenne de séjour des stocks. Chaque jour de stock immobilise de la trésorerie.</field>
+        </record>
+
+        <record id="ratio_c2" model="fa.ratio">
+            <field name="code">C2</field>
+            <field name="name">Rotation des stocks (nombre de fois)</field>
+            <field name="family">activity</field>
+            <field name="sequence">20</field>
+            <field name="formula">(PL_ACHATS + PL_ACHAT_MSE) / (IN_STOCK_MOYEN or AC_STOCK) if (IN_STOCK_MOYEN or AC_STOCK) else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">3</field>
+            <field name="threshold_watch">5</field>
+            <field name="threshold_good">8</field>
+            <field name="norm_label">&gt; 5 fois par an</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Total des achats rapporté au stock moyen. Inverse du délai d'écoulement, exprimé en nombre de renouvellements annuels.</field>
+            <field name="threshold_rationale">Cinq rotations par an correspondent au seuil de 72 jours. En dessous de trois rotations, l'immobilisation de trésorerie devient préoccupante et le risque d'obsolescence réel.</field>
+            <field name="limits">Doit être lu avec le délai d'écoulement : les deux ratios sont mathématiquement liés et ne doivent jamais diverger.</field>
+            <field name="interpretation">Nombre de fois où le stock est renouvelé dans l'année.</field>
+        </record>
+
+        <record id="ratio_c3" model="fa.ratio">
+            <field name="code">C3</field>
+            <field name="name">Délai de règlement clients (DSO)</field>
+            <field name="family">activity</field>
+            <field name="sequence">30</field>
+            <field name="formula">(AC_CLIENT + IN_EENE) * 360 / CA_TTC if CA_TTC else 0</field>
+            <field name="unit">days</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">90</field>
+            <field name="threshold_watch">60</field>
+            <field name="threshold_good">30</field>
+            <field name="norm_label">&lt; 60 jours</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Créances clients augmentées des effets escomptés non échus, multipliées par 360 et rapportées au chiffre d'affaires TTC. Le chiffre d'affaires TTC se saisit dans les informations complémentaires ; à défaut, il est estimé en majorant le montant hors taxes de 20 %.</field>
+            <field name="threshold_rationale">Le seuil de 60 jours correspond au délai légal usuel en Europe et à la pratique courante. À Madagascar, les règlements sur marchés publics dépassent fréquemment 90 jours, ce qui justifie un seuil sectoriel adapté en BTP.</field>
+            <field name="limits">L'estimation du chiffre d'affaires TTC par un coefficient forfaitaire introduit un biais si les ventes relèvent de régimes de TVA différents.</field>
+            <field name="interpretation">Durée moyenne du crédit accordé aux clients. Chaque jour gagné libère de la trésorerie.</field>
+        </record>
+
+        <record id="ratio_c4" model="fa.ratio">
+            <field name="code">C4</field>
+            <field name="name">Délai de règlement fournisseurs (DPO)</field>
+            <field name="family">activity</field>
+            <field name="sequence">40</field>
+            <field name="formula">PA_FOURN * 360 / ACHATS_TTC if ACHATS_TTC else 0</field>
+            <field name="unit">days</field>
+            <field name="direction">range</field>
+            <field name="threshold_bad">15</field>
+            <field name="threshold_watch">30</field>
+            <field name="threshold_good">90</field>
+            <field name="threshold_max">90</field>
+            <field name="norm_label">30 à 90 jours</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Dettes fournisseurs multipliées par 360 et rapportées aux achats TTC. Les achats TTC se saisissent dans les informations complémentaires.</field>
+            <field name="threshold_rationale">La fourchette de 30 à 90 jours correspond aux conditions commerciales usuelles. En deçà, l'entreprise se prive d'une ressource gratuite ; au-delà, elle dégrade la relation fournisseur et s'expose à des ruptures.</field>
+            <field name="limits">Un délai très long n'implique pas toujours une difficulté de trésorerie : il peut traduire un rapport de force favorable. Le module distingue les deux situations.</field>
+            <field name="interpretation">Durée moyenne du crédit obtenu des fournisseurs. C'est une ressource de financement gratuite, à ne pas dégrader mais à ne pas abuser.</field>
+        </record>
+
+        <record id="ratio_c5" model="fa.ratio">
+            <field name="code">C5</field>
+            <field name="name">Cycle d'exploitation net</field>
+            <field name="family">activity</field>
+            <field name="sequence">50</field>
+            <field name="formula">((IN_STOCK_MOYEN or AC_STOCK) * 360 / (PL_ACHATS + PL_ACHAT_MSE) if (PL_ACHATS + PL_ACHAT_MSE) else 0) + ((AC_CLIENT + IN_EENE) * 360 / CA_TTC if CA_TTC else 0) - (PA_FOURN * 360 / ACHATS_TTC if ACHATS_TTC else 0)</field>
+            <field name="unit">days</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">90</field>
+            <field name="threshold_watch">60</field>
+            <field name="threshold_good">30</field>
+            <field name="norm_label">le plus court possible</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Somme du délai d'écoulement des stocks et du délai de règlement clients, diminuée du délai fournisseurs. Exprime la durée que l'entreprise doit financer.</field>
+            <field name="threshold_rationale">Un cycle inférieur à 30 jours est très favorable. Au-delà de 90 jours, le financement du cycle devient l'enjeu principal de la gestion financière.</field>
+            <field name="limits">Cumule les imprécisions des trois ratios qui le composent. Un cycle négatif signifie que l'entreprise encaisse avant de décaisser.</field>
+            <field name="interpretation">Nombre de jours entre le décaissement fournisseur et l'encaissement client. C'est la durée que l'entreprise doit financer.</field>
+        </record>
+
+        <record id="ratio_c6" model="fa.ratio">
+            <field name="code">C6</field>
+            <field name="name">Rotation de l'actif total</field>
+            <field name="family">activity</field>
+            <field name="sequence">60</field>
+            <field name="formula">CA / T_ACTIF if T_ACTIF else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0.5</field>
+            <field name="threshold_watch">1</field>
+            <field name="threshold_good">1.5</field>
+            <field name="norm_label">&gt; 1</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Chiffre d'affaires rapporté au total de l'actif. Mesure l'efficacité avec laquelle les moyens engagés génèrent de l'activité.</field>
+            <field name="threshold_rationale">Le seuil de 1 signifie que l'actif se renouvelle une fois par an en chiffre d'affaires. Fortement dépendant du secteur : le négoce atteint couramment 1,5 à 2, l'industrie se situe autour de 0,7 à 1.</field>
+            <field name="limits">Ne dit rien de la rentabilité : une rotation élevée sur des marges nulles ne crée pas de valeur. À croiser avec la marge nette.</field>
+            <field name="interpretation">Chiffre d'affaires généré par chaque unité monétaire investie dans l'actif. Mesure l'efficacité de l'outil.</field>
+        </record>
+
+        <record id="ratio_c7" model="fa.ratio">
+            <field name="code">C7</field>
+            <field name="name">Rotation des capitaux propres</field>
+            <field name="family">activity</field>
+            <field name="sequence">70</field>
+            <field name="formula">CA / ST_CP if ST_CP &gt; 0 else 0</field>
+            <field name="applicability">ST_CP &gt; 0</field>
+            <field name="na_message">Ratio sans objet : les capitaux propres sont négatifs ou nuls.</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">2</field>
+            <field name="threshold_good">3</field>
+            <field name="norm_label">&gt; 2</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Chiffre d'affaires rapporté aux capitaux propres. Indique le volume d'activité soutenu par chaque unité de fonds propres.</field>
+            <field name="threshold_rationale">Le seuil de 2 correspond à un usage normal des fonds propres. Un ratio très élevé traduit soit une forte efficacité, soit une insuffisance de capitalisation.</field>
+            <field name="limits">Sans objet si les capitaux propres sont négatifs. Un ratio élevé doit être lu avec l'autonomie financière pour distinguer performance et sous-capitalisation.</field>
+            <field name="interpretation">Chiffre d'affaires rapporté aux fonds propres investis.</field>
+        </record>
+
+        <record id="ratio_c8" model="fa.ratio">
+            <field name="code">C8</field>
+            <field name="name">Productivité du personnel (VA par salarié)</field>
+            <field name="family">activity</field>
+            <field name="sequence">80</field>
+            <field name="formula">VA / EFFECTIF if EFFECTIF else 0</field>
+            <field name="unit">amount</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">2</field>
+            <field name="threshold_good">3</field>
+            <field name="norm_label">à comparer au secteur</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Valeur ajoutée rapportée à l'effectif moyen, qui se saisit dans les informations complémentaires.</field>
+            <field name="threshold_rationale">Il n'existe pas de norme absolue : la valeur dépend entièrement du secteur, du niveau de qualification et du degré de mécanisation. C'est l'évolution dans le temps et la comparaison sectorielle qui font sens.</field>
+            <field name="limits">Non calculable sans effectif renseigné. Le recours à l'intérim ou à la sous-traitance fausse la comparaison entre entreprises.</field>
+            <field name="interpretation">Valeur ajoutée créée par salarié. Indicateur clé de l'efficience de la main-d'œuvre.</field>
+        </record>
+
+        <record id="ratio_c9" model="fa.ratio">
+            <field name="code">C9</field>
+            <field name="name">Rendement du personnel</field>
+            <field name="family">activity</field>
+            <field name="sequence">90</field>
+            <field name="formula">CA / PL_PERSONNEL if PL_PERSONNEL else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">2</field>
+            <field name="threshold_watch">3</field>
+            <field name="threshold_good">5</field>
+            <field name="norm_label">&gt; 3</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Chiffre d'affaires rapporté aux charges de personnel. Mesure le volume d'activité généré par unité de masse salariale.</field>
+            <field name="threshold_rationale">Le seuil de 3 correspond à une masse salariale représentant un tiers du chiffre d'affaires, référence usuelle hors services intensifs en main-d'œuvre.</field>
+            <field name="limits">Un ratio élevé peut traduire un recours important à la sous-traitance plutôt qu'une productivité supérieure.</field>
+            <field name="interpretation">Chiffre d'affaires généré par unité monétaire de charge de personnel.</field>
+        </record>
+
+        <record id="ratio_c10" model="fa.ratio">
+            <field name="code">C10</field>
+            <field name="name">Intensité capitalistique</field>
+            <field name="family">activity</field>
+            <field name="sequence">100</field>
+            <field name="formula">AI / EFFECTIF if EFFECTIF else 0</field>
+            <field name="unit">amount</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">1</field>
+            <field name="threshold_good">2</field>
+            <field name="norm_label">selon secteur</field>
+            <field name="annualize" eval="False"/>
+            <field name="calculation_note">Actif immobilisé rapporté à l'effectif moyen. Mesure l'équipement moyen par salarié.</field>
+            <field name="threshold_rationale">Aucune norme générale : structurellement élevé en industrie et en transport, faible en services. Son évolution renseigne sur la stratégie d'automatisation.</field>
+            <field name="limits">Non calculable sans effectif. Le crédit-bail non retraité minore artificiellement l'intensité capitalistique.</field>
+            <field name="interpretation">Montant d'immobilisations par salarié. Élevé en industrie, faible en services.</field>
+        </record>
+
+        <record id="ratio_d1" model="fa.ratio">
+            <field name="code">D1</field>
+            <field name="name">Taux de marge commerciale</field>
+            <field name="family">profitability</field>
+            <field name="sequence">10</field>
+            <field name="formula">MC / PL_VENTE_MSE if PL_VENTE_MSE else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">10</field>
+            <field name="threshold_watch">20</field>
+            <field name="threshold_good">30</field>
+            <field name="norm_label">selon secteur</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Marge commerciale rapportée aux ventes de marchandises. Ne concerne que l'activité de négoce.</field>
+            <field name="threshold_rationale">Les seuils dépendent entièrement du positionnement : la distribution alimentaire fonctionne à 15 ou 20 %, la distribution spécialisée dépasse 35 %. La norme sectorielle du négoce retient une fourchette de 15 à 25 %.</field>
+            <field name="limits">Sans objet pour une activité de production pure. En activité mixte, ne reflète qu'une partie de la performance.</field>
+            <field name="interpretation">Marge dégagée sur l'activité de négoce, rapportée aux ventes de marchandises.</field>
+        </record>
+
+        <record id="ratio_d2" model="fa.ratio">
+            <field name="code">D2</field>
+            <field name="name">Taux de valeur ajoutée</field>
+            <field name="family">profitability</field>
+            <field name="sequence">20</field>
+            <field name="formula">VA / CA if CA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">15</field>
+            <field name="threshold_watch">25</field>
+            <field name="threshold_good">35</field>
+            <field name="norm_label">selon secteur</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Valeur ajoutée rapportée au chiffre d'affaires. Mesure la richesse créée en propre par rapport au volume d'activité.</field>
+            <field name="threshold_rationale">Le taux dépend du degré d'intégration : le négoce se situe entre 10 et 20 %, l'industrie entre 25 et 40 %, les services au-delà de 45 %. Comparer un négociant à un industriel sur ce ratio n'a aucun sens.</field>
+            <field name="limits">Un taux faible n'est pas un défaut en négoce, où l'essentiel du chiffre d'affaires est absorbé par le coût d'achat des marchandises.</field>
+            <field name="interpretation">Part de la richesse créée par l'entreprise dans son chiffre d'affaires. Mesure le degré d'intégration de l'activité.</field>
+        </record>
+
+        <record id="ratio_d3" model="fa.ratio">
+            <field name="code">D3</field>
+            <field name="name">Taux de marge brute d'exploitation (EBE)</field>
+            <field name="family">profitability</field>
+            <field name="sequence">30</field>
+            <field name="formula">EBE / CA if CA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">3</field>
+            <field name="threshold_watch">8</field>
+            <field name="threshold_good">15</field>
+            <field name="norm_label">&gt; 8 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Excédent brut d'exploitation rapporté au chiffre d'affaires. Mesure la rentabilité du cycle avant amortissements, frais financiers et impôts.</field>
+            <field name="threshold_rationale">C'est l'indicateur de performance économique pure, le moins sensible aux choix comptables. Le seuil de 8 % permet généralement de couvrir amortissements et service de la dette. En dessous de 3 %, l'exploitation ne dégage pas de quoi financer le renouvellement de l'outil.</field>
+            <field name="limits">Un excédent brut négatif est le signal le plus grave d'une analyse : l'activité courante détruit de la valeur, indépendamment de toute politique d'amortissement ou de financement.</field>
+            <field name="interpretation">Rentabilité du cycle d'exploitation avant amortissements, frais financiers et impôts. C'est le meilleur indicateur de la performance économique pure.</field>
+        </record>
+
+        <record id="ratio_d4" model="fa.ratio">
+            <field name="code">D4</field>
+            <field name="name">Taux de marge opérationnelle</field>
+            <field name="family">profitability</field>
+            <field name="sequence">40</field>
+            <field name="formula">REX / CA if CA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">3</field>
+            <field name="threshold_good">7</field>
+            <field name="norm_label">&gt; 3 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Résultat opérationnel rapporté au chiffre d'affaires. Intègre les dotations aux amortissements et provisions.</field>
+            <field name="threshold_rationale">Le seuil de 3 % marque une rentabilité d'exploitation acceptable après prise en compte de l'usure de l'outil. L'écart avec la marge brute d'exploitation mesure le poids des amortissements.</field>
+            <field name="limits">Sensible à la politique d'amortissement et aux provisions, qui relèvent partiellement de choix de gestion.</field>
+            <field name="interpretation">Rentabilité après amortissements et provisions, avant éléments financiers.</field>
+        </record>
+
+        <record id="ratio_d5" model="fa.ratio">
+            <field name="code">D5</field>
+            <field name="name">Taux de marge nette</field>
+            <field name="family">profitability</field>
+            <field name="sequence">50</field>
+            <field name="formula">RN / CA if CA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">2</field>
+            <field name="threshold_good">5</field>
+            <field name="norm_label">&gt; 2 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Résultat net rapporté au chiffre d'affaires. Ce qui reste à l'entreprise sur cent unités vendues.</field>
+            <field name="threshold_rationale">Le seuil de 2 % est une référence minimale tous secteurs confondus. En dessous, la moindre dégradation fait basculer en perte. Le négoce fonctionne structurellement sur des marges nettes plus faibles que l'industrie.</field>
+            <field name="limits">Affecté par les éléments exceptionnels et la fiscalité. La marge brute d'exploitation reflète mieux la performance récurrente.</field>
+            <field name="interpretation">Résultat net rapporté au chiffre d'affaires : ce qui reste réellement à l'entreprise sur 100 ariary vendus.</field>
+        </record>
+
+        <record id="ratio_d6" model="fa.ratio">
+            <field name="code">D6</field>
+            <field name="name">Rentabilité économique (ROCE)</field>
+            <field name="family">profitability</field>
+            <field name="sequence">60</field>
+            <field name="formula">REX / CAPITAUX_EMPLOYES if CAPITAUX_EMPLOYES &gt; 0 else 0</field>
+            <field name="applicability">CAPITAUX_EMPLOYES &gt; 0</field>
+            <field name="na_message">Ratio sans objet : les capitaux employés sont négatifs ou nuls. Cette configuration survient lorsque le besoin en fonds de roulement négatif excède l'actif immobilisé : l'exploitation fonctionne sans capital engagé, situation qui rend la notion de rentabilité économique inopérante.</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">3</field>
+            <field name="threshold_watch">8</field>
+            <field name="threshold_good">12</field>
+            <field name="norm_label">&gt; coût du capital</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Résultat opérationnel rapporté aux capitaux employés, soit l'actif immobilisé augmenté du besoin en fonds de roulement.</field>
+            <field name="threshold_rationale">Le seuil pertinent est le coût moyen pondéré des ressources : au-dessus, l'entreprise crée de la valeur ; en dessous, elle en détruit même en dégageant un bénéfice comptable. Le seuil de 8 % correspond à un coût du capital usuel.</field>
+            <field name="limits">Sans objet si les capitaux employés sont négatifs, configuration qui survient lorsqu'un besoin en fonds de roulement négatif excède l'actif immobilisé.</field>
+            <field name="interpretation">Rentabilité des capitaux engagés dans l'exploitation, indépendamment du mode de financement. À comparer au coût moyen des ressources.</field>
+        </record>
+
+        <record id="ratio_d7" model="fa.ratio">
+            <field name="code">D7</field>
+            <field name="name">Rentabilité financière (ROE)</field>
+            <field name="family">profitability</field>
+            <field name="sequence">70</field>
+            <field name="formula">RN / ST_CP if ST_CP &gt; 0 else 0</field>
+            <field name="applicability">ST_CP &gt; 0</field>
+            <field name="na_message">Ratio sans objet : les capitaux propres sont négatifs ou nuls. Rapporter un résultat à des fonds propres négatifs produirait une valeur dépourvue de sens.</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">5</field>
+            <field name="threshold_good">10</field>
+            <field name="norm_label">&gt; 5 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Résultat net rapporté aux capitaux propres. Rendement de l'investissement des actionnaires.</field>
+            <field name="threshold_rationale">Le seuil de 10 % correspond à la rémunération attendue d'un placement risqué. En dessous de 5 %, l'actionnaire obtiendrait mieux d'un placement sans risque.</field>
+            <field name="limits">Un ratio élevé peut résulter d'un fort effet de levier plutôt que d'une performance opérationnelle. À croiser avec la rentabilité économique et le levier financier.</field>
+            <field name="interpretation">Rendement des capitaux investis par les actionnaires. Critère de décision de l'actionnaire.</field>
+        </record>
+
+        <record id="ratio_d8" model="fa.ratio">
+            <field name="code">D8</field>
+            <field name="name">Rentabilité de l'actif (ROA)</field>
+            <field name="family">profitability</field>
+            <field name="sequence">80</field>
+            <field name="formula">RN / T_ACTIF if T_ACTIF else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">2</field>
+            <field name="threshold_good">5</field>
+            <field name="norm_label">&gt; 2 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Résultat net rapporté au total de l'actif. Mesure le rendement de l'ensemble des moyens engagés.</field>
+            <field name="threshold_rationale">Le seuil de 5 % constitue une référence tous secteurs. Ce ratio se décompose en marge nette multipliée par rotation de l'actif, ce qui permet d'identifier le levier d'amélioration.</field>
+            <field name="limits">Ne distingue pas l'origine du financement. Deux entreprises de même rentabilité de l'actif peuvent présenter des profils de risque très différents.</field>
+            <field name="interpretation">Résultat net rapporté à l'ensemble des moyens mis en œuvre.</field>
+        </record>
+
+        <record id="ratio_d9" model="fa.ratio">
+            <field name="code">D9</field>
+            <field name="name">Taux de rentabilité brute (CAF / CA)</field>
+            <field name="family">profitability</field>
+            <field name="sequence">90</field>
+            <field name="formula">CAF / CA if CA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">2</field>
+            <field name="threshold_watch">5</field>
+            <field name="threshold_good">10</field>
+            <field name="norm_label">&gt; 5 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Capacité d'autofinancement rapportée au chiffre d'affaires. Part de l'activité transformée en ressource interne.</field>
+            <field name="threshold_rationale">Le seuil de 5 % permet généralement de faire face au renouvellement courant et au remboursement des emprunts. En dessous de 2 %, l'entreprise ne peut se développer sans financement externe.</field>
+            <field name="limits">La capacité d'autofinancement est un flux potentiel, non un encaissement : elle ne tient pas compte de la variation du besoin en fonds de roulement.</field>
+            <field name="interpretation">Part du chiffre d'affaires transformée en ressource interne de financement.</field>
+        </record>
+
+        <record id="ratio_d10" model="fa.ratio">
+            <field name="code">D10</field>
+            <field name="name">Rentabilité de la valeur ajoutée</field>
+            <field name="family">profitability</field>
+            <field name="sequence">100</field>
+            <field name="formula">EBE / VA if VA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">10</field>
+            <field name="threshold_watch">20</field>
+            <field name="threshold_good">30</field>
+            <field name="norm_label">&gt; 20 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Excédent brut d'exploitation rapporté à la valeur ajoutée. Part de la richesse créée qui revient à l'entreprise après rémunération du travail et de l'État.</field>
+            <field name="threshold_rationale">Le seuil de 20 % traduit un partage équilibré. En dessous de 10 %, la quasi-totalité de la valeur ajoutée est absorbée par les charges de personnel et les impôts.</field>
+            <field name="limits">Doit être lu avec la part du personnel dans la valeur ajoutée, dont il est le complément principal.</field>
+            <field name="interpretation">Part de la valeur ajoutée qui reste à l'entreprise après rémunération du travail et de l'État.</field>
+        </record>
+
+        <record id="ratio_d11" model="fa.ratio">
+            <field name="code">D11</field>
+            <field name="name">Point mort (en jours d'activité)</field>
+            <field name="family">profitability</field>
+            <field name="sequence">110</field>
+            <field name="formula">POINT_MORT</field>
+            <field name="unit">days</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">330</field>
+            <field name="threshold_watch">300</field>
+            <field name="threshold_good">250</field>
+            <field name="norm_label">&lt; 300 jours</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Seuil de rentabilité multiplié par 360 et rapporté au chiffre d'affaires. Nombre de jours d'activité nécessaires pour couvrir les charges de structure.</field>
+            <field name="threshold_rationale">Le seuil de 300 jours laisse deux mois d'activité bénéficiaire. Au-delà de 360 jours, l'activité d'un exercice complet ne suffit pas à atteindre l'équilibre.</field>
+            <field name="limits">Suppose une répartition régulière de l'activité sur l'année. En cas de forte saisonnalité, la date réelle du point mort peut différer sensiblement.</field>
+            <field name="interpretation">Date à laquelle l'entreprise couvre ses charges de structure. Au-delà, elle génère du profit. Calculé par défaut à partir du taux d'excédent brut d'exploitation.</field>
+        </record>
+
+        <record id="ratio_d12" model="fa.ratio">
+            <field name="code">D12</field>
+            <field name="name">Marge de sécurité</field>
+            <field name="family">profitability</field>
+            <field name="sequence">120</field>
+            <field name="formula">MARGE_SECURITE</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">10</field>
+            <field name="threshold_good">20</field>
+            <field name="norm_label">&gt; 10 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Écart entre le chiffre d'affaires et le seuil de rentabilité, rapporté au chiffre d'affaires. Baisse d'activité supportable avant de basculer en perte.</field>
+            <field name="threshold_rationale">Le seuil de 20 % permet d'absorber un retournement conjoncturel significatif. En dessous de 10 %, la moindre variation d'activité met l'équilibre en cause.</field>
+            <field name="limits">Une marge négative signifie que le chiffre d'affaires est déjà inférieur au seuil : l'exercice se solde par une perte d'exploitation structurelle.</field>
+            <field name="interpretation">Pourcentage de baisse du chiffre d'affaires que l'entreprise peut absorber avant de basculer en perte.</field>
+        </record>
+
+        <record id="ratio_e1" model="fa.ratio">
+            <field name="code">E1</field>
+            <field name="name">Part du personnel dans la VA</field>
+            <field name="family">value_added</field>
+            <field name="sequence">10</field>
+            <field name="formula">PL_PERSONNEL / VA if VA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">85</field>
+            <field name="threshold_watch">70</field>
+            <field name="threshold_good">55</field>
+            <field name="norm_label">&lt; 70 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Charges de personnel rapportées à la valeur ajoutée. Part de la richesse créée revenant aux salariés.</field>
+            <field name="threshold_rationale">Le seuil dépend fortement du secteur : 55 % en négoce, 62 % en industrie, 75 % en services où la main-d'œuvre est le facteur de production principal. Au-delà de 85 %, l'entreprise ne dégage plus de quoi s'autofinancer.</field>
+            <field name="limits">Le recours à l'intérim ou à la sous-traitance déplace des charges de personnel vers les consommations externes et minore artificiellement le ratio.</field>
+            <field name="interpretation">Part de la richesse créée revenant aux salariés. Au-delà de 80 %, l'entreprise ne dégage plus de quoi s'autofinancer.</field>
+        </record>
+
+        <record id="ratio_e2" model="fa.ratio">
+            <field name="code">E2</field>
+            <field name="name">Part de l'État dans la VA</field>
+            <field name="family">value_added</field>
+            <field name="sequence">20</field>
+            <field name="formula">(PL_IMPOTS_TAXES + PL_IMP_EXIG) / VA if VA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">25</field>
+            <field name="threshold_watch">18</field>
+            <field name="threshold_good">12</field>
+            <field name="norm_label">&lt; 18 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Impôts et taxes augmentés de l'impôt sur les résultats, rapportés à la valeur ajoutée. Part des prélèvements dans la richesse créée.</field>
+            <field name="threshold_rationale">Le seuil de 18 % correspond à une charge fiscale normale à Madagascar, où l'impôt sur les sociétés s'établit à 20 % du résultat. Un taux très supérieur mérite un examen du régime applicable.</field>
+            <field name="limits">Ne comprend pas les cotisations sociales patronales, comptabilisées en charges de personnel.</field>
+            <field name="interpretation">Prélèvements fiscaux rapportés à la richesse créée.</field>
+        </record>
+
+        <record id="ratio_e3" model="fa.ratio">
+            <field name="code">E3</field>
+            <field name="name">Part des prêteurs dans la VA</field>
+            <field name="family">value_added</field>
+            <field name="sequence">30</field>
+            <field name="formula">PL_CH_FIN / VA if VA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">15</field>
+            <field name="threshold_watch">8</field>
+            <field name="threshold_good">4</field>
+            <field name="norm_label">&lt; 8 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Charges financières rapportées à la valeur ajoutée. Part de la richesse créée absorbée par le coût de la dette.</field>
+            <field name="threshold_rationale">Le seuil de 8 % traduit un endettement soutenable. Au-delà de 15 %, les prêteurs captent une part excessive de la valeur créée. Le secteur financier obéit à des normes distinctes, le coût des ressources y étant un poste d'exploitation.</field>
+            <field name="limits">Ne tient pas compte du remboursement du capital, qui pèse également sur la trésorerie.</field>
+            <field name="interpretation">Part de la richesse créée absorbée par le coût de la dette.</field>
+        </record>
+
+        <record id="ratio_e4" model="fa.ratio">
+            <field name="code">E4</field>
+            <field name="name">Part de l'entreprise (autofinancement)</field>
+            <field name="family">value_added</field>
+            <field name="sequence">40</field>
+            <field name="formula">CAF / VA if VA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">12</field>
+            <field name="threshold_good">20</field>
+            <field name="norm_label">&gt; 12 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Capacité d'autofinancement rapportée à la valeur ajoutée. Part de la richesse conservée pour financer le développement.</field>
+            <field name="threshold_rationale">Le seuil de 12 % permet de financer le renouvellement courant. En dessous, l'entreprise dépend de financements externes pour tout investissement.</field>
+            <field name="limits">Somme des quatre parts de la valeur ajoutée : personnel, État, prêteurs et entreprise. Un écart au total signale une erreur de saisie.</field>
+            <field name="interpretation">Part de la valeur ajoutée conservée pour financer le développement.</field>
+        </record>
+
+        <record id="ratio_f1" model="fa.ratio">
+            <field name="code">F1</field>
+            <field name="name">Poids des charges financières sur CA</field>
+            <field name="family">coverage</field>
+            <field name="sequence">10</field>
+            <field name="formula">PL_CH_FIN / CA if CA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">3</field>
+            <field name="threshold_good">1.5</field>
+            <field name="norm_label">&lt; 3 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Charges financières rapportées au chiffre d'affaires.</field>
+            <field name="threshold_rationale">Le seuil de 3 % est une référence bancaire : au-delà, le coût de la dette pèse significativement sur la formation du résultat. À 5 %, le seuil d'alerte est franchi pour tout partenaire financier.</field>
+            <field name="limits">Rapporte une charge de financement à un volume d'activité, deux grandeurs sans lien direct. La couverture des frais financiers est plus significative.</field>
+            <field name="interpretation">Coût de l'endettement rapporté au volume d'activité. Au-delà de 4 %, le seuil d'alerte bancaire est franchi.</field>
+        </record>
+
+        <record id="ratio_f2" model="fa.ratio">
+            <field name="code">F2</field>
+            <field name="name">Couverture des frais financiers</field>
+            <field name="family">coverage</field>
+            <field name="sequence">20</field>
+            <field name="formula">EBE / PL_CH_FIN if PL_CH_FIN else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">1.5</field>
+            <field name="threshold_watch">3</field>
+            <field name="threshold_good">5</field>
+            <field name="norm_label">&gt; 3</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Excédent brut d'exploitation rapporté aux charges financières. Nombre de fois où l'exploitation couvre les intérêts.</field>
+            <field name="threshold_rationale">Ratio de référence des clauses bancaires. Le seuil de 3 est le minimum généralement exigé. En dessous de 1, l'exploitation ne couvre plus les intérêts, situation qui conduit mécaniquement à l'aggravation de l'endettement.</field>
+            <field name="limits">Ne tient pas compte du remboursement du capital. Une entreprise peut couvrir ses intérêts sans pouvoir rembourser ses échéances.</field>
+            <field name="interpretation">Nombre de fois où l'excédent brut d'exploitation couvre les intérêts. Ratio de référence des covenants bancaires.</field>
+        </record>
+
+        <record id="ratio_f3" model="fa.ratio">
+            <field name="code">F3</field>
+            <field name="name">Charges financières sur EBE</field>
+            <field name="family">coverage</field>
+            <field name="sequence">30</field>
+            <field name="formula">PL_CH_FIN / EBE if EBE &gt; 0 else 0</field>
+            <field name="applicability">EBE &gt; 0</field>
+            <field name="na_message">Ratio sans objet : l'excédent brut d'exploitation est négatif ou nul. Il ne peut donc absorber aucune charge financière, ce que traduit déjà le ratio de couverture des frais financiers.</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">50</field>
+            <field name="threshold_watch">33</field>
+            <field name="threshold_good">20</field>
+            <field name="norm_label">&lt; 33 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Charges financières rapportées à l'excédent brut d'exploitation. Part de la performance d'exploitation absorbée par le service de la dette.</field>
+            <field name="threshold_rationale">Le seuil de 33 % signifie qu'un tiers de l'excédent part en intérêts, limite au-delà de laquelle la capacité d'investissement se réduit fortement. À 50 %, le désendettement devient la priorité stratégique.</field>
+            <field name="limits">Sans objet si l'excédent brut d'exploitation est négatif : le ratio de couverture des frais financiers traduit alors mieux la situation.</field>
+            <field name="interpretation">Part de l'excédent d'exploitation absorbée par le service de la dette.</field>
+        </record>
+
+        <record id="ratio_f4" model="fa.ratio">
+            <field name="code">F4</field>
+            <field name="name">Taux d'investissement</field>
+            <field name="family">coverage</field>
+            <field name="sequence">40</field>
+            <field name="formula">INVESTISSEMENTS / VA if VA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">10</field>
+            <field name="threshold_good">15</field>
+            <field name="norm_label">&gt; 10 %</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Investissements de la période rapportés à la valeur ajoutée. Le montant des investissements se saisit dans les informations complémentaires.</field>
+            <field name="threshold_rationale">Le seuil de 10 % correspond à un effort de renouvellement courant. Un taux durablement inférieur aux dotations aux amortissements traduit un désinvestissement progressif.</field>
+            <field name="limits">Un investissement est par nature irrégulier : ce ratio doit s'apprécier sur plusieurs exercices, non sur une année isolée.</field>
+            <field name="interpretation">Effort d'investissement rapporté à la richesse créée. Un taux durablement faible annonce un vieillissement de l'outil.</field>
+        </record>
+
+        <record id="ratio_f5" model="fa.ratio">
+            <field name="code">F5</field>
+            <field name="name">Taux d'autofinancement des investissements</field>
+            <field name="family">coverage</field>
+            <field name="sequence">50</field>
+            <field name="formula">CAF / INVESTISSEMENTS if INVESTISSEMENTS else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">0.5</field>
+            <field name="threshold_watch">0.8</field>
+            <field name="threshold_good">1</field>
+            <field name="norm_label">&gt; 0,8</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Capacité d'autofinancement rapportée aux investissements de la période.</field>
+            <field name="threshold_rationale">Un ratio de 1 signifie que les investissements sont intégralement autofinancés. Le seuil de 0,8 correspond à un apport propre de 80 %, au-delà des exigences bancaires usuelles qui se situent entre 20 et 30 %.</field>
+            <field name="limits">Non significatif si aucun investissement n'a été réalisé. Un ratio très élevé peut traduire un sous-investissement plutôt qu'une aisance financière.</field>
+            <field name="interpretation">Capacité à financer les investissements par les ressources internes.</field>
+        </record>
+
+        <record id="ratio_d13" model="fa.ratio">
+            <field name="code">D13</field>
+            <field name="name">Couverture des charges de structure</field>
+            <field name="family">profitability</field>
+            <field name="sequence">130</field>
+            <field name="formula">EBE / CSI if CSI else 0</field>
+            <field name="unit">times</field>
+            <field name="direction">higher</field>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.3</field>
+            <field name="threshold_good">2</field>
+            <field name="norm_label">&gt; 1,3</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Excédent brut d'exploitation rapporté aux charges de structure, constituées des dotations aux amortissements, des frais financiers et des impôts exigibles.</field>
+            <field name="threshold_rationale">Le seuil de 1 correspond exactement au point mort : en dessous, l'exploitation ne finance ni le renouvellement de l'outil ni le service de la dette. Le seuil de confort à 2 traduit une capacité d'absorption réelle.</field>
+            <field name="limits">Les impôts et taxes ne sont pas inclus dans les charges de structure car ils sont déjà déduits dans l'excédent brut d'exploitation. Les y ajouter reviendrait à les compter deux fois.</field>
+            <field name="interpretation">Nombre de fois où l'excédent brut d'exploitation couvre les charges de structure : dotations aux amortissements, frais financiers et impôts sur les résultats. En dessous de 1, l'exploitation ne finance pas le renouvellement de l'outil et le service de la dette : c'est la traduction directe d'un chiffre d'affaires inférieur au seuil de rentabilité.</field>
+        </record>
+
+        <record id="ratio_d14" model="fa.ratio">
+            <field name="code">D14</field>
+            <field name="name">Chiffre d'affaires nécessaire au seuil</field>
+            <field name="family">profitability</field>
+            <field name="sequence">140</field>
+            <field name="formula">SR / CA if CA else 0</field>
+            <field name="unit">percent</field>
+            <field name="direction">lower</field>
+            <field name="threshold_bad">100</field>
+            <field name="threshold_watch">90</field>
+            <field name="threshold_good">75</field>
+            <field name="norm_label">&lt; 90 % du CA</field>
+            <field name="annualize" eval="True"/>
+            <field name="calculation_note">Seuil de rentabilité rapporté au chiffre d'affaires réalisé. Part de l'activité consacrée à atteindre le point mort.</field>
+            <field name="threshold_rationale">Le seuil de 100 % marque la frontière : au-delà, l'activité de la période n'a pas suffi à couvrir les charges de structure. La norme de 88 % en négoce ménage une marge de sécurité de douze points.</field>
+            <field name="limits">Complément à cent de la marge de sécurité : les deux ratios expriment la même réalité sous deux angles.</field>
+            <field name="interpretation">Part du chiffre d'affaires réalisé qui sert uniquement à atteindre le point mort. Au-dessus de 100 %, l'activité de la période n'a pas suffi à couvrir les charges de structure. Ce ratio est le pendant direct de la marge de sécurité et se lit facilement en réunion : « il vous faut X % de votre chiffre d'affaires actuel rien que pour atteindre l'équilibre ».</field>
+        </record>
+    </data>
+</odoo>

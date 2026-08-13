@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_fa_comparison">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-set="an" t-value="doc.analysis_id"/>
+            <t t-set="pers" t-value="periods(doc)"/>
+            <t t-set="np" t-value="len(pers)"/>
+            <t t-set="syn" t-value="synthesis(doc)"/>
+            <t t-set="opt_reco" t-value="an.report_show_recommendations"/>
+            <t t-set="opt_interp" t-value="an.report_show_interpretation"/>
+            <t t-set="opt_formula" t-value="an.report_show_formula"/>
+            <t t-set="opt_gloss" t-value="an.report_show_glossary"/>
+            <t t-call="web.external_layout">
+                <div class="page" style="font-size: 9.5px;">
+
+                    <!-- ================= PAGE DE GARDE ================= -->
+                    <div class="text-center mt-4 mb-4">
+                        <h1 style="color:#1F3A5F; font-size:24px;">RAPPORT D'ANALYSE FINANCIÈRE</h1>
+                        <h3 class="mt-3"><span t-field="an.partner_id.name"/></h3>
+                        <h5 class="text-muted">
+                            Analyse comparative sur <span t-esc="np"/> périodes
+                        </h5>
+                        <table class="table table-sm table-bordered mt-4"
+                               style="width:75%; margin:auto;">
+                            <thead style="background-color:#1F3A5F; color:white;">
+                                <tr>
+                                    <th>Période</th><th>Du</th><th>Au</th>
+                                    <th class="text-center">Durée</th>
+                                    <th class="text-center">Audité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="pers" t-as="p">
+                                    <td><strong t-field="p.name"/></td>
+                                    <td><span t-field="p.date_from"/></td>
+                                    <td><span t-field="p.date_to"/></td>
+                                    <td class="text-center">
+                                        <span t-field="p.duration_months"/> mois
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-if="p.is_audited">Oui</span>
+                                        <span t-if="not p.is_audited" class="text-danger">Non</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-muted mt-3">
+                            Référentiel : Plan Comptable Général 2005 (Madagascar)<br/>
+                            Secteur : <span t-field="an.sector_id.name"/> —
+                            Devise : <span t-field="an.currency_id.name"/><br/>
+                            Dossier <span t-field="an.name"/> —
+                            Consultant : <span t-field="an.user_id.name"/>
+                        </p>
+                        <p class="text-muted mt-4"><small>Document confidentiel</small></p>
+                    </div>
+
+                    <!-- Tableau de bord des appréciations -->
+                    <table class="table table-sm table-bordered"
+                           style="width:70%; margin:auto;">
+                        <thead style="background-color:#e9ecef;">
+                            <tr><th colspan="4" class="text-center">
+                                Positionnement des ratios en dernière période
+                            </th></tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center">
+                                <td style="background-color:#F8D7DA;">
+                                    <h4 t-esc="syn['nb_bad']" class="mb-0"/>
+                                    <small>Critique</small>
+                                </td>
+                                <td style="background-color:#FFF3CD;">
+                                    <h4 t-esc="syn['nb_watch']" class="mb-0"/>
+                                    <small>À surveiller</small>
+                                </td>
+                                <td style="background-color:#CFE2FF;">
+                                    <h4 t-esc="syn['nb_ok']" class="mb-0"/>
+                                    <small>Correct</small>
+                                </td>
+                                <td style="background-color:#D1E7DD;">
+                                    <h4 t-esc="syn['nb_good']" class="mb-0"/>
+                                    <small>Solide</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="page-break-after: always;"/>
+
+                    <!-- ================= 1. MÉTHODOLOGIE ================= -->
+                    <h2 style="color:#1F3A5F; font-size:16px;">1. Contexte et méthodologie</h2>
+                    <table class="table table-sm table-bordered">
+                        <tr><td style="width:30%;"><strong>Client</strong></td>
+                            <td><span t-field="an.partner_id.name"/></td></tr>
+                        <tr><td><strong>NIF / STAT</strong></td>
+                            <td><span t-field="an.nif"/> / <span t-field="an.stat"/></td></tr>
+                        <tr><td><strong>Secteur d'activité</strong></td>
+                            <td><span t-field="an.sector_id.name"/></td></tr>
+                        <tr><td><strong>Mode de comparaison</strong></td>
+                            <td><span t-field="doc.mode"/></td></tr>
+                    </table>
+
+                    <div t-if="an.sector_id.description" class="mt-2">
+                        <h4 style="font-size:12px;">Caractéristiques financières du secteur</h4>
+                        <p><i t-field="an.sector_id.description"/></p>
+                    </div>
+
+                    <div t-if="doc.methodology_note" class="alert alert-warning" role="alert">
+                        <strong>Réserve méthodologique</strong>
+                        <div style="white-space: pre-line;" t-field="doc.methodology_note"/>
+                    </div>
+
+                    <div class="alert alert-light" style="border:1px solid #dee2e6;">
+                        <strong>Origine des normes.</strong> Les seuils utilisés pour apprécier
+                        chaque ratio sont des références professionnelles générales, ajustées
+                        au secteur d'activité. Ils ne constituent pas des statistiques
+                        officielles du marché malgache. Les normes signalées par un astérisque
+                        sont propres au secteur
+                        « <span t-field="an.sector_id.name"/> » ; les autres sont génériques.
+                        L'appréciation doit dans tous les cas être pondérée par la taille de
+                        l'entreprise, son positionnement et la connaissance du dossier.
+                    </div>
+
+                    <div t-if="an.note">
+                        <h4 style="font-size:12px;">Contexte de la mission</h4>
+                        <div t-field="an.note"/>
+                    </div>
+
+                    <!-- ================= 2. BILAN FINANCIER ================= -->
+                    <h2 style="color:#1F3A5F; font-size:16px;" class="mt-4">
+                        2. Bilan financier
+                    </h2>
+
+                    <h4 style="font-size:12px;">2.1 Grandes masses</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color:#1F3A5F; color:white;">
+                            <tr>
+                                <th style="width:30%;">Poste</th>
+                                <th t-foreach="pers" t-as="p" class="text-end">
+                                    <span t-field="p.name"/>
+                                    <br/><small t-if="p.duration_months != 12">
+                                        (<span t-field="p.duration_months"/> mois)</small>
+                                </th>
+                                <th class="text-end" style="width:11%;">Évolution</th>
+                                <th class="text-center" style="width:9%;">Tendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="agg_lines(doc, 'balance')" t-as="l">
+                                <td><span t-field="l.name"/></td>
+                                <td class="text-end"><span t-esc="'{:,.0f}'.format(l.value1).replace(',',' ')"/></td>
+                                <td class="text-end"><span t-esc="'{:,.0f}'.format(l.value2).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 3">
+                                    <span t-esc="'{:,.0f}'.format(l.value3).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 4">
+                                    <span t-esc="'{:,.0f}'.format(l.value4).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 5">
+                                    <span t-esc="'{:,.0f}'.format(l.value5).replace(',',' ')"/></td>
+                                <td class="text-end">
+                                    <span t-esc="'%+.1f %%' % l.variation_pct"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-raw="sparkline(doc, l)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="font-size:12px;" class="mt-3">2.2 Équilibre financier</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color:#1F3A5F; color:white;">
+                            <tr>
+                                <th style="width:26%;">Agrégat</th>
+                                <th t-foreach="pers" t-as="p" class="text-end">
+                                    <span t-field="p.name"/>
+                                </th>
+                                <th class="text-end" style="width:11%;">Évolution</th>
+                                <th class="text-center" style="width:9%;">Tendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="agg_lines(doc, 'equilibrium')" t-as="l">
+                                <td><strong t-field="l.name"/></td>
+                                <td class="text-end"><strong t-esc="'{:,.0f}'.format(l.value1).replace(',',' ')"/></td>
+                                <td class="text-end"><strong t-esc="'{:,.0f}'.format(l.value2).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 3">
+                                    <strong t-esc="'{:,.0f}'.format(l.value3).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 4">
+                                    <strong t-esc="'{:,.0f}'.format(l.value4).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 5">
+                                    <strong t-esc="'{:,.0f}'.format(l.value5).replace(',',' ')"/></td>
+                                <td class="text-end"><span t-esc="'%+.1f %%' % l.variation_pct"/></td>
+                                <td class="text-center"><span t-raw="sparkline(doc, l)"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center mt-2">
+                        <span t-raw="bar_chart(doc, ['FRNG', 'BFR', 'TN'],
+                                                'Équilibre financier')"/>
+                        <div class="text-muted"><small>
+                            Évolution du fonds de roulement, du besoin en fonds de roulement
+                            et de la trésorerie nette sur les périodes comparées.
+                        </small></div>
+                    </div>
+
+                    <div style="page-break-after: always;"/>
+
+                    <!-- ================= 3. COMPTE DE RÉSULTAT ================= -->
+                    <h2 style="color:#1F3A5F; font-size:16px;">
+                        3. Compte de résultat financier
+                    </h2>
+                    <h4 style="font-size:12px;">3.1 Soldes intermédiaires de gestion</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color:#1F3A5F; color:white;">
+                            <tr>
+                                <th style="width:26%;">Solde</th>
+                                <th t-foreach="pers" t-as="p" class="text-end">
+                                    <span t-field="p.name"/>
+                                </th>
+                                <th class="text-end" style="width:11%;">Évolution</th>
+                                <th class="text-center" style="width:9%;">Tendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="agg_lines(doc, 'sig')" t-as="l">
+                                <td><span t-field="l.name"/></td>
+                                <td class="text-end"><span t-esc="'{:,.0f}'.format(l.value1).replace(',',' ')"/></td>
+                                <td class="text-end"><span t-esc="'{:,.0f}'.format(l.value2).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 3">
+                                    <span t-esc="'{:,.0f}'.format(l.value3).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 4">
+                                    <span t-esc="'{:,.0f}'.format(l.value4).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 5">
+                                    <span t-esc="'{:,.0f}'.format(l.value5).replace(',',' ')"/></td>
+                                <td class="text-end"><span t-esc="'%+.1f %%' % l.variation_pct"/></td>
+                                <td class="text-center"><span t-raw="sparkline(doc, l)"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center mt-2">
+                        <span t-raw="bar_chart(doc, ['CA', 'VA', 'EBE', 'RN'],
+                                                'Formation du résultat')"/>
+                        <div class="text-muted"><small>
+                            Chiffre d'affaires, valeur ajoutée, excédent brut d'exploitation
+                            et résultat net.
+                        </small></div>
+                    </div>
+
+                    <t t-set="be_rows" t-value="agg_lines(doc, 'breakeven')"/>
+                    <t t-if="be_rows">
+                        <h4 style="font-size:12px;" class="mt-3">
+                            3.2 Seuil de rentabilité
+                        </h4>
+                        <table class="table table-sm table-bordered">
+                            <thead style="background-color:#1F3A5F; color:white;">
+                                <tr>
+                                    <th style="width:30%;">Élément</th>
+                                    <th t-foreach="pers" t-as="p" class="text-end">
+                                        <span t-field="p.name"/>
+                                    </th>
+                                    <th class="text-center" style="width:9%;">Tendance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="be_rows" t-as="l">
+                                    <td><span t-field="l.name"/></td>
+                                    <td class="text-end"><span t-esc="be_fmt(l, 1)"/></td>
+                                    <td class="text-end"><span t-esc="be_fmt(l, 2)"/></td>
+                                    <td class="text-end" t-if="np &gt;= 3">
+                                        <span t-esc="be_fmt(l, 3)"/></td>
+                                    <td class="text-end" t-if="np &gt;= 4">
+                                        <span t-esc="be_fmt(l, 4)"/></td>
+                                    <td class="text-end" t-if="np &gt;= 5">
+                                        <span t-esc="be_fmt(l, 5)"/></td>
+                                    <td class="text-center"><span t-raw="sparkline(doc, l)"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+
+                    <h4 style="font-size:12px;" class="mt-3">
+                        3.3 Capacité d'autofinancement
+                    </h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color:#1F3A5F; color:white;">
+                            <tr>
+                                <th style="width:30%;">Élément</th>
+                                <th t-foreach="pers" t-as="p" class="text-end">
+                                    <span t-field="p.name"/>
+                                </th>
+                                <th class="text-end" style="width:11%;">Évolution</th>
+                                <th class="text-center" style="width:9%;">Tendance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="agg_lines(doc, 'caf')" t-as="l">
+                                <td><span t-field="l.name"/></td>
+                                <td class="text-end"><span t-esc="'{:,.0f}'.format(l.value1).replace(',',' ')"/></td>
+                                <td class="text-end"><span t-esc="'{:,.0f}'.format(l.value2).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 3">
+                                    <span t-esc="'{:,.0f}'.format(l.value3).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 4">
+                                    <span t-esc="'{:,.0f}'.format(l.value4).replace(',',' ')"/></td>
+                                <td class="text-end" t-if="np &gt;= 5">
+                                    <span t-esc="'{:,.0f}'.format(l.value5).replace(',',' ')"/></td>
+                                <td class="text-end"><span t-esc="'%+.1f %%' % l.variation_pct"/></td>
+                                <td class="text-center"><span t-raw="sparkline(doc, l)"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="page-break-after: always;"/>
+
+                    <!-- ============ VARIATION DES CAPITAUX PROPRES ============ -->
+                    <t t-if="an.report_show_equity">
+                        <div style="page-break-after: always;"/>
+                        <h2 style="color:#1F3A5F; font-size:16px;">
+                            3 ter. Variation des capitaux propres
+                        </h2>
+                        <p class="text-muted"><small>
+                            Chapitre 4 du PCG 2005. Un tableau par période.
+                        </small></p>
+                        <t t-foreach="pers" t-as="p">
+                            <t t-if="p.equity_ids">
+                                <h4 style="font-size:11px;" class="mt-2">
+                                    <span t-field="p.name"/>
+                                </h4>
+                                <table class="table table-sm table-bordered"
+                                       style="font-size:8px;">
+                                    <thead style="background-color:#e9ecef;">
+                                        <tr>
+                                            <th style="width:28%;">Mouvement</th>
+                                            <th class="text-end">Capital</th>
+                                            <th class="text-end">Primes et réserves</th>
+                                            <th class="text-end">Report à nouveau</th>
+                                            <th class="text-end">Résultat</th>
+                                            <th class="text-end">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="p.get_equity_table()" t-as="eq"
+                                            t-attf-style="#{'background-color:#e9ecef;' if eq.line_type in ('balance','control') else ''}">
+                                            <td>
+                                                <strong t-if="eq.line_type == 'balance'"
+                                                        t-field="eq.name"/>
+                                                <span t-if="eq.line_type != 'balance'"
+                                                      t-field="eq.name"/>
+                                            </td>
+                                            <td class="text-end"><span t-if="eq.amount_capital"
+                                                t-esc="'{:,.0f}'.format(eq.amount_capital).replace(',', ' ')"/></td>
+                                            <td class="text-end"><span t-if="eq.amount_primes"
+                                                t-esc="'{:,.0f}'.format(eq.amount_primes).replace(',', ' ')"/></td>
+                                            <td class="text-end"><span t-if="eq.amount_report"
+                                                t-esc="'{:,.0f}'.format(eq.amount_report).replace(',', ' ')"/></td>
+                                            <td class="text-end"><span t-if="eq.amount_resultat"
+                                                t-esc="'{:,.0f}'.format(eq.amount_resultat).replace(',', ' ')"/></td>
+                                            <td class="text-end"><strong
+                                                t-esc="'{:,.0f}'.format(eq.amount_total).replace(',', ' ')"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </t>
+                    </t>
+
+                    <!-- ================= FLUX DE TRÉSORERIE ================= -->
+                    <t t-if="an.report_show_cashflow">
+                        <div style="page-break-after: always;"/>
+                        <h2 style="color:#1F3A5F; font-size:16px;">
+                            3 bis. Tableau des flux de trésorerie
+                        </h2>
+                        <p class="text-muted"><small>
+                            Chapitre 5 du PCG 2005, méthode indirecte. Chaque colonne
+                            présente les flux de la période par rapport à la précédente.
+                        </small></p>
+                        <table class="table table-sm table-bordered">
+                            <thead style="background-color:#1F3A5F; color:white;">
+                                <tr>
+                                    <th style="width:34%;">Rubrique</th>
+                                    <th t-foreach="pers" t-as="p" class="text-end">
+                                        <span t-field="p.name"/>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="cashflow_rows(pers)" t-as="row"
+                                    t-attf-style="#{'background-color:#e9ecef; font-weight:bold;' if row['bold'] else ''}">
+                                    <td><span t-esc="row['label']"/></td>
+                                    <td t-foreach="row['values']" t-as="cell" class="text-end">
+                                        <span t-esc="cell"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+
+                    <!-- ================= 4. RATIOS ================= -->
+                    <h2 style="color:#1F3A5F; font-size:16px;">
+                        4. Analyse par les ratios
+                    </h2>
+                    <p class="text-muted"><small>
+                        L'appréciation porte sur la dernière période
+                        (<span t-field="pers[-1].name"/>), au regard des normes du secteur.
+                        Les normes suivies d'un astérisque sont sectorielles.
+                        Chaque ratio est présenté sous forme de fiche en trois volets :
+                        <strong>ce qu'il mesure</strong>, le <strong>constat</strong> chiffré
+                        sur la période, et la <strong>recommandation</strong> d'action
+                        associée.
+                    </small></p>
+
+                    <t t-foreach="ratio_families(doc)" t-as="fam">
+                        <h4 style="color:#1F3A5F; font-size:12px;" class="mt-3">
+                            <span t-esc="fam['label']"/>
+                        </h4>
+                        <p class="text-muted mb-1"><small>
+                            <span t-esc="fam['nb_good']"/> solide(s) ·
+                            <span t-esc="fam['nb_watch']"/> à surveiller ·
+                            <span t-esc="fam['nb_bad']"/> critique(s)
+                        </small></p>
+                        <table class="table table-sm table-bordered"
+                               style="font-size:8.5px;">
+                            <thead style="background-color:#e9ecef;">
+                                <tr>
+                                    <th style="width:22%;">Ratio</th>
+                                    <th t-foreach="pers" t-as="p" class="text-end">
+                                        <span t-field="p.name"/>
+                                    </th>
+                                    <th class="text-center" style="width:8%;">Tend.</th>
+                                    <th class="text-center" style="width:12%;">Norme</th>
+                                    <th class="text-center" style="width:11%;">Appréciation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="fam['lines'].filtered(lambda l: not l.hide_in_report)"
+                                    t-as="r"
+                                    t-attf-style="background-color: #{appr.get(r.appreciation, ('','#FFFFFF',''))[1]};">
+                                    <td><span t-field="r.name"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="fmt(r.value1, r.unit)"/></td>
+                                    <td class="text-end">
+                                        <span t-esc="fmt(r.value2, r.unit)"/></td>
+                                    <td class="text-end" t-if="np &gt;= 3">
+                                        <strong t-esc="fmt(r.value3, r.unit)"/></td>
+                                    <td class="text-end" t-if="np &gt;= 4">
+                                        <strong t-esc="fmt(r.value4, r.unit)"/></td>
+                                    <td class="text-end" t-if="np &gt;= 5">
+                                        <strong t-esc="fmt(r.value5, r.unit)"/></td>
+                                    <td class="text-center">
+                                        <span t-raw="sparkline(doc, r)"/></td>
+                                    <td class="text-center">
+                                        <small t-field="r.norm_label"/></td>
+                                    <td class="text-center">
+                                        <small t-esc="appr.get(r.appreciation, ('n/a',''))[0]"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Fiche détaillée par ratio : explication, analyse, action -->
+                        <t t-foreach="fam['lines'].filtered(lambda l: (l.comment or l.recommendation) and not l.hide_in_report)"
+                           t-as="r">
+                            <table class="table table-sm table-bordered mb-2"
+                                   style="font-size:8.5px;">
+                                <tr t-attf-style="background-color: #{appr.get(r.appreciation, ('','#F1F3F5',''))[1]};">
+                                    <td colspan="2">
+                                        <strong t-field="r.name"/>
+                                        <span class="float-end">
+                                            <span t-esc="fmt(r['value%d' % min(np,5)], r.unit)"/>
+                                            <span t-if="r.norm_label"> · norme
+                                                <span t-field="r.norm_label"/></span>
+                                            ·
+                                            <strong t-esc="appr.get(r.appreciation, ('n/a',''))[0]"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr t-if="r.interpretation and opt_interp">
+                                    <td style="width:17%; vertical-align:top;
+                                               background-color:#f8f9fa;">
+                                        <strong>Ce que mesure le ratio</strong>
+                                    </td>
+                                    <td>
+                                        <i t-field="r.interpretation"/>
+                                        <span t-if="r.formula_text and opt_formula"
+                                              class="text-muted">
+                                            <br/>Calcul : <span t-field="r.formula_text"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr t-if="r.comment">
+                                    <td style="vertical-align:top; background-color:#f8f9fa;">
+                                        <strong>Constat</strong>
+                                    </td>
+                                    <td>
+                                        <span t-field="r.comment"/>
+                                        <div t-if="r.trend_comment" class="text-muted mt-1">
+                                            <i t-field="r.trend_comment"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr t-if="r.recommendation and opt_reco and
+                                          (an.report_reco_scope == 'all'
+                                           or (an.report_reco_scope == 'alerts'
+                                               and r.appreciation in ('bad', 'watch'))
+                                           or (an.report_reco_scope == 'critical'
+                                               and r.appreciation == 'bad'))">
+                                    <td style="vertical-align:top; background-color:#E7F1EA;">
+                                        <strong>Recommandation</strong>
+                                    </td>
+                                    <td style="background-color:#F4FAF6;">
+                                        <span t-field="r.recommendation"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </t>
+
+                    <div style="page-break-after: always;"/>
+
+                    <!-- ================= SCORE DE RISQUE ================= -->
+                    <t t-if="an.report_show_score">
+                        <h2 style="color:#1F3A5F; font-size:16px;" class="mt-4">
+                            4 bis. Évolution du risque de défaillance
+                        </h2>
+                        <table class="table table-sm table-bordered">
+                            <thead style="background-color:#1F3A5F; color:white;">
+                                <tr>
+                                    <th style="width:26%;">Modèle</th>
+                                    <th t-foreach="pers" t-as="p" class="text-end">
+                                        <span t-field="p.name"/>
+                                    </th>
+                                    <th class="text-center" style="width:16%;">
+                                        Zone en dernière période
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="score_rows(doc, pers)" t-as="row"
+                                    t-attf-style="background-color: #{'#F8D7DA' if row['zone'] == 'distress' else ('#FFF3CD' if row['zone'] == 'grey' else '#D1E7DD')};">
+                                    <td><strong t-esc="row['label']"/></td>
+                                    <td t-foreach="row['values']" t-as="cell"
+                                        class="text-end">
+                                        <span t-esc="cell"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <small t-esc="row['zone_label']"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <t t-foreach="pers[-1].score_ids.filtered(lambda s: not s.is_na)"
+                           t-as="sc">
+                            <p style="font-size:8.5px;"><span t-field="sc.comment"/></p>
+                        </t>
+                    </t>
+
+                    <!-- ================= 5. SYNTHÈSE ================= -->
+                    <h2 style="color:#1F3A5F; font-size:16px;">5. Synthèse de la trajectoire</h2>
+
+                    <h4 class="text-danger" style="font-size:12px;">
+                        5.1 Indicateurs les plus dégradés sur la période
+                    </h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color:#e9ecef;">
+                            <tr>
+                                <th style="width:30%;">Indicateur</th>
+                                <th class="text-end">Départ</th>
+                                <th class="text-end">Arrivée</th>
+                                <th class="text-end">Évolution</th>
+                                <th>Lecture</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="syn['degraded']" t-as="d">
+                                <td><span t-field="d.name"/></td>
+                                <td class="text-end"><span t-esc="fmt(d.value1, d.unit)"/></td>
+                                <td class="text-end">
+                                    <strong t-esc="fmt(d['value%d' % min(np,5)], d.unit)"/>
+                                </td>
+                                <td class="text-end text-danger">
+                                    <span t-esc="'%+.1f %%' % d.variation_pct"/>
+                                </td>
+                                <td><small t-field="d.trend_comment"/></td>
+                            </tr>
+                            <tr t-if="not syn['degraded']">
+                                <td colspan="5" class="text-center text-muted">
+                                    Aucune dégradation significative relevée.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 class="text-success" style="font-size:12px;" >
+                        5.2 Indicateurs en amélioration
+                    </h4>
+                    <table class="table table-sm table-bordered">
+                        <thead style="background-color:#e9ecef;">
+                            <tr>
+                                <th style="width:30%;">Indicateur</th>
+                                <th class="text-end">Départ</th>
+                                <th class="text-end">Arrivée</th>
+                                <th class="text-end">Évolution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="syn['improved']" t-as="i">
+                                <td><span t-field="i.name"/></td>
+                                <td class="text-end"><span t-esc="fmt(i.value1, i.unit)"/></td>
+                                <td class="text-end">
+                                    <strong t-esc="fmt(i['value%d' % min(np,5)], i.unit)"/>
+                                </td>
+                                <td class="text-end text-success">
+                                    <span t-esc="'%+.1f %%' % i.variation_pct"/>
+                                </td>
+                            </tr>
+                            <tr t-if="not syn['improved']">
+                                <td colspan="4" class="text-center text-muted">
+                                    Aucune amélioration significative relevée.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="font-size:12px;" class="mt-3">
+                        5.3 Points forts en dernière période
+                    </h4>
+                    <ul style="font-size:9px;">
+                        <li t-foreach="syn['strengths']" t-as="s">
+                            <strong t-field="s.name"/> :
+                            <span t-esc="fmt(s['value%d' % min(np,5)], s.unit)"/>
+                            <span t-if="s.norm_label"> (norme <span t-field="s.norm_label"/>)</span>
+                        </li>
+                        <li t-if="not syn['strengths']">
+                            Aucun indicateur ne ressort comme un point fort marqué.
+                        </li>
+                    </ul>
+
+                    <h4 style="font-size:12px;">5.4 Points de vigilance</h4>
+                    <ul style="font-size:9px;">
+                        <li t-foreach="syn['weaknesses']" t-as="w">
+                            <strong t-field="w.name"/> :
+                            <span t-esc="fmt(w['value%d' % min(np,5)], w.unit)"/>
+                            <span t-if="w.norm_label"> (norme <span t-field="w.norm_label"/>)</span>
+                        </li>
+                        <li t-if="not syn['weaknesses']">
+                            Aucun point de vigilance significatif.
+                        </li>
+                    </ul>
+
+                    <!-- ================= 6. RECOMMANDATIONS ================= -->
+                    <t t-if="opt_reco and an.report_show_reco_summary">
+                    <div style="page-break-after: always;"/>
+                    <h2 style="color:#1F3A5F; font-size:16px;">6. Recommandations</h2>
+                    <p t-if="an.report_reco_scope != 'all'" class="text-muted"><small>
+                        Périmètre retenu :
+                        <span t-if="an.report_reco_scope == 'alerts'">
+                            indicateurs critiques et à surveiller.</span>
+                        <span t-if="an.report_reco_scope == 'critical'">
+                            indicateurs critiques uniquement.</span>
+                    </small></p>
+                    <table class="table table-sm table-bordered" style="font-size:8.5px;">
+                        <thead style="background-color:#1F3A5F; color:white;">
+                            <tr>
+                                <th style="width:9%;">Urgence</th>
+                                <th style="width:22%;">Indicateur concerné</th>
+                                <th>Action préconisée</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="syn['recommendations']" t-as="rec">
+                                <td class="text-center">
+                                    <span t-if="rec.appreciation == 'bad'" class="text-danger">
+                                        <strong>Élevée</strong></span>
+                                    <span t-if="rec.appreciation == 'watch'">Moyenne</span>
+                                </td>
+                                <td>
+                                    <small><strong t-field="rec.name"/></small><br/>
+                                    <small class="text-muted">
+                                        <span t-esc="fmt(rec['value%d' % min(np,5)], rec.unit)"/>
+                                        <span t-if="rec.norm_label"> — norme
+                                            <span t-field="rec.norm_label"/></span>
+                                    </small>
+                                </td>
+                                <td><small t-field="rec.recommendation"/></td>
+                            </tr>
+                            <tr t-if="not syn['recommendations']">
+                                <td colspan="3" class="text-center text-muted">
+                                    Aucune recommandation particulière : les indicateurs
+                                    se situent dans les normes.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    </t>
+
+                    <div t-if="an.conclusion" class="mt-3">
+                        <h4 style="font-size:12px;">Conclusion du consultant</h4>
+                        <div t-field="an.conclusion"/>
+                    </div>
+
+                    <!-- ================= 7. GLOSSAIRE ================= -->
+                    <t t-if="opt_gloss">
+                    <div style="page-break-after: always;"/>
+                    <h2 style="color:#1F3A5F; font-size:16px;">
+                        7. Glossaire des ratios utilisés
+                    </h2>
+                    <p class="text-muted"><small>
+                        Définition et mode de calcul de chaque indicateur figurant
+                        dans le présent rapport, classés par famille.
+                    </small></p>
+
+                    <t t-foreach="ratio_families(doc)" t-as="fam">
+                        <h4 style="color:#1F3A5F; font-size:11px;" class="mt-3">
+                            <span t-esc="fam['label']"/>
+                        </h4>
+                        <table class="table table-sm table-bordered" style="font-size:8px;">
+                            <thead style="background-color:#e9ecef;">
+                                <tr>
+                                    <th style="width:19%;">Ratio</th>
+                                    <th style="width:22%;">Formule</th>
+                                    <th>Ce qu'il mesure</th>
+                                    <th class="text-center" style="width:11%;">Norme retenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="fam['lines'].filtered(lambda l: not l.hide_in_report)"
+                                    t-as="g">
+                                    <td><strong t-field="g.name"/></td>
+                                    <td><small class="text-muted"
+                                               t-field="g.formula_text"/></td>
+                                    <td>
+                                        <small t-field="g.interpretation"/>
+                                        <div t-if="g.threshold_rationale"
+                                             class="text-muted mt-1">
+                                            <small><i t-field="g.threshold_rationale"/></small>
+                                        </div>
+                                        <div t-if="g.limits" class="mt-1"
+                                             style="background-color:#FFFCF5;">
+                                            <small><strong>Limites : </strong>
+                                                <i t-field="g.limits"/></small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <small t-field="g.norm_label"/>
+                                        <div t-if="g.threshold_summary" class="text-muted">
+                                            <small t-field="g.threshold_summary"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+
+                    </t>
+
+                    <div class="mt-4 text-muted">
+                        <small>
+                            <strong>Avertissement.</strong> La présente analyse a été établie
+                            à partir des états financiers communiqués par le client et n'a fait
+                            l'objet d'aucune vérification de nature à engager la responsabilité
+                            du cabinet quant à leur exactitude.
+                            Les normes de ratios sont des références professionnelles
+                            indicatives ajustées au secteur, et non des statistiques officielles
+                            du marché malgache : elles doivent être pondérées par la
+                            connaissance du dossier, la taille de l'entreprise et son
+                            positionnement concurrentiel.
+                        </small>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fa_rubric_tree" model="ir.ui.view">
+        <field name="name">fa.rubric.tree</field>
+        <field name="model">fa.rubric</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" decoration-bf="line_type in ('subtotal','total')"
+                  decoration-muted="is_detail" decoration-info="line_type == 'title'">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="statement_type"/>
+                <field name="section"/>
+                <field name="line_type"/>
+                <field name="is_detail" string="Détail"/>
+                <field name="has_gross" string="Brut/Amort."/>
+                <field name="sign"/>
+                <field name="formula" optional="show"/>
+                <field name="pcg_accounts" string="Comptes PCG" optional="show"/>
+                <field name="active" widget="boolean_toggle" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_rubric_form" model="ir.ui.view">
+        <field name="name">fa.rubric.form</field>
+        <field name="model">fa.rubric</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivé" bg_color="bg-danger"
+                            attrs="{'invisible': [('active','=',True)]}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="statement_type"/>
+                            <field name="section"/>
+                            <field name="line_type"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="sign"/>
+                            <field name="is_detail"/>
+                            <field name="has_gross"/>
+                            <field name="pcg_accounts"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Formule (sous-totaux et totaux)">
+                        <field name="formula" nolabel="1"
+                               placeholder="Ex. ST_ANC + ST_AC"/>
+                    </group>
+                    <group string="Aide à la saisie">
+                        <field name="note" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fa_rubric_search" model="ir.ui.view">
+        <field name="name">fa.rubric.search</field>
+        <field name="model">fa.rubric</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <filter name="asset" string="Bilan Actif" domain="[('statement_type','=','bs_asset')]"/>
+                <filter name="liab" string="Bilan Passif" domain="[('statement_type','=','bs_liability')]"/>
+                <filter name="pl" string="Compte de résultat" domain="[('statement_type','=','pl')]"/>
+                <filter name="extra" string="Infos complémentaires" domain="[('statement_type','=','extra')]"/>
+                <separator/>
+                <filter name="input" string="Saisissables" domain="[('line_type','=','input')]"/>
+                <filter name="archived" string="Archivées" domain="[('active','=',False)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="g_type" string="État" context="{'group_by': 'statement_type'}"/>
+                    <filter name="g_section" string="Section" context="{'group_by': 'section'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_rubric" model="ir.actions.act_window">
+        <field name="name">Rubriques PCG 2005</field>
+        <field name="res_model">fa.rubric</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_g_type': 1}</field>
+    </record>
+</odoo>

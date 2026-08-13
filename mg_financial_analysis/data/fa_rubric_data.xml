@@ -1,0 +1,1159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Référentiel des rubriques des états financiers PCG 2005 Malagasy -->
+
+        <record id="rubric_tit_anc" model="fa.rubric">
+            <field name="code">TIT_ANC</field>
+            <field name="name">ACTIFS NON COURANTS</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">title</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="rubric_ac_ecart_acq" model="fa.rubric">
+            <field name="code">AC_ECART_ACQ</field>
+            <field name="name">Écarts d'acquisition (goodwill)</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">20</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">207</field>
+        </record>
+
+        <record id="rubric_ac_immo_inc" model="fa.rubric">
+            <field name="code">AC_IMMO_INC</field>
+            <field name="name">Immobilisations incorporelles</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">30</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">20 (hors 207)</field>
+            <field name="note">Logiciels, brevets, licences, frais de développement immobilisés.</field>
+        </record>
+
+        <record id="rubric_ac_immo_corp" model="fa.rubric">
+            <field name="code">AC_IMMO_CORP</field>
+            <field name="name">Immobilisations corporelles</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">40</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">21</field>
+            <field name="note">Total des immobilisations corporelles. Les lignes « dont » ci-dessous sont informatives.</field>
+        </record>
+
+        <record id="rubric_ac_immo_corp_ter" model="fa.rubric">
+            <field name="code">AC_IMMO_CORP_TER</field>
+            <field name="name">dont Terrains</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">50</field>
+            <field name="is_detail" eval="True"/>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">211</field>
+        </record>
+
+        <record id="rubric_ac_immo_corp_bat" model="fa.rubric">
+            <field name="code">AC_IMMO_CORP_BAT</field>
+            <field name="name">dont Bâtiments et agencements</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">60</field>
+            <field name="is_detail" eval="True"/>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">213</field>
+        </record>
+
+        <record id="rubric_ac_immo_corp_aut" model="fa.rubric">
+            <field name="code">AC_IMMO_CORP_AUT</field>
+            <field name="name">dont Matériels, mobiliers et autres</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">70</field>
+            <field name="is_detail" eval="True"/>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">215,218</field>
+        </record>
+
+        <record id="rubric_ac_immo_enc" model="fa.rubric">
+            <field name="code">AC_IMMO_ENC</field>
+            <field name="name">Immobilisations en cours</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">80</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">23</field>
+        </record>
+
+        <record id="rubric_ac_immo_fin" model="fa.rubric">
+            <field name="code">AC_IMMO_FIN</field>
+            <field name="name">Immobilisations financières</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">90</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">26,27</field>
+        </record>
+
+        <record id="rubric_ac_titres_part" model="fa.rubric">
+            <field name="code">AC_TITRES_PART</field>
+            <field name="name">dont Titres de participation / mis en équivalence</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">100</field>
+            <field name="is_detail" eval="True"/>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">261,265</field>
+        </record>
+
+        <record id="rubric_ac_aut_titres" model="fa.rubric">
+            <field name="code">AC_AUT_TITRES</field>
+            <field name="name">dont Autres titres immobilisés</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">110</field>
+            <field name="is_detail" eval="True"/>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">271,272</field>
+        </record>
+
+        <record id="rubric_ac_prets" model="fa.rubric">
+            <field name="code">AC_PRETS</field>
+            <field name="name">dont Prêts et autres actifs financiers non courants</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">120</field>
+            <field name="is_detail" eval="True"/>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">274,275</field>
+        </record>
+
+        <record id="rubric_ac_imp_diff" model="fa.rubric">
+            <field name="code">AC_IMP_DIFF</field>
+            <field name="name">Impôts différés actif</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">130</field>
+            <field name="pcg_accounts">133</field>
+        </record>
+
+        <record id="rubric_st_anc" model="fa.rubric">
+            <field name="code">ST_ANC</field>
+            <field name="name">TOTAL ACTIFS NON COURANTS</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">anc</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">140</field>
+            <field name="formula">AC_ECART_ACQ + AC_IMMO_INC + AC_IMMO_CORP + AC_IMMO_ENC + AC_IMMO_FIN + AC_IMP_DIFF</field>
+        </record>
+
+        <record id="rubric_tit_ac" model="fa.rubric">
+            <field name="code">TIT_AC</field>
+            <field name="name">ACTIFS COURANTS</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">title</field>
+            <field name="sequence">150</field>
+        </record>
+
+        <record id="rubric_ac_stock" model="fa.rubric">
+            <field name="code">AC_STOCK</field>
+            <field name="name">Stocks et en-cours</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">input</field>
+            <field name="sequence">160</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">3</field>
+            <field name="note">Marchandises, matières premières, en-cours, produits finis, nets de dépréciation.</field>
+        </record>
+
+        <record id="rubric_ac_client" model="fa.rubric">
+            <field name="code">AC_CLIENT</field>
+            <field name="name">Clients et comptes rattachés</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">input</field>
+            <field name="sequence">170</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">41</field>
+        </record>
+
+        <record id="rubric_ac_aut_creance" model="fa.rubric">
+            <field name="code">AC_AUT_CREANCE</field>
+            <field name="name">Autres créances et actifs assimilés</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">input</field>
+            <field name="sequence">180</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">40,42,43,44,45,46,486</field>
+        </record>
+
+        <record id="rubric_ac_cca" model="fa.rubric">
+            <field name="code">AC_CCA</field>
+            <field name="name">dont Charges constatées d'avance</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">input</field>
+            <field name="sequence">190</field>
+            <field name="is_detail" eval="True"/>
+            <field name="pcg_accounts">486</field>
+        </record>
+
+        <record id="rubric_ac_tva" model="fa.rubric">
+            <field name="code">AC_TVA</field>
+            <field name="name">dont État, TVA et créances fiscales</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">input</field>
+            <field name="sequence">200</field>
+            <field name="is_detail" eval="True"/>
+            <field name="pcg_accounts">4456,4457</field>
+        </record>
+
+        <record id="rubric_ac_placement" model="fa.rubric">
+            <field name="code">AC_PLACEMENT</field>
+            <field name="name">Placements et autres actifs financiers courants</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">input</field>
+            <field name="sequence">210</field>
+            <field name="has_gross" eval="True"/>
+            <field name="pcg_accounts">50</field>
+        </record>
+
+        <record id="rubric_ac_treso" model="fa.rubric">
+            <field name="code">AC_TRESO</field>
+            <field name="name">Trésorerie et équivalents de trésorerie</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">input</field>
+            <field name="sequence">220</field>
+            <field name="pcg_accounts">51,53,54</field>
+            <field name="note">Banques créditrices exclues : elles figurent en trésorerie passif.</field>
+        </record>
+
+        <record id="rubric_st_ac" model="fa.rubric">
+            <field name="code">ST_AC</field>
+            <field name="name">TOTAL ACTIFS COURANTS</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">230</field>
+            <field name="formula">AC_STOCK + AC_CLIENT + AC_AUT_CREANCE + AC_PLACEMENT + AC_TRESO</field>
+        </record>
+
+        <record id="rubric_t_actif" model="fa.rubric">
+            <field name="code">T_ACTIF</field>
+            <field name="name">TOTAL GÉNÉRAL ACTIF</field>
+            <field name="statement_type">bs_asset</field>
+            <field name="section">ac</field>
+            <field name="line_type">total</field>
+            <field name="sequence">240</field>
+            <field name="formula">ST_ANC + ST_AC</field>
+        </record>
+
+        <record id="rubric_tit_cp" model="fa.rubric">
+            <field name="code">TIT_CP</field>
+            <field name="name">CAPITAUX PROPRES</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">title</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="rubric_pa_capital" model="fa.rubric">
+            <field name="code">PA_CAPITAL</field>
+            <field name="name">Capital émis (ou compte de l'exploitant)</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">20</field>
+            <field name="pcg_accounts">101,108</field>
+        </record>
+
+        <record id="rubric_pa_primes" model="fa.rubric">
+            <field name="code">PA_PRIMES</field>
+            <field name="name">Primes et réserves - Réserves consolidées</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">30</field>
+            <field name="pcg_accounts">104,106</field>
+        </record>
+
+        <record id="rubric_pa_ecart_eval" model="fa.rubric">
+            <field name="code">PA_ECART_EVAL</field>
+            <field name="name">Écarts de réévaluation</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">40</field>
+            <field name="pcg_accounts">105</field>
+        </record>
+
+        <record id="rubric_pa_ecart_equiv" model="fa.rubric">
+            <field name="code">PA_ECART_EQUIV</field>
+            <field name="name">Écarts d'équivalence</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">50</field>
+            <field name="pcg_accounts">107</field>
+        </record>
+
+        <record id="rubric_pa_autres_cp" model="fa.rubric">
+            <field name="code">PA_AUTRES_CP</field>
+            <field name="name">Autres capitaux propres - Report à nouveau</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">60</field>
+            <field name="pcg_accounts">11</field>
+            <field name="note">Report à nouveau : saisir en négatif si débiteur (pertes antérieures).</field>
+        </record>
+
+        <record id="rubric_pa_resultat" model="fa.rubric">
+            <field name="code">PA_RESULTAT</field>
+            <field name="name">Résultat net de l'exercice</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">70</field>
+            <field name="pcg_accounts">12</field>
+            <field name="note">Doit être strictement égal au résultat net du compte de résultat. Négatif si perte.</field>
+        </record>
+
+        <record id="rubric_pa_minoritaires" model="fa.rubric">
+            <field name="code">PA_MINORITAIRES</field>
+            <field name="name">Part des minoritaires (comptes consolidés)</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">80</field>
+        </record>
+
+        <record id="rubric_st_cp" model="fa.rubric">
+            <field name="code">ST_CP</field>
+            <field name="name">TOTAL CAPITAUX PROPRES</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">cp</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">90</field>
+            <field name="formula">PA_CAPITAL + PA_PRIMES + PA_ECART_EVAL + PA_ECART_EQUIV + PA_AUTRES_CP + PA_RESULTAT + PA_MINORITAIRES</field>
+        </record>
+
+        <record id="rubric_tit_pnc" model="fa.rubric">
+            <field name="code">TIT_PNC</field>
+            <field name="name">PASSIFS NON COURANTS</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pnc</field>
+            <field name="line_type">title</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <record id="rubric_pa_emprunt_nc" model="fa.rubric">
+            <field name="code">PA_EMPRUNT_NC</field>
+            <field name="name">Emprunts et dettes financières</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pnc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">110</field>
+            <field name="pcg_accounts">16</field>
+            <field name="note">Part à plus d'un an. La part à moins d'un an se saisit dans l'onglet Informations complémentaires.</field>
+        </record>
+
+        <record id="rubric_pa_imp_diff" model="fa.rubric">
+            <field name="code">PA_IMP_DIFF</field>
+            <field name="name">Impôts différés passif</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pnc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">120</field>
+            <field name="pcg_accounts">134</field>
+        </record>
+
+        <record id="rubric_pa_aut_dette_nc" model="fa.rubric">
+            <field name="code">PA_AUT_DETTE_NC</field>
+            <field name="name">Autres dettes non courantes</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pnc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">130</field>
+            <field name="pcg_accounts">17,229</field>
+        </record>
+
+        <record id="rubric_pa_prov_nc" model="fa.rubric">
+            <field name="code">PA_PROV_NC</field>
+            <field name="name">Provisions et produits constatés d'avance</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pnc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">140</field>
+            <field name="pcg_accounts">15,131</field>
+        </record>
+
+        <record id="rubric_pa_subv" model="fa.rubric">
+            <field name="code">PA_SUBV</field>
+            <field name="name">dont Subventions d'investissement (partie non amortie)</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pnc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">150</field>
+            <field name="is_detail" eval="True"/>
+            <field name="pcg_accounts">131</field>
+        </record>
+
+        <record id="rubric_st_pnc" model="fa.rubric">
+            <field name="code">ST_PNC</field>
+            <field name="name">TOTAL PASSIFS NON COURANTS</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pnc</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">160</field>
+            <field name="formula">PA_EMPRUNT_NC + PA_IMP_DIFF + PA_AUT_DETTE_NC + PA_PROV_NC</field>
+        </record>
+
+        <record id="rubric_tit_pc" model="fa.rubric">
+            <field name="code">TIT_PC</field>
+            <field name="name">PASSIFS COURANTS</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pc</field>
+            <field name="line_type">title</field>
+            <field name="sequence">170</field>
+        </record>
+
+        <record id="rubric_pa_fourn" model="fa.rubric">
+            <field name="code">PA_FOURN</field>
+            <field name="name">Fournisseurs et comptes rattachés</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">180</field>
+            <field name="pcg_accounts">40</field>
+        </record>
+
+        <record id="rubric_pa_impots" model="fa.rubric">
+            <field name="code">PA_IMPOTS</field>
+            <field name="name">Impôts (IR, TVA, autres taxes)</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">190</field>
+            <field name="pcg_accounts">44</field>
+        </record>
+
+        <record id="rubric_pa_aut_dette_c" model="fa.rubric">
+            <field name="code">PA_AUT_DETTE_C</field>
+            <field name="name">Autres dettes courantes</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">200</field>
+            <field name="pcg_accounts">42,43,45,46,487</field>
+            <field name="note">Personnel, organismes sociaux, produits constatés d'avance, comptes courants d'associés.</field>
+        </record>
+
+        <record id="rubric_pa_treso_passif" model="fa.rubric">
+            <field name="code">PA_TRESO_PASSIF</field>
+            <field name="name">Trésorerie passif (découverts, concours bancaires)</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pc</field>
+            <field name="line_type">input</field>
+            <field name="sequence">210</field>
+            <field name="pcg_accounts">519,512cr</field>
+        </record>
+
+        <record id="rubric_st_pc" model="fa.rubric">
+            <field name="code">ST_PC</field>
+            <field name="name">TOTAL PASSIFS COURANTS</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pc</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">220</field>
+            <field name="formula">PA_FOURN + PA_IMPOTS + PA_AUT_DETTE_C + PA_TRESO_PASSIF</field>
+        </record>
+
+        <record id="rubric_t_passif" model="fa.rubric">
+            <field name="code">T_PASSIF</field>
+            <field name="name">TOTAL GÉNÉRAL PASSIF</field>
+            <field name="statement_type">bs_liability</field>
+            <field name="section">pc</field>
+            <field name="line_type">total</field>
+            <field name="sequence">230</field>
+            <field name="formula">ST_CP + ST_PNC + ST_PC</field>
+        </record>
+
+        <record id="rubric_tit_pl_act" model="fa.rubric">
+            <field name="code">TIT_PL_ACT</field>
+            <field name="name">ACTIVITÉ</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">title</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="rubric_pl_vente_mse" model="fa.rubric">
+            <field name="code">PL_VENTE_MSE</field>
+            <field name="name">Ventes de marchandises</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">20</field>
+            <field name="pcg_accounts">700</field>
+            <field name="note">Activité de négoce (achat-revente en l'état). Laisser à zéro si l'entreprise ne revend pas.</field>
+        </record>
+
+        <record id="rubric_pl_achat_mse" model="fa.rubric">
+            <field name="code">PL_ACHAT_MSE</field>
+            <field name="name">Achats de marchandises vendues</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">30</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">600</field>
+        </record>
+
+        <record id="rubric_pl_var_stock_mse" model="fa.rubric">
+            <field name="code">PL_VAR_STOCK_MSE</field>
+            <field name="name">Variation des stocks de marchandises</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">40</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">603</field>
+            <field name="note">Signe : positif si le stock diminue (déstockage), négatif s'il augmente.</field>
+        </record>
+
+        <record id="rubric_mc" model="fa.rubric">
+            <field name="code">MC</field>
+            <field name="name">MARGE COMMERCIALE</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">50</field>
+            <field name="formula">PL_VENTE_MSE - PL_ACHAT_MSE - PL_VAR_STOCK_MSE</field>
+        </record>
+
+        <record id="rubric_pl_ca_prod" model="fa.rubric">
+            <field name="code">PL_CA_PROD</field>
+            <field name="name">Production vendue de biens et services</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">60</field>
+            <field name="pcg_accounts">701 à 706</field>
+        </record>
+
+        <record id="rubric_pl_prod_stock" model="fa.rubric">
+            <field name="code">PL_PROD_STOCK</field>
+            <field name="name">Variation stocks produits finis et en-cours</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">70</field>
+            <field name="pcg_accounts">72</field>
+        </record>
+
+        <record id="rubric_pl_prod_immo" model="fa.rubric">
+            <field name="code">PL_PROD_IMMO</field>
+            <field name="name">Production immobilisée</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">80</field>
+            <field name="pcg_accounts">73</field>
+        </record>
+
+        <record id="rubric_prod" model="fa.rubric">
+            <field name="code">PROD</field>
+            <field name="name">I. PRODUCTION DE L'EXERCICE</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">90</field>
+            <field name="formula">PL_CA_PROD + PL_PROD_STOCK + PL_PROD_IMMO</field>
+        </record>
+
+        <record id="rubric_pl_achats" model="fa.rubric">
+            <field name="code">PL_ACHATS</field>
+            <field name="name">Achats consommés (matières et fournitures)</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">100</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">601,602,604 à 609</field>
+        </record>
+
+        <record id="rubric_pl_serv_ext" model="fa.rubric">
+            <field name="code">PL_SERV_EXT</field>
+            <field name="name">Services extérieurs et autres consommations</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">110</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">61,62</field>
+        </record>
+
+        <record id="rubric_conso" model="fa.rubric">
+            <field name="code">CONSO</field>
+            <field name="name">II. CONSOMMATION DE L'EXERCICE</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">120</field>
+            <field name="formula">PL_ACHATS + PL_SERV_EXT</field>
+        </record>
+
+        <record id="rubric_va" model="fa.rubric">
+            <field name="code">VA</field>
+            <field name="name">III. VALEUR AJOUTÉE D'EXPLOITATION</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">130</field>
+            <field name="formula">MC + PROD - CONSO</field>
+        </record>
+
+        <record id="rubric_pl_subv_expl" model="fa.rubric">
+            <field name="code">PL_SUBV_EXPL</field>
+            <field name="name">Subventions d'exploitation</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">140</field>
+            <field name="pcg_accounts">74</field>
+        </record>
+
+        <record id="rubric_pl_personnel" model="fa.rubric">
+            <field name="code">PL_PERSONNEL</field>
+            <field name="name">Charges de personnel</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">150</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">63,64</field>
+        </record>
+
+        <record id="rubric_pl_impots_taxes" model="fa.rubric">
+            <field name="code">PL_IMPOTS_TAXES</field>
+            <field name="name">Impôts, taxes et versements assimilés</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">input</field>
+            <field name="sequence">160</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">65</field>
+        </record>
+
+        <record id="rubric_ebe" model="fa.rubric">
+            <field name="code">EBE</field>
+            <field name="name">IV. EXCÉDENT BRUT D'EXPLOITATION</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_expl</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">170</field>
+            <field name="formula">VA + PL_SUBV_EXPL - PL_PERSONNEL - PL_IMPOTS_TAXES</field>
+        </record>
+
+        <record id="rubric_tit_pl_op" model="fa.rubric">
+            <field name="code">TIT_PL_OP</field>
+            <field name="name">RÉSULTAT OPÉRATIONNEL</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_op</field>
+            <field name="line_type">title</field>
+            <field name="sequence">180</field>
+        </record>
+
+        <record id="rubric_pl_aut_prod_op" model="fa.rubric">
+            <field name="code">PL_AUT_PROD_OP</field>
+            <field name="name">Autres produits opérationnels</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_op</field>
+            <field name="line_type">input</field>
+            <field name="sequence">190</field>
+            <field name="pcg_accounts">75,78</field>
+        </record>
+
+        <record id="rubric_pl_aut_ch_op" model="fa.rubric">
+            <field name="code">PL_AUT_CH_OP</field>
+            <field name="name">Autres charges opérationnelles</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_op</field>
+            <field name="line_type">input</field>
+            <field name="sequence">200</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">66</field>
+        </record>
+
+        <record id="rubric_pl_dotations" model="fa.rubric">
+            <field name="code">PL_DOTATIONS</field>
+            <field name="name">Dotations aux amortissements, provisions et pertes de valeur</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_op</field>
+            <field name="line_type">input</field>
+            <field name="sequence">210</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">68</field>
+        </record>
+
+        <record id="rubric_pl_reprises" model="fa.rubric">
+            <field name="code">PL_REPRISES</field>
+            <field name="name">Reprises sur provisions et pertes de valeur</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_op</field>
+            <field name="line_type">input</field>
+            <field name="sequence">220</field>
+            <field name="pcg_accounts">78</field>
+        </record>
+
+        <record id="rubric_rex" model="fa.rubric">
+            <field name="code">REX</field>
+            <field name="name">V. RÉSULTAT OPÉRATIONNEL</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_op</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">230</field>
+            <field name="formula">EBE + PL_AUT_PROD_OP - PL_AUT_CH_OP - PL_DOTATIONS + PL_REPRISES</field>
+        </record>
+
+        <record id="rubric_tit_pl_fin" model="fa.rubric">
+            <field name="code">TIT_PL_FIN</field>
+            <field name="name">RÉSULTAT FINANCIER</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_fin</field>
+            <field name="line_type">title</field>
+            <field name="sequence">240</field>
+        </record>
+
+        <record id="rubric_pl_prod_fin" model="fa.rubric">
+            <field name="code">PL_PROD_FIN</field>
+            <field name="name">Produits financiers</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_fin</field>
+            <field name="line_type">input</field>
+            <field name="sequence">250</field>
+            <field name="pcg_accounts">76</field>
+        </record>
+
+        <record id="rubric_pl_ch_fin" model="fa.rubric">
+            <field name="code">PL_CH_FIN</field>
+            <field name="name">Charges financières</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_fin</field>
+            <field name="line_type">input</field>
+            <field name="sequence">260</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">66</field>
+        </record>
+
+        <record id="rubric_rf" model="fa.rubric">
+            <field name="code">RF</field>
+            <field name="name">VI. RÉSULTAT FINANCIER</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_fin</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">270</field>
+            <field name="formula">PL_PROD_FIN - PL_CH_FIN</field>
+        </record>
+
+        <record id="rubric_rai" model="fa.rubric">
+            <field name="code">RAI</field>
+            <field name="name">VII. RÉSULTAT AVANT IMPÔTS</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_fin</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">280</field>
+            <field name="formula">REX + RF</field>
+        </record>
+
+        <record id="rubric_tit_pl_imp" model="fa.rubric">
+            <field name="code">TIT_PL_IMP</field>
+            <field name="name">IMPÔTS ET RÉSULTAT NET</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_imp</field>
+            <field name="line_type">title</field>
+            <field name="sequence">290</field>
+        </record>
+
+        <record id="rubric_pl_imp_exig" model="fa.rubric">
+            <field name="code">PL_IMP_EXIG</field>
+            <field name="name">Impôts exigibles sur résultats</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_imp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">300</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">695</field>
+        </record>
+
+        <record id="rubric_pl_imp_diff_cr" model="fa.rubric">
+            <field name="code">PL_IMP_DIFF_CR</field>
+            <field name="name">Impôts différés (variations)</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_imp</field>
+            <field name="line_type">input</field>
+            <field name="sequence">310</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">692,693</field>
+        </record>
+
+        <record id="rubric_rnao" model="fa.rubric">
+            <field name="code">RNAO</field>
+            <field name="name">VIII. RÉSULTAT NET DES ACTIVITÉS ORDINAIRES</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_imp</field>
+            <field name="line_type">subtotal</field>
+            <field name="sequence">320</field>
+            <field name="formula">RAI - PL_IMP_EXIG - PL_IMP_DIFF_CR</field>
+        </record>
+
+        <record id="rubric_pl_extra_prod" model="fa.rubric">
+            <field name="code">PL_EXTRA_PROD</field>
+            <field name="name">Éléments extraordinaires - produits</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_extra</field>
+            <field name="line_type">input</field>
+            <field name="sequence">330</field>
+            <field name="pcg_accounts">77</field>
+        </record>
+
+        <record id="rubric_pl_extra_ch" model="fa.rubric">
+            <field name="code">PL_EXTRA_CH</field>
+            <field name="name">Éléments extraordinaires - charges</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_extra</field>
+            <field name="line_type">input</field>
+            <field name="sequence">340</field>
+            <field name="sign">-1</field>
+            <field name="pcg_accounts">67</field>
+        </record>
+
+        <record id="rubric_rn" model="fa.rubric">
+            <field name="code">RN</field>
+            <field name="name">IX. RÉSULTAT NET DE L'EXERCICE</field>
+            <field name="statement_type">pl</field>
+            <field name="section">pl_extra</field>
+            <field name="line_type">total</field>
+            <field name="sequence">350</field>
+            <field name="formula">RNAO + PL_EXTRA_PROD - PL_EXTRA_CH</field>
+        </record>
+
+        <record id="rubric_in_effectif" model="fa.rubric">
+            <field name="code">IN_EFFECTIF</field>
+            <field name="name">Effectif moyen de la période</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">10</field>
+            <field name="note">Nombre de salariés. Sert aux ratios de productivité.</field>
+        </record>
+
+        <record id="rubric_in_ca_ttc" model="fa.rubric">
+            <field name="code">IN_CA_TTC</field>
+            <field name="name">Chiffre d'affaires TTC</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">20</field>
+            <field name="note">Pour le calcul du délai clients. Si vide, estimé à CA HT x 1,20.</field>
+        </record>
+
+        <record id="rubric_in_achats_ttc" model="fa.rubric">
+            <field name="code">IN_ACHATS_TTC</field>
+            <field name="name">Achats et services extérieurs TTC</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">30</field>
+            <field name="note">Pour le calcul du délai fournisseurs. Si vide, estimé à partir du HT x 1,20.</field>
+        </record>
+
+        <record id="rubric_in_eene" model="fa.rubric">
+            <field name="code">IN_EENE</field>
+            <field name="name">Effets escomptés non échus</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">40</field>
+            <field name="note">Retraitement : réintégrés en créances clients et en concours bancaires.</field>
+        </record>
+
+        <record id="rubric_in_cb_vnc" model="fa.rubric">
+            <field name="code">IN_CB_VNC</field>
+            <field name="name">Crédit-bail : valeur nette des biens</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">50</field>
+            <field name="note">Retraitement : réintégré à l'actif immobilisé.</field>
+        </record>
+
+        <record id="rubric_in_cb_dette_lt" model="fa.rubric">
+            <field name="code">IN_CB_DETTE_LT</field>
+            <field name="name">Crédit-bail : dette résiduelle à plus d'un an</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <record id="rubric_in_cb_dette_ct" model="fa.rubric">
+            <field name="code">IN_CB_DETTE_CT</field>
+            <field name="name">Crédit-bail : dette résiduelle à moins d'un an</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">70</field>
+        </record>
+
+        <record id="rubric_in_actif_fictif" model="fa.rubric">
+            <field name="code">IN_ACTIF_FICTIF</field>
+            <field name="name">Actifs fictifs (frais d'établissement, charges à répartir)</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">80</field>
+            <field name="note">Retraitement : éliminés de l'actif et des capitaux propres.</field>
+        </record>
+
+        <record id="rubric_in_emprunt_moins_1an" model="fa.rubric">
+            <field name="code">IN_EMPRUNT_MOINS_1AN</field>
+            <field name="name">Part à moins d'un an des emprunts à long terme</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">90</field>
+            <field name="note">Retraitement : reclassée du passif non courant vers le passif courant.</field>
+        </record>
+
+        <record id="rubric_in_dividendes" model="fa.rubric">
+            <field name="code">IN_DIVIDENDES</field>
+            <field name="name">Dividendes à distribuer / distribués</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">100</field>
+            <field name="note">Retraitement : sortis des capitaux propres vers les dettes courantes.</field>
+        </record>
+
+        <record id="rubric_in_immo_brut" model="fa.rubric">
+            <field name="code">IN_IMMO_BRUT</field>
+            <field name="name">Immobilisations corporelles brutes</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">110</field>
+            <field name="note">Pour le ratio de vétusté de l'outil de production.</field>
+        </record>
+
+        <record id="rubric_in_amort_cumul" model="fa.rubric">
+            <field name="code">IN_AMORT_CUMUL</field>
+            <field name="name">Amortissements cumulés sur immobilisations corporelles</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">120</field>
+        </record>
+
+        <record id="rubric_in_vnc_cedee" model="fa.rubric">
+            <field name="code">IN_VNC_CEDEE</field>
+            <field name="name">Valeur nette comptable des actifs cédés</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">130</field>
+            <field name="note">Pour le calcul de la CAF.</field>
+        </record>
+
+        <record id="rubric_in_prod_cession" model="fa.rubric">
+            <field name="code">IN_PROD_CESSION</field>
+            <field name="name">Produits de cession d'actifs immobilisés</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">140</field>
+            <field name="note">Pour le calcul de la CAF.</field>
+        </record>
+
+        <record id="rubric_in_qp_subv" model="fa.rubric">
+            <field name="code">IN_QP_SUBV</field>
+            <field name="name">Quote-part de subvention virée au résultat</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">150</field>
+            <field name="note">Pour le calcul de la CAF.</field>
+        </record>
+
+        <record id="rubric_in_investissements" model="fa.rubric">
+            <field name="code">IN_INVESTISSEMENTS</field>
+            <field name="name">Investissements de la période</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">160</field>
+            <field name="note">Acquisitions d'immobilisations. Pour le taux d'autofinancement.</field>
+        </record>
+
+        <record id="rubric_in_charges_variables" model="fa.rubric">
+            <field name="code">IN_CHARGES_VARIABLES</field>
+            <field name="name">Charges variables</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">170</field>
+            <field name="note">Facultatif. Si ces données sont renseignees avec les charges fixes, le seuil de rentabilite est calcule par la methode des couts variables, plus precise. Sinon le module utilise le taux d'excedent brut d'exploitation.</field>
+        </record>
+
+        <record id="rubric_in_charges_fixes" model="fa.rubric">
+            <field name="code">IN_CHARGES_FIXES</field>
+            <field name="name">Charges fixes</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">180</field>
+            <field name="note">Facultatif. A renseigner avec les charges variables pour activer la methode des couts variables.</field>
+        </record>
+
+        <record id="rubric_in_stock_moyen" model="fa.rubric">
+            <field name="code">IN_STOCK_MOYEN</field>
+            <field name="name">Stock moyen de la période</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">190</field>
+            <field name="note">(Stock initial + stock final) / 2. Si vide, le stock final est utilisé.</field>
+        </record>
+
+        <record id="rubric_in_stock_outil" model="fa.rubric">
+            <field name="code">IN_STOCK_OUTIL</field>
+            <field name="name">Stock outil (stock minimum permanent)</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">200</field>
+            <field name="note">Retraitement : reclassé en actif immobilisé.</field>
+        </record>
+
+        <record id="rubric_in_treso_ouverture" model="fa.rubric">
+            <field name="code">IN_TRESO_OUVERTURE</field>
+            <field name="name">Trésorerie d'ouverture de la période</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">210</field>
+            <field name="note">Trésorerie et équivalents au premier jour. Renseigner uniquement s'il n'existe pas de période précédente dans le dossier : sinon, reprise automatique du bilan N-1.</field>
+        </record>
+
+        <record id="rubric_in_emprunts_nouveaux" model="fa.rubric">
+            <field name="code">IN_EMPRUNTS_NOUVEAUX</field>
+            <field name="name">Nouveaux emprunts encaissés</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">220</field>
+            <field name="note">Montant des emprunts contractés sur la période. Flux de financement.</field>
+        </record>
+
+        <record id="rubric_in_remb_emprunts" model="fa.rubric">
+            <field name="code">IN_REMB_EMPRUNTS</field>
+            <field name="name">Remboursements d'emprunts (capital)</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">230</field>
+            <field name="note">Capital remboursé, hors intérêts. Saisir en positif. Flux de financement.</field>
+        </record>
+
+        <record id="rubric_in_augm_capital" model="fa.rubric">
+            <field name="code">IN_AUGM_CAPITAL</field>
+            <field name="name">Augmentation de capital en numéraire</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">240</field>
+            <field name="note">Apports nouveaux encaissés. Flux de financement.</field>
+        </record>
+
+        <record id="rubric_in_subv_recues" model="fa.rubric">
+            <field name="code">IN_SUBV_RECUES</field>
+            <field name="name">Subventions d'investissement encaissées</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">250</field>
+            <field name="note">Montant reçu sur la période. Flux de financement.</field>
+        </record>
+
+        <record id="rubric_in_acq_immo_fin" model="fa.rubric">
+            <field name="code">IN_ACQ_IMMO_FIN</field>
+            <field name="name">Acquisitions d'immobilisations financières</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">260</field>
+            <field name="note">Titres, prêts accordés. Flux d'investissement.</field>
+        </record>
+
+        <record id="rubric_in_cess_immo_fin" model="fa.rubric">
+            <field name="code">IN_CESS_IMMO_FIN</field>
+            <field name="name">Cessions d'immobilisations financières</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">270</field>
+            <field name="note">Encaissements sur titres et prêts. Flux d'investissement.</field>
+        </record>
+
+        <record id="rubric_in_interets_payes" model="fa.rubric">
+            <field name="code">IN_INTERETS_PAYES</field>
+            <field name="name">Intérêts effectivement payés</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">280</field>
+            <field name="note">Pour la méthode directe. Si vide, les charges financières du compte de résultat sont retenues.</field>
+        </record>
+
+        <record id="rubric_in_impots_payes" model="fa.rubric">
+            <field name="code">IN_IMPOTS_PAYES</field>
+            <field name="name">Impôts sur les résultats effectivement payés</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">290</field>
+            <field name="note">Pour la méthode directe. Si vide, l'impôt exigible du compte de résultat est retenu.</field>
+        </record>
+
+        <record id="rubric_in_dividendes_recus" model="fa.rubric">
+            <field name="code">IN_DIVIDENDES_RECUS</field>
+            <field name="name">Dividendes et intérêts reçus</field>
+            <field name="statement_type">extra</field>
+            <field name="section">info</field>
+            <field name="line_type">input</field>
+            <field name="sequence">300</field>
+            <field name="note">Encaissements financiers. Flux opérationnel selon la convention du PCG 2005.</field>
+        </record>
+    </data>
+</odoo>

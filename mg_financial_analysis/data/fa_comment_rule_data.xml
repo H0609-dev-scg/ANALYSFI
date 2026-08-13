@@ -1,0 +1,1958 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Règles de commentaires et recommandations -->
+
+        <record id="rule_a1_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="sequence">10</field>
+            <field name="name">A1 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Les capitaux propres sont négatifs : la situation nette est détériorée et l'entreprise est techniquement en état de cessation de ses fonds propres. Les créanciers financent l'intégralité de l'actif.</field>
+            <field name="recommendation_tpl">Recapitaliser d'urgence : augmentation de capital, incorporation des comptes courants d'associés, abandon de créances avec clause de retour à meilleure fortune. Examiner l'obligation légale de reconstitution des capitaux propres.</field>
+        </record>
+
+        <record id="rule_a1_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="sequence">20</field>
+            <field name="name">A1 - cas 2</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'autonomie financière ressort à {value}, très en deçà du seuil de {norm}. L'entreprise dépend fortement de ses créanciers et sa marge de négociation bancaire est réduite.</field>
+            <field name="recommendation_tpl">Renforcer les fonds propres : mise en réserve intégrale du résultat, apport en compte courant bloqué, ouverture du capital. Suspendre toute distribution de dividendes tant que le ratio reste sous 25 %.</field>
+        </record>
+
+        <record id="rule_a1_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="sequence">30</field>
+            <field name="name">A1 - cas 3</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, l'autonomie financière reste inférieure à la norme de {norm}. La structure est encore vulnérable à un retournement d'activité.</field>
+            <field name="recommendation_tpl">Poursuivre le renforcement des fonds propres par mise en réserve du résultat et limiter le recours à l'endettement nouveau.</field>
+        </record>
+
+        <record id="rule_a1_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="sequence">40</field>
+            <field name="name">A1 - cas 4</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'autonomie financière de {value} est conforme à la norme de {norm}. La structure financière est saine.</field>
+            <field name="recommendation_tpl">Maintenir cette politique de capitalisation et surveiller le ratio lors des prochains investissements.</field>
+        </record>
+
+        <record id="rule_a1_5" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="sequence">50</field>
+            <field name="name">A1 - cas 5</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'autonomie financière atteint {value}, nettement au-dessus de la norme de {norm}. L'entreprise dispose d'une structure financière solide et d'une réelle capacité d'endettement.</field>
+            <field name="recommendation_tpl">Une capitalisation très élevée peut signaler un effet de levier sous-exploité : étudier si un recours mesuré à la dette permettrait de financer la croissance et d'améliorer la rentabilité des fonds propres.</field>
+        </record>
+
+        <record id="rule_a2_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a2"/>
+            <field name="sequence">10</field>
+            <field name="name">A2 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le ratio d'endettement s'établit à {value}, très au-dessus de la norme de {norm}. Le surendettement financier expose l'entreprise à un risque de défaut en cas de baisse d'activité.</field>
+            <field name="recommendation_tpl">Établir un plan de désendettement : céder les actifs non stratégiques, rééchelonner la dette sur une durée plus longue, convertir une partie des comptes courants d'associés en capital.</field>
+        </record>
+
+        <record id="rule_a2_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a2"/>
+            <field name="sequence">20</field>
+            <field name="name">A2 - cas 2</field>
+            <field name="condition">value &gt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, l'endettement financier dépasse les capitaux propres (norme {norm}). La capacité d'emprunt additionnelle est limitée.</field>
+            <field name="recommendation_tpl">Privilégier l'autofinancement pour les prochains investissements et négocier un allongement de la maturité de la dette existante.</field>
+        </record>
+
+        <record id="rule_a2_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a2"/>
+            <field name="sequence">30</field>
+            <field name="name">A2 - cas 3</field>
+            <field name="condition">value &gt; 0.5</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le ratio d'endettement de {value} respecte la norme de {norm}. L'équilibre entre dette et fonds propres est maîtrisé.</field>
+            <field name="recommendation_tpl">Maintenir ce niveau et surveiller l'évolution du coût de la dette.</field>
+        </record>
+
+        <record id="rule_a2_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a2"/>
+            <field name="sequence">40</field>
+            <field name="name">A2 - cas 4</field>
+            <field name="condition">value &lt;= 0.5</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'endettement financier de {value} est faible au regard des capitaux propres.</field>
+            <field name="recommendation_tpl">L'entreprise dispose d'une capacité d'endettement inutilisée : un financement par dette de projets rentables pourrait accroître la rentabilité des capitaux propres par effet de levier.</field>
+        </record>
+
+        <record id="rule_a3_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a3"/>
+            <field name="sequence">10</field>
+            <field name="name">A3 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le taux d'endettement global atteint {value} (norme {norm}) : l'actif est très majoritairement financé par les tiers.</field>
+            <field name="recommendation_tpl">Réduire le levier global : renforcement des fonds propres et arbitrage sur les actifs peu productifs.</field>
+        </record>
+
+        <record id="rule_a3_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a3"/>
+            <field name="sequence">20</field>
+            <field name="name">A3 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le taux d'endettement global de {value} dépasse la norme de {norm}.</field>
+            <field name="recommendation_tpl">Contenir la progression des dettes et améliorer la génération de trésorerie interne.</field>
+        </record>
+
+        <record id="rule_a3_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a3"/>
+            <field name="sequence">30</field>
+            <field name="name">A3 - cas 3</field>
+            <field name="condition">value &gt; 50</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le taux d'endettement global de {value} reste dans la norme de {norm}.</field>
+            <field name="recommendation_tpl">Maintenir la trajectoire actuelle.</field>
+        </record>
+
+        <record id="rule_a3_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a3"/>
+            <field name="sequence">40</field>
+            <field name="name">A3 - cas 4</field>
+            <field name="condition">value &lt;= 50</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, le recours aux dettes est modéré.</field>
+            <field name="recommendation_tpl">Structure prudente : vérifier que cela ne traduit pas un sous-investissement.</field>
+        </record>
+
+        <record id="rule_a4_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a4"/>
+            <field name="sequence">10</field>
+            <field name="name">A4 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Il faudrait {value} de capacité d'autofinancement intégralement affectée au remboursement pour éteindre la dette nette (norme {norm}). Ce niveau est généralement rédhibitoire pour un nouveau concours bancaire.</field>
+            <field name="recommendation_tpl">Priorité absolue au désendettement : rééchelonnement, moratoire sur le capital, cession d'actifs, et redressement de la CAF par amélioration des marges.</field>
+        </record>
+
+        <record id="rule_a4_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a4"/>
+            <field name="sequence">20</field>
+            <field name="name">A4 - cas 2</field>
+            <field name="condition">value &gt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La capacité de remboursement ressort à {value}, au-delà de la norme prudentielle de {norm}.</field>
+            <field name="recommendation_tpl">Améliorer la CAF (marges, maîtrise des charges) et éviter tout nouvel endettement à court terme.</field>
+        </record>
+
+        <record id="rule_a4_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a4"/>
+            <field name="sequence">30</field>
+            <field name="name">A4 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, la capacité de remboursement respecte la norme bancaire de {norm}.</field>
+            <field name="recommendation_tpl">Situation confortable pour solliciter un financement complémentaire si un projet rentable se présente.</field>
+        </record>
+
+        <record id="rule_a4_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a4"/>
+            <field name="sequence">40</field>
+            <field name="name">A4 - cas 4</field>
+            <field name="condition">value &lt;= 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La trésorerie disponible excède les dettes financières : l'entreprise est en position de dette nette négative.</field>
+            <field name="recommendation_tpl">Placer utilement les excédents ou envisager un investissement de croissance.</field>
+        </record>
+
+        <record id="rule_a5_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a5"/>
+            <field name="sequence">10</field>
+            <field name="name">A5 - cas 1</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Avec {value}, les capitaux permanents ne couvrent pas l'actif immobilisé (norme {norm}) : une partie des investissements est financée par des dettes à court terme. La règle d'or de l'équilibre financier est rompue.</field>
+            <field name="recommendation_tpl">Consolider le court terme : transformer les découverts et crédits de campagne en emprunt à moyen terme adossé à la durée de vie des actifs financés.</field>
+        </record>
+
+        <record id="rule_a5_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a5"/>
+            <field name="sequence">20</field>
+            <field name="name">A5 - cas 2</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La couverture des emplois stables de {value} respecte tout juste la règle d'or ({norm}). Le fonds de roulement dégagé est faible.</field>
+            <field name="recommendation_tpl">Renforcer les ressources stables pour dégager un fonds de roulement capable d'absorber le besoin d'exploitation.</field>
+        </record>
+
+        <record id="rule_a5_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a5"/>
+            <field name="sequence">30</field>
+            <field name="name">A5 - cas 3</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, les ressources stables couvrent largement les emplois durables et dégagent un fonds de roulement positif.</field>
+            <field name="recommendation_tpl">Veiller à ce que l'excédent de ressources stables soit employé de manière productive.</field>
+        </record>
+
+        <record id="rule_a6_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a6"/>
+            <field name="sequence">10</field>
+            <field name="name">A6 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Seulement {value} de l'actif immobilisé est couvert par les fonds propres.</field>
+            <field name="recommendation_tpl">Renforcer les capitaux propres avant d'engager de nouveaux investissements lourds.</field>
+        </record>
+
+        <record id="rule_a6_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a6"/>
+            <field name="sequence">20</field>
+            <field name="name">A6 - cas 2</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le financement propre des immobilisations ressort à {value} : le recours à l'emprunt complète les fonds propres, ce qui est usuel.</field>
+            <field name="recommendation_tpl">Veiller à l'adéquation entre la durée des emprunts et la durée d'amortissement des biens financés.</field>
+        </record>
+
+        <record id="rule_a6_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a6"/>
+            <field name="sequence">30</field>
+            <field name="name">A6 - cas 3</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Les capitaux propres couvrent la totalité de l'actif immobilisé ({value}).</field>
+            <field name="recommendation_tpl">Situation très prudente ; l'entreprise conserve une capacité d'emprunt intacte.</field>
+        </record>
+
+        <record id="rule_a7_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a7"/>
+            <field name="sequence">10</field>
+            <field name="name">A7 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'actif total ne couvre pas les dettes ({value}) : la situation nette est négative.</field>
+            <field name="recommendation_tpl">Situation de faillite virtuelle : recapitalisation ou procédure préventive à envisager sans délai.</field>
+        </record>
+
+        <record id="rule_a7_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a7"/>
+            <field name="sequence">20</field>
+            <field name="name">A7 - cas 2</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La solvabilité générale de {value} reste en dessous de la norme de {norm}.</field>
+            <field name="recommendation_tpl">Améliorer le matelas de sécurité par mise en réserve des résultats.</field>
+        </record>
+
+        <record id="rule_a7_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a7"/>
+            <field name="sequence">30</field>
+            <field name="name">A7 - cas 3</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, la solvabilité générale est satisfaisante ({norm}).</field>
+            <field name="recommendation_tpl">Maintenir ce niveau de couverture.</field>
+        </record>
+
+        <record id="rule_a8_0" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a8"/>
+            <field name="sequence">3</field>
+            <field name="name">A8 - cas 0 : levier sans dette financière</field>
+            <field name="condition">value &gt; t_max and DETTES_FIN == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le levier financier atteint {value}, au-delà de la fourchette usuelle de {norm}. Il ne provient cependant d'aucun endettement bancaire : l'entreprise ne supporte aucune dette financière. Ce multiplicateur traduit le poids du crédit fournisseur et des dettes d'exploitation dans le financement de l'actif. Le risque n'est donc pas celui d'une charge d'intérêts ou d'une échéance de remboursement, mais celui d'une dépendance aux conditions de paiement négociées avec les fournisseurs.</field>
+            <field name="recommendation_tpl">Ne pas traiter ce ratio comme un problème d'endettement. L'enjeu réel est la sécurisation du crédit fournisseur : identifier les fournisseurs stratégiques dont un durcissement des conditions mettrait la trésorerie sous tension, et formaliser les délais par contrat plutôt que de les subir. Le renforcement des capitaux propres par mise en réserve reste utile à moyen terme, sans caractère d'urgence au regard de la rentabilité dégagée.</field>
+        </record>
+
+        <record id="rule_a8_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a8"/>
+            <field name="sequence">10</field>
+            <field name="name">A8 - cas 1</field>
+            <field name="condition">value &gt; 4</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le levier financier de {value} est très élevé (norme {norm}) : la rentabilité des fonds propres est artificiellement gonflée par l'endettement, au prix d'un risque important.</field>
+            <field name="recommendation_tpl">Réduire le levier par renforcement des capitaux propres.</field>
+        </record>
+
+        <record id="rule_a8_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a8"/>
+            <field name="sequence">20</field>
+            <field name="name">A8 - cas 2</field>
+            <field name="condition">value &gt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le levier de {value} dépasse la fourchette usuelle de {norm}.</field>
+            <field name="recommendation_tpl">Surveiller l'évolution et éviter tout endettement additionnel.</field>
+        </record>
+
+        <record id="rule_a8_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a8"/>
+            <field name="sequence">30</field>
+            <field name="name">A8 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le levier financier de {value} se situe dans la fourchette recommandée de {norm}.</field>
+            <field name="recommendation_tpl">Équilibre satisfaisant entre dette et fonds propres.</field>
+        </record>
+
+        <record id="rule_a8_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a8"/>
+            <field name="sequence">40</field>
+            <field name="name">A8 - cas 4</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le levier de {value} est faible : l'entreprise se finance essentiellement sur fonds propres.</field>
+            <field name="recommendation_tpl">Un recours mesuré à la dette pourrait améliorer la rentabilité des capitaux propres si le taux d'intérêt reste inférieur à la rentabilité économique.</field>
+        </record>
+
+        <record id="rule_a9_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="sequence">10</field>
+            <field name="name">A9 - cas 1</field>
+            <field name="condition">value &gt; 80</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">L'actif est immobilisé à {value} : la structure est très rigide et peu liquide.</field>
+            <field name="recommendation_tpl">Vérifier le taux d'utilisation des immobilisations et envisager la cession des actifs sous-employés ou le recours à la location.</field>
+        </record>
+
+        <record id="rule_a9_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="sequence">20</field>
+            <field name="name">A9 - cas 2</field>
+            <field name="condition">value &lt; 15</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'actif immobilisé ne représente que {value} du total : structure légère, typique d'une activité de négoce ou de services.</field>
+            <field name="recommendation_tpl">S'assurer que l'outil de production reste suffisant pour soutenir la croissance.</field>
+        </record>
+
+        <record id="rule_a9_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="sequence">30</field>
+            <field name="name">A9 - cas 3</field>
+            <field name="condition">value &gt;= 15</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La part de l'actif immobilisé ({value}) traduit une structure équilibrée au regard de l'activité.</field>
+            <field name="recommendation_tpl">Poursuivre le renouvellement régulier de l'outil.</field>
+        </record>
+
+        <record id="rule_a10_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a10"/>
+            <field name="sequence">10</field>
+            <field name="name">A10 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">L'outil de production est amorti à {value} (norme {norm}) : il est vieillissant et un cycle de renouvellement lourd est à prévoir à court terme.</field>
+            <field name="recommendation_tpl">Planifier et budgéter le renouvellement des équipements ; anticiper le financement (emprunt, crédit-bail) avant que les pannes n'affectent la production.</field>
+        </record>
+
+        <record id="rule_a10_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a10"/>
+            <field name="sequence">20</field>
+            <field name="name">A10 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le taux de vétusté de {value} dépasse la norme de {norm} : l'outil entre en phase de vieillissement.</field>
+            <field name="recommendation_tpl">Établir un plan pluriannuel d'investissement de renouvellement.</field>
+        </record>
+
+        <record id="rule_a10_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_a10"/>
+            <field name="sequence">30</field>
+            <field name="name">A10 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec un taux d'amortissement de {value}, l'outil de production est récent ({norm}).</field>
+            <field name="recommendation_tpl">Maintenir la politique d'investissement régulier.</field>
+        </record>
+
+        <record id="rule_b1_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b1"/>
+            <field name="sequence">10</field>
+            <field name="name">B1 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La liquidité générale s'établit à {value} : l'actif courant ne couvre pas les dettes à moins d'un an (norme {norm}). Le fonds de roulement est négatif et l'entreprise est en tension de trésorerie.</field>
+            <field name="recommendation_tpl">Agir sur trois leviers simultanément : accélérer le recouvrement client, renégocier l'allongement des délais fournisseurs, et consolider le court terme par un emprunt à moyen terme. Un prévisionnel de trésorerie hebdomadaire doit être mis en place.</field>
+        </record>
+
+        <record id="rule_b1_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b1"/>
+            <field name="sequence">20</field>
+            <field name="name">B1 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, la liquidité générale est juste à l'équilibre mais reste sous la norme de {norm}. La marge de manœuvre est étroite.</field>
+            <field name="recommendation_tpl">Constituer un matelas de sécurité en réduisant le besoin en fonds de roulement, notamment sur les stocks et les créances.</field>
+        </record>
+
+        <record id="rule_b1_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b1"/>
+            <field name="sequence">30</field>
+            <field name="name">B1 - cas 3</field>
+            <field name="condition">value &lt; 2</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La liquidité générale de {value} est conforme à la norme de {norm} : les engagements à court terme sont couverts.</field>
+            <field name="recommendation_tpl">Maintenir ce niveau et suivre mensuellement l'évolution du besoin en fonds de roulement.</field>
+        </record>
+
+        <record id="rule_b1_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b1"/>
+            <field name="sequence">40</field>
+            <field name="name">B1 - cas 4</field>
+            <field name="condition">value &gt;= 2</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, la liquidité est très confortable.</field>
+            <field name="recommendation_tpl">Un niveau très élevé peut traduire un surstockage ou des créances dormantes : vérifier la qualité et la rotation réelle de l'actif circulant.</field>
+        </record>
+
+        <record id="rule_b2_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b2"/>
+            <field name="sequence">10</field>
+            <field name="name">B2 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La liquidité réduite de {value} est très inférieure à la norme de {norm} : hors stocks, l'entreprise ne peut faire face à ses échéances courtes.</field>
+            <field name="recommendation_tpl">Mobiliser rapidement les créances (escompte, affacturage) et rééchelonner les dettes courantes les plus pressantes.</field>
+        </record>
+
+        <record id="rule_b2_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b2"/>
+            <field name="sequence">20</field>
+            <field name="name">B2 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, la liquidité réduite reste sous la norme de {norm} : la solvabilité à court terme dépend de l'écoulement des stocks.</field>
+            <field name="recommendation_tpl">Réduire le poids des stocks et sécuriser des lignes de crédit court terme confirmées.</field>
+        </record>
+
+        <record id="rule_b2_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b2"/>
+            <field name="sequence">30</field>
+            <field name="name">B2 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La liquidité réduite de {value} respecte la norme de {norm}.</field>
+            <field name="recommendation_tpl">Situation saine ; maintenir la discipline de recouvrement.</field>
+        </record>
+
+        <record id="rule_b3_0" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b3"/>
+            <field name="sequence">3</field>
+            <field name="name">B3 - cas 0 : aucun concours bancaire</field>
+            <field name="condition">value &lt; t_watch and CBC == 0 and TN &gt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La liquidité immédiate ressort à {value}, sous la fourchette usuelle de {norm}. Ce niveau doit toutefois être relativisé : l'entreprise ne supporte aucun découvert bancaire et sa trésorerie nette est positive. Le ratio est mécaniquement écrasé par un passif circulant d'exploitation très élevé, constitué de crédit fournisseur et non de dettes financières exigibles à date fixe.</field>
+            <field name="recommendation_tpl">Aucune action de financement n'est requise. Surveiller en revanche la concentration du passif fournisseur : le maintien de la trésorerie dépend directement de la stabilité des délais de paiement accordés par les principaux fournisseurs.</field>
+        </record>
+
+        <record id="rule_b3_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b3"/>
+            <field name="sequence">10</field>
+            <field name="name">B3 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La trésorerie disponible ne couvre que {value} des dettes courantes (norme {norm}) : le risque d'incident de paiement est immédiat.</field>
+            <field name="recommendation_tpl">Négocier sans délai une ligne de trésorerie confirmée et établir un plan de trésorerie glissant à 13 semaines.</field>
+        </record>
+
+        <record id="rule_b3_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b3"/>
+            <field name="sequence">20</field>
+            <field name="name">B3 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, la liquidité immédiate est faible ({norm}).</field>
+            <field name="recommendation_tpl">Reconstituer un volant de trésorerie de sécurité équivalent à un mois de charges décaissables.</field>
+        </record>
+
+        <record id="rule_b3_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b3"/>
+            <field name="sequence">30</field>
+            <field name="name">B3 - cas 3</field>
+            <field name="condition">value &lt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La liquidité immédiate de {value} se situe dans la fourchette optimale de {norm}.</field>
+            <field name="recommendation_tpl">Bon équilibre entre sécurité et rentabilité des liquidités.</field>
+        </record>
+
+        <record id="rule_b3_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b3"/>
+            <field name="sequence">40</field>
+            <field name="name">B3 - cas 4</field>
+            <field name="condition">value &gt; t_good</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La trésorerie représente {value} des dettes courantes, au-dessus de la fourchette usuelle de {norm}.</field>
+            <field name="recommendation_tpl">Des liquidités excédentaires non rémunérées pèsent sur la rentabilité : envisager un placement à court terme ou un remboursement anticipé de dette coûteuse.</field>
+        </record>
+
+        <record id="rule_b4_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b4"/>
+            <field name="sequence">10</field>
+            <field name="name">B4 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le fonds de roulement ne couvre pas le besoin d'exploitation : il manque l'équivalent de {value} de chiffre d'affaires. Cet écart est financé par des concours bancaires courants, ressources coûteuses et révocables sans préavis.</field>
+            <field name="recommendation_tpl">Consolider les financements courts en ressources longues, renforcer les capitaux propres, et réduire le cycle d'exploitation en agissant sur les stocks et le crédit client.</field>
+        </record>
+
+        <record id="rule_b4_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b4"/>
+            <field name="sequence">20</field>
+            <field name="name">B4 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le fonds de roulement ne dépasse le besoin d'exploitation que de {value} de chiffre d'affaires (norme {norm}) : le matelas de sécurité est mince. Une variation saisonnière du cycle suffirait à basculer en trésorerie négative.</field>
+            <field name="recommendation_tpl">Augmenter les ressources stables ou réduire le besoin en fonds de roulement. Un suivi mensuel de la trésorerie prévisionnelle est recommandé tant que l'écart reste inférieur à dix jours d'activité.</field>
+        </record>
+
+        <record id="rule_b4_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b4"/>
+            <field name="sequence">30</field>
+            <field name="name">B4 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le fonds de roulement excède le besoin d'exploitation de {value} de chiffre d'affaires ({norm}) : le cycle est intégralement financé par des ressources stables et dégage un excédent de trésorerie.</field>
+            <field name="recommendation_tpl">Situation saine. Veiller à ce que cet excédent soit employé de manière productive plutôt que laissé en compte courant non rémunéré.</field>
+        </record>
+
+        <record id="rule_b5_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b5"/>
+            <field name="sequence">10</field>
+            <field name="name">B5 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le besoin en fonds de roulement représente {value} de chiffre d'affaires : le cycle d'exploitation absorbe une trésorerie considérable.</field>
+            <field name="recommendation_tpl">Plan d'action BFR prioritaire : réduire les stocks (analyse ABC, déstockage des références dormantes), raccourcir le délai de recouvrement client (relances systématiques, acomptes, escompte pour paiement anticipé), et allonger le crédit fournisseur par renégociation.</field>
+        </record>
+
+        <record id="rule_b5_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b5"/>
+            <field name="sequence">20</field>
+            <field name="name">B5 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value} de chiffre d'affaires, le besoin en fonds de roulement est élevé et pèse sur la trésorerie.</field>
+            <field name="recommendation_tpl">Fixer des objectifs chiffrés de réduction sur chacune des trois composantes : stocks, créances clients, dettes fournisseurs.</field>
+        </record>
+
+        <record id="rule_b5_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b5"/>
+            <field name="sequence">30</field>
+            <field name="name">B5 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le besoin en fonds de roulement de {value} de chiffre d'affaires est maîtrisé.</field>
+            <field name="recommendation_tpl">Maintenir le pilotage mensuel des délais de rotation.</field>
+        </record>
+
+        <record id="rule_b5_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b5"/>
+            <field name="sequence">40</field>
+            <field name="name">B5 - cas 4</field>
+            <field name="condition">value &lt;= 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le besoin en fonds de roulement est négatif : le cycle d'exploitation dégage de la trésorerie ({value} de chiffre d'affaires).</field>
+            <field name="recommendation_tpl">Situation favorable typique du commerce de détail. Veiller à ne pas la dégrader lors d'un changement de politique d'achat.</field>
+        </record>
+
+        <record id="rule_b6_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b6"/>
+            <field name="sequence">10</field>
+            <field name="name">B6 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La trésorerie nette est négative ({value}) : le fonds de roulement ne couvre pas le besoin d'exploitation, l'écart étant financé par des concours bancaires courants, coûteux et révocables.</field>
+            <field name="recommendation_tpl">Réduire la dépendance aux découverts : augmenter le fonds de roulement par financement long terme et compresser le besoin en fonds de roulement. Négocier des lignes confirmées plutôt que des autorisations révocables.</field>
+        </record>
+
+        <record id="rule_b6_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b6"/>
+            <field name="sequence">20</field>
+            <field name="name">B6 - cas 2</field>
+            <field name="condition">value == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La trésorerie nette est nulle : l'équilibre est atteint sans marge de sécurité.</field>
+            <field name="recommendation_tpl">Constituer un volant de trésorerie de précaution.</field>
+        </record>
+
+        <record id="rule_b6_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b6"/>
+            <field name="sequence">30</field>
+            <field name="name">B6 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La trésorerie nette est positive ({value}) : le fonds de roulement finance intégralement le besoin d'exploitation et dégage un excédent.</field>
+            <field name="recommendation_tpl">Optimiser le placement de cet excédent tout en conservant la liquidité nécessaire aux échéances.</field>
+        </record>
+
+        <record id="rule_b7_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b7"/>
+            <field name="sequence">10</field>
+            <field name="name">B7 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Les concours bancaires courants représentent {value} de l'endettement (norme {norm}) : l'entreprise est dépendante de financements révocables à tout moment.</field>
+            <field name="recommendation_tpl">Substituer un emprunt à moyen terme aux découverts permanents : le coût sera moindre et la ressource sécurisée.</field>
+        </record>
+
+        <record id="rule_b7_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b7"/>
+            <field name="sequence">20</field>
+            <field name="name">B7 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le poids des concours courants ({value}) dépasse la norme de {norm}.</field>
+            <field name="recommendation_tpl">Engager la consolidation d'une partie du court terme.</field>
+        </record>
+
+        <record id="rule_b7_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b7"/>
+            <field name="sequence">30</field>
+            <field name="name">B7 - cas 3</field>
+            <field name="condition">value &gt;= 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La part des concours bancaires courants ({value}) est maîtrisée ({norm}).</field>
+            <field name="recommendation_tpl">Structure d'endettement équilibrée.</field>
+        </record>
+
+        <record id="rule_b8_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b8"/>
+            <field name="sequence">10</field>
+            <field name="name">B8 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le fonds de roulement ne couvre que {value} du besoin en fonds de roulement (norme {norm}) : le solde repose sur la trésorerie court terme.</field>
+            <field name="recommendation_tpl">Rééquilibrer la structure : financement long terme complémentaire et réduction du cycle d'exploitation.</field>
+        </record>
+
+        <record id="rule_b8_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b8"/>
+            <field name="sequence">20</field>
+            <field name="name">B8 - cas 2</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La couverture du besoin en fonds de roulement par le fonds de roulement est incomplète ({value}, norme {norm}).</field>
+            <field name="recommendation_tpl">Poursuivre la réduction du besoin d'exploitation pour rétablir l'équilibre.</field>
+        </record>
+
+        <record id="rule_b8_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_b8"/>
+            <field name="sequence">30</field>
+            <field name="name">B8 - cas 3</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le fonds de roulement couvre intégralement le besoin d'exploitation ({value}).</field>
+            <field name="recommendation_tpl">Équilibre financier respecté.</field>
+        </record>
+
+        <record id="rule_c1_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="sequence">10</field>
+            <field name="name">C1 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Les stocks tournent en {value}, très au-delà de la norme de {norm}. Une part significative de la trésorerie est immobilisée et le risque d'obsolescence est réel.</field>
+            <field name="recommendation_tpl">Réaliser un inventaire de rotation par référence (analyse ABC) : liquider les références dormantes même à prix sacrifié, réduire les quantités de réapprovisionnement et passer en flux tendu sur les articles à forte rotation.</field>
+        </record>
+
+        <record id="rule_c1_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="sequence">20</field>
+            <field name="name">C1 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le délai d'écoulement de {value} dépasse la norme de {norm} : les stocks pèsent sur le besoin en fonds de roulement.</field>
+            <field name="recommendation_tpl">Fixer un objectif de réduction de 15 à 20 jours et mettre en place un suivi mensuel par famille de produits.</field>
+        </record>
+
+        <record id="rule_c1_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="sequence">30</field>
+            <field name="name">C1 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, la rotation des stocks est maîtrisée ({norm}).</field>
+            <field name="recommendation_tpl">Maintenir la politique d'approvisionnement actuelle.</field>
+        </record>
+
+        <record id="rule_c2_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c2"/>
+            <field name="sequence">10</field>
+            <field name="name">C2 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le stock ne tourne que {value} fois par an (norme {norm}) : rotation très lente.</field>
+            <field name="recommendation_tpl">Réviser la politique d'approvisionnement et la largeur de la gamme.</field>
+        </record>
+
+        <record id="rule_c2_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c2"/>
+            <field name="sequence">20</field>
+            <field name="name">C2 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value} rotations par an, l'écoulement est en deçà de la norme de {norm}.</field>
+            <field name="recommendation_tpl">Améliorer la prévision des ventes pour ajuster les commandes.</field>
+        </record>
+
+        <record id="rule_c2_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c2"/>
+            <field name="sequence">30</field>
+            <field name="name">C2 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le stock tourne {value} fois par an, conformément à la norme de {norm}.</field>
+            <field name="recommendation_tpl">Bonne gestion des approvisionnements.</field>
+        </record>
+
+        <record id="rule_c3_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c3"/>
+            <field name="sequence">10</field>
+            <field name="name">C3 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Les clients règlent en moyenne à {value} (norme {norm}). Ce crédit client excessif finance les clients au détriment de la trésorerie de l'entreprise et fait peser un risque d'impayés.</field>
+            <field name="recommendation_tpl">Mettre en place une procédure de recouvrement structurée : relance automatique à J+5, mise en demeure à J+30, blocage des livraisons au-delà. Instaurer des acomptes à la commande et un escompte de 1 à 2 % pour paiement comptant. Analyser la balance âgée et provisionner les créances douteuses.</field>
+        </record>
+
+        <record id="rule_c3_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c3"/>
+            <field name="sequence">20</field>
+            <field name="name">C3 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le délai de règlement clients de {value} dépasse la norme de {norm}.</field>
+            <field name="recommendation_tpl">Renforcer le suivi de la balance âgée et systématiser les relances préventives avant échéance.</field>
+        </record>
+
+        <record id="rule_c3_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c3"/>
+            <field name="sequence">30</field>
+            <field name="name">C3 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, le délai de règlement clients est maîtrisé ({norm}).</field>
+            <field name="recommendation_tpl">Maintenir la rigueur du processus de recouvrement.</field>
+        </record>
+
+        <record id="rule_c4_0" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c4"/>
+            <field name="sequence">3</field>
+            <field name="name">C4 - cas 0 : délai long mais trésorerie saine</field>
+            <field name="condition">value &gt; t_max and TN &gt; 0 and CBC == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">watch</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le délai de règlement fournisseurs atteint {value}, bien au-delà de la fourchette usuelle de {norm}. Contrairement au cas habituel, cet allongement ne traduit pas une difficulté de trésorerie : celle-ci est positive et l'entreprise ne supporte aucun découvert. Le crédit fournisseur constitue ici le mode de financement principal du cycle d'exploitation, ce qui explique un besoin en fonds de roulement négatif. Cette position est confortable mais fragile : elle repose entièrement sur le maintien des conditions accordées.</field>
+            <field name="recommendation_tpl">Traiter ce délai comme un risque opérationnel et non comme un symptôme financier. Recenser les fournisseurs critiques et évaluer l'impact d'un passage au comptant sur la trésorerie. Envisager une réduction progressive vers quatre-vingt-dix jours sur les approvisionnements stratégiques, quitte à mobiliser une partie de la trésorerie disponible, afin de sécuriser la chaîne d'approvisionnement et de préserver la relation commerciale. Réduire en parallèle le délai de recouvrement client, qui contraint aujourd'hui l'entreprise à maintenir ce crédit fournisseur long.</field>
+        </record>
+
+        <record id="rule_c4_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c4"/>
+            <field name="sequence">10</field>
+            <field name="name">C4 - cas 1</field>
+            <field name="condition">value &gt; 120</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le délai fournisseurs atteint {value} (norme {norm}). Un tel allongement traduit souvent des difficultés de trésorerie et dégrade la relation commerciale.</field>
+            <field name="recommendation_tpl">Régulariser les retards les plus anciens pour préserver les approvisionnements, et traiter la cause : le besoin en fonds de roulement doit être financé par des ressources stables et non par le crédit fournisseur subi.</field>
+        </record>
+
+        <record id="rule_c4_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c4"/>
+            <field name="sequence">20</field>
+            <field name="name">C4 - cas 2</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, l'entreprise règle ses fournisseurs très rapidement ({norm}), se privant d'une ressource de financement gratuite.</field>
+            <field name="recommendation_tpl">Négocier l'allongement des délais contractuels à 30 ou 45 jours, sauf si des escomptes pour paiement anticipé plus avantageux sont obtenus.</field>
+        </record>
+
+        <record id="rule_c4_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c4"/>
+            <field name="sequence">30</field>
+            <field name="name">C4 - cas 3</field>
+            <field name="condition">value &lt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le délai fournisseurs de {value} se situe dans la fourchette usuelle de {norm}.</field>
+            <field name="recommendation_tpl">Équilibre satisfaisant entre relation fournisseur et financement du cycle.</field>
+        </record>
+
+        <record id="rule_c4_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c4"/>
+            <field name="sequence">40</field>
+            <field name="name">C4 - cas 4</field>
+            <field name="condition">value &gt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le délai fournisseurs de {value} est supérieur à la norme de {norm}.</field>
+            <field name="recommendation_tpl">Vérifier qu'il ne s'agit pas de retards de paiement subis plutôt que de conditions négociées.</field>
+        </record>
+
+        <record id="rule_c5_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c5"/>
+            <field name="sequence">10</field>
+            <field name="name">C5 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le cycle d'exploitation net s'établit à {value} : l'entreprise finance son activité pendant trois mois avant d'être payée.</field>
+            <field name="recommendation_tpl">Attaquer les trois composantes simultanément : stocks, créances et dettes fournisseurs. Chaque jour gagné libère l'équivalent d'un jour de chiffre d'affaires en trésorerie.</field>
+        </record>
+
+        <record id="rule_c5_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c5"/>
+            <field name="sequence">20</field>
+            <field name="name">C5 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le cycle d'exploitation de {value} reste long et consomme de la trésorerie.</field>
+            <field name="recommendation_tpl">Fixer un objectif de réduction chiffré et suivre son avancement mensuellement.</field>
+        </record>
+
+        <record id="rule_c5_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c5"/>
+            <field name="sequence">30</field>
+            <field name="name">C5 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le cycle d'exploitation net de {value} est maîtrisé.</field>
+            <field name="recommendation_tpl">Maintenir le pilotage des délais.</field>
+        </record>
+
+        <record id="rule_c5_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c5"/>
+            <field name="sequence">40</field>
+            <field name="name">C5 - cas 4</field>
+            <field name="condition">value &lt;= 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le cycle d'exploitation est négatif ({value}) : l'entreprise encaisse avant de décaisser, ce qui génère de la trésorerie.</field>
+            <field name="recommendation_tpl">Situation très favorable à préserver.</field>
+        </record>
+
+        <record id="rule_c6_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="sequence">10</field>
+            <field name="name">C6 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Chaque ariary d'actif ne génère que {value} ariary de chiffre d'affaires (norme {norm}) : l'actif est peu productif.</field>
+            <field name="recommendation_tpl">Identifier les actifs sous-employés et les céder ou les rentabiliser. Vérifier également la pertinence du dimensionnement de l'outil au regard du marché.</field>
+        </record>
+
+        <record id="rule_c6_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="sequence">20</field>
+            <field name="name">C6 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La rotation de l'actif de {value} reste sous la norme de {norm}.</field>
+            <field name="recommendation_tpl">Développer le volume d'activité à structure constante ou alléger l'actif.</field>
+        </record>
+
+        <record id="rule_c6_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="sequence">30</field>
+            <field name="name">C6 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, l'actif est efficacement mis à contribution ({norm}).</field>
+            <field name="recommendation_tpl">Bonne productivité du capital investi.</field>
+        </record>
+
+        <record id="rule_c7_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c7"/>
+            <field name="sequence">10</field>
+            <field name="name">C7 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le chiffre d'affaires ne représente que {value} fois les capitaux propres.</field>
+            <field name="recommendation_tpl">Développer l'activité ou examiner si les fonds propres sont surdimensionnés.</field>
+        </record>
+
+        <record id="rule_c7_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c7"/>
+            <field name="sequence">20</field>
+            <field name="name">C7 - cas 2</field>
+            <field name="condition">value &gt;= t_bad</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La rotation des capitaux propres de {value} est satisfaisante.</field>
+            <field name="recommendation_tpl">Maintenir le rythme d'activité.</field>
+        </record>
+
+        <record id="rule_c8_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c8"/>
+            <field name="sequence">10</field>
+            <field name="name">C8 - cas 1</field>
+            <field name="condition">value &lt;= 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La valeur ajoutée par salarié est nulle ou négative : l'activité ne couvre pas les consommations externes.</field>
+            <field name="recommendation_tpl">Revoir en urgence le modèle économique : prix de vente, coûts d'achat et dimensionnement des effectifs.</field>
+        </record>
+
+        <record id="rule_c8_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c8"/>
+            <field name="sequence">20</field>
+            <field name="name">C8 - cas 2</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La valeur ajoutée par salarié s'établit à {value}.</field>
+            <field name="recommendation_tpl">Comparer cette valeur aux références du secteur et suivre son évolution dans le temps ; c'est la tendance qui importe davantage que le niveau absolu.</field>
+        </record>
+
+        <record id="rule_c9_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c9"/>
+            <field name="sequence">10</field>
+            <field name="name">C9 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Chaque ariary de charge de personnel ne génère que {value} ariary de chiffre d'affaires (norme {norm}).</field>
+            <field name="recommendation_tpl">Analyser l'organisation du travail et le dimensionnement des effectifs au regard du volume d'activité.</field>
+        </record>
+
+        <record id="rule_c9_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c9"/>
+            <field name="sequence">20</field>
+            <field name="name">C9 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le rendement du personnel de {value} reste sous la norme de {norm}.</field>
+            <field name="recommendation_tpl">Rechercher des gains de productivité : formation, outillage, automatisation des tâches répétitives.</field>
+        </record>
+
+        <record id="rule_c9_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c9"/>
+            <field name="sequence">30</field>
+            <field name="name">C9 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le rendement du personnel de {value} est conforme à la norme de {norm}.</field>
+            <field name="recommendation_tpl">Bonne efficience de la masse salariale.</field>
+        </record>
+
+        <record id="rule_c10_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_c10"/>
+            <field name="sequence">10</field>
+            <field name="name">C10 - cas 1</field>
+            <field name="condition">value &gt;= 0</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'intensité capitalistique ressort à {value} par salarié.</field>
+            <field name="recommendation_tpl">À interpréter au regard du secteur : une intensité croissante traduit une automatisation, une intensité décroissante une activité de main-d'œuvre.</field>
+        </record>
+
+        <record id="rule_d1_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d1"/>
+            <field name="sequence">10</field>
+            <field name="name">D1 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le taux de marge commerciale de {value} est très faible : la revente ne dégage quasiment aucune marge pour couvrir les charges de structure.</field>
+            <field name="recommendation_tpl">Revoir la politique tarifaire et la négociation d'achat : renégocier les conditions fournisseurs, revoir le positionnement prix, et abandonner les références vendues à perte.</field>
+        </record>
+
+        <record id="rule_d1_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d1"/>
+            <field name="sequence">20</field>
+            <field name="name">D1 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le taux de marge commerciale de {value} est modeste.</field>
+            <field name="recommendation_tpl">Analyser la marge par famille de produits et recentrer l'effort commercial sur les références les plus contributives.</field>
+        </record>
+
+        <record id="rule_d1_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d1"/>
+            <field name="sequence">30</field>
+            <field name="name">D1 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le taux de marge commerciale de {value} est satisfaisant.</field>
+            <field name="recommendation_tpl">Préserver ce niveau de marge face à la pression concurrentielle.</field>
+        </record>
+
+        <record id="rule_d2_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="sequence">10</field>
+            <field name="name">D2 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le taux de valeur ajoutée de {value} est faible : l'entreprise dépend fortement de ses achats externes et crée peu de valeur en propre.</field>
+            <field name="recommendation_tpl">Étudier les possibilités d'internalisation des activités sous-traitées à forte valeur, et renégocier les achats qui pèsent le plus.</field>
+        </record>
+
+        <record id="rule_d2_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="sequence">20</field>
+            <field name="name">D2 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le taux de valeur ajoutée de {value} est correct au regard de l'activité.</field>
+            <field name="recommendation_tpl">Suivre l'évolution du poids des consommations externes.</field>
+        </record>
+
+        <record id="rule_d2_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="sequence">30</field>
+            <field name="name">D2 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, l'entreprise crée une valeur ajoutée substantielle.</field>
+            <field name="recommendation_tpl">Bon degré d'intégration ; veiller à la répartition de cette valeur entre les parties prenantes.</field>
+        </record>
+
+        <record id="rule_d3_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="sequence">10</field>
+            <field name="name">D3 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'excédent brut d'exploitation est négatif ({value} du chiffre d'affaires) : l'activité courante détruit de la valeur, indépendamment de toute politique d'amortissement ou de financement.</field>
+            <field name="recommendation_tpl">Redressement d'urgence de l'exploitation : plan de réduction des charges externes et de la masse salariale, révision de la politique tarifaire, abandon des activités ou produits structurellement déficitaires. Un compte de résultat par activité est indispensable pour cibler les actions.</field>
+        </record>
+
+        <record id="rule_d3_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="sequence">20</field>
+            <field name="name">D3 - cas 2</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le taux de marge brute d'exploitation de {value} est très insuffisant (norme {norm}) : l'exploitation ne dégage pas de quoi financer les amortissements et le service de la dette.</field>
+            <field name="recommendation_tpl">Agir simultanément sur les prix de vente, les coûts d'achat et les charges fixes. Établir un compte de résultat analytique pour identifier les activités qui détruisent de la marge.</field>
+        </record>
+
+        <record id="rule_d3_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="sequence">30</field>
+            <field name="name">D3 - cas 3</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, le taux de marge brute d'exploitation reste sous la norme de {norm}.</field>
+            <field name="recommendation_tpl">Rechercher des économies sur les charges externes et améliorer le mix produit vers les segments les plus margés.</field>
+        </record>
+
+        <record id="rule_d3_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="sequence">40</field>
+            <field name="name">D3 - cas 4</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le taux de marge brute d'exploitation de {value} est conforme à la norme de {norm}.</field>
+            <field name="recommendation_tpl">Performance d'exploitation satisfaisante ; maintenir la maîtrise des charges.</field>
+        </record>
+
+        <record id="rule_d3_5" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="sequence">50</field>
+            <field name="name">D3 - cas 5</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, la rentabilité d'exploitation est excellente ({norm}).</field>
+            <field name="recommendation_tpl">Capitaliser sur cette performance pour financer la croissance et renforcer les fonds propres.</field>
+        </record>
+
+        <record id="rule_d4_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d4"/>
+            <field name="sequence">10</field>
+            <field name="name">D4 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le résultat opérationnel est négatif ({value} du chiffre d'affaires) : après amortissements, l'exploitation est déficitaire.</field>
+            <field name="recommendation_tpl">Au-delà du redressement des marges, examiner si la politique d'investissement n'a pas surdimensionné l'outil au regard du niveau d'activité.</field>
+        </record>
+
+        <record id="rule_d4_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d4"/>
+            <field name="sequence">20</field>
+            <field name="name">D4 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La marge opérationnelle de {value} est faible (norme {norm}) : la capacité à absorber un choc conjoncturel est limitée.</field>
+            <field name="recommendation_tpl">Améliorer la marge d'exploitation et vérifier le poids relatif des dotations aux amortissements.</field>
+        </record>
+
+        <record id="rule_d4_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d4"/>
+            <field name="sequence">30</field>
+            <field name="name">D4 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La marge opérationnelle de {value} est conforme à la norme de {norm}.</field>
+            <field name="recommendation_tpl">Rentabilité d'exploitation saine.</field>
+        </record>
+
+        <record id="rule_d5_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d5"/>
+            <field name="sequence">10</field>
+            <field name="name">D5 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'exercice se solde par une perte représentant {value} du chiffre d'affaires. Les capitaux propres se trouvent entamés d'autant.</field>
+            <field name="recommendation_tpl">Établir un plan de retour à l'équilibre chiffré et daté, portant à la fois sur les marges, les charges de structure et le coût du financement. Suspendre toute distribution.</field>
+        </record>
+
+        <record id="rule_d5_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d5"/>
+            <field name="sequence">20</field>
+            <field name="name">D5 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La marge nette de {value} est très mince (norme {norm}) : la moindre dégradation ferait basculer l'entreprise en perte.</field>
+            <field name="recommendation_tpl">Renforcer la marge d'exploitation en priorité, puis alléger le coût de l'endettement.</field>
+        </record>
+
+        <record id="rule_d5_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d5"/>
+            <field name="sequence">30</field>
+            <field name="name">D5 - cas 3</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La marge nette de {value} est conforme à la norme de {norm}.</field>
+            <field name="recommendation_tpl">Situation satisfaisante ; poursuivre la politique de mise en réserve pour renforcer les fonds propres.</field>
+        </record>
+
+        <record id="rule_d5_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d5"/>
+            <field name="sequence">40</field>
+            <field name="name">D5 - cas 4</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, la marge nette est très satisfaisante ({norm}).</field>
+            <field name="recommendation_tpl">Arbitrer l'affectation du résultat entre distribution, réserves et investissement de croissance.</field>
+        </record>
+
+        <record id="rule_d6_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d6"/>
+            <field name="sequence">10</field>
+            <field name="name">D6 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La rentabilité économique est négative ({value}) : les capitaux engagés dans l'exploitation ne dégagent aucun rendement.</field>
+            <field name="recommendation_tpl">Réexaminer le modèle économique dans son ensemble : soit la marge est insuffisante, soit les capitaux employés sont surdimensionnés. La cession d'actifs non productifs améliore mécaniquement ce ratio.</field>
+        </record>
+
+        <record id="rule_d6_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d6"/>
+            <field name="sequence">20</field>
+            <field name="name">D6 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La rentabilité économique de {value} est faible et probablement inférieure au coût des ressources ({norm}), ce qui rend l'effet de levier défavorable.</field>
+            <field name="recommendation_tpl">Améliorer le résultat opérationnel et réduire les capitaux employés, notamment le besoin en fonds de roulement qui en constitue une composante souvent négligée.</field>
+        </record>
+
+        <record id="rule_d6_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d6"/>
+            <field name="sequence">30</field>
+            <field name="name">D6 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La rentabilité économique de {value} est satisfaisante et permet un effet de levier favorable si le coût de la dette lui reste inférieur.</field>
+            <field name="recommendation_tpl">Le recours à l'endettement pour financer la croissance est créateur de valeur tant que ce ratio dépasse le coût de la dette.</field>
+        </record>
+
+        <record id="rule_d7_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d7"/>
+            <field name="sequence">10</field>
+            <field name="name">D7 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La rentabilité financière est négative ({value}) : les fonds propres se dégradent.</field>
+            <field name="recommendation_tpl">Retour à l'équilibre du résultat net prioritaire. Informer les associés de l'érosion de la valeur de leurs apports.</field>
+        </record>
+
+        <record id="rule_d7_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d7"/>
+            <field name="sequence">20</field>
+            <field name="name">D7 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La rentabilité des fonds propres de {value} est faible (norme {norm}) : elle rémunère mal le risque pris par les actionnaires, et se compare défavorablement à un placement sans risque.</field>
+            <field name="recommendation_tpl">Améliorer la rentabilité économique et vérifier si un recours mesuré au levier financier permettrait d'accroître le rendement des fonds propres.</field>
+        </record>
+
+        <record id="rule_d7_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d7"/>
+            <field name="sequence">30</field>
+            <field name="name">D7 - cas 3</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La rentabilité financière de {value} est correcte sans être élevée ({norm}).</field>
+            <field name="recommendation_tpl">Poursuivre l'amélioration de la marge nette et de la rotation de l'actif.</field>
+        </record>
+
+        <record id="rule_d7_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d7"/>
+            <field name="sequence">40</field>
+            <field name="name">D7 - cas 4</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, la rentabilité des capitaux propres est bonne ({norm}).</field>
+            <field name="recommendation_tpl">Vérifier que cette performance ne repose pas exclusivement sur un levier d'endettement élevé, ce qui la rendrait fragile.</field>
+        </record>
+
+        <record id="rule_d8_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d8"/>
+            <field name="sequence">10</field>
+            <field name="name">D8 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La rentabilité de l'actif est négative ({value}).</field>
+            <field name="recommendation_tpl">Redressement du résultat net et allègement de l'actif improductif.</field>
+        </record>
+
+        <record id="rule_d8_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d8"/>
+            <field name="sequence">20</field>
+            <field name="name">D8 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La rentabilité de l'actif de {value} est faible (norme {norm}).</field>
+            <field name="recommendation_tpl">Agir sur les deux leviers du ratio : la marge nette et la rotation de l'actif.</field>
+        </record>
+
+        <record id="rule_d8_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d8"/>
+            <field name="sequence">30</field>
+            <field name="name">D8 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La rentabilité de l'actif de {value} est satisfaisante.</field>
+            <field name="recommendation_tpl">Maintenir l'équilibre entre marge et rotation.</field>
+        </record>
+
+        <record id="rule_d9_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d9"/>
+            <field name="sequence">10</field>
+            <field name="name">D9 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La capacité d'autofinancement est négative ({value} du chiffre d'affaires) : l'activité consomme de la trésorerie au lieu d'en générer.</field>
+            <field name="recommendation_tpl">Situation critique : sans ressource interne, tout investissement et tout remboursement d'emprunt reposent sur des financements externes. Le redressement de l'exploitation est la seule issue durable.</field>
+        </record>
+
+        <record id="rule_d9_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d9"/>
+            <field name="sequence">20</field>
+            <field name="name">D9 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La capacité d'autofinancement ne représente que {value} du chiffre d'affaires (norme {norm}) : les moyens de financement internes sont limités.</field>
+            <field name="recommendation_tpl">Améliorer la marge brute d'exploitation, principal déterminant de la capacité d'autofinancement.</field>
+        </record>
+
+        <record id="rule_d9_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d9"/>
+            <field name="sequence">30</field>
+            <field name="name">D9 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, l'entreprise dégage une capacité d'autofinancement significative ({norm}).</field>
+            <field name="recommendation_tpl">Affecter cette ressource en priorité au désendettement et au renouvellement de l'outil.</field>
+        </record>
+
+        <record id="rule_d10_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d10"/>
+            <field name="sequence">10</field>
+            <field name="name">D10 - cas 1</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Seulement {value} de la valeur ajoutée revient à l'entreprise (norme {norm}) : la richesse créée est presque intégralement absorbée par les charges de personnel et les impôts.</field>
+            <field name="recommendation_tpl">Analyser le poids relatif de la masse salariale et rechercher des gains de productivité, ou augmenter la valeur ajoutée par une politique tarifaire plus offensive.</field>
+        </record>
+
+        <record id="rule_d10_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d10"/>
+            <field name="sequence">20</field>
+            <field name="name">D10 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La part de la valeur ajoutée conservée par l'entreprise ({value}) est modeste ({norm}).</field>
+            <field name="recommendation_tpl">Suivre l'évolution du ratio charges de personnel sur valeur ajoutée.</field>
+        </record>
+
+        <record id="rule_d10_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d10"/>
+            <field name="sequence">30</field>
+            <field name="name">D10 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'entreprise conserve {value} de la valeur ajoutée créée ({norm}).</field>
+            <field name="recommendation_tpl">Répartition équilibrée de la richesse produite.</field>
+        </record>
+
+        <record id="rule_d11_0" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d11"/>
+            <field name="sequence">5</field>
+            <field name="name">D11 - cas 0</field>
+            <field name="condition">value &gt; 360</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le point mort ressort à {value}, au-delà de la durée d'un exercice. Autrement dit, le niveau d'activité de la période ne permet pas d'atteindre l'équilibre : l'entreprise devrait travailler {value} au rythme actuel pour seulement couvrir ses charges de structure.</field>
+            <field name="recommendation_tpl">Situation d'alerte. Le retour sous 360 jours suppose soit une progression du chiffre d'affaires, soit un allègement des charges de structure, soit une amélioration du taux de marge brute. Établir un plan chiffré combinant les trois leviers, avec un jalon de suivi mensuel, et le présenter aux partenaires financiers avant qu'ils ne le demandent.</field>
+        </record>
+
+        <record id="rule_d11_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d11"/>
+            <field name="sequence">10</field>
+            <field name="name">D11 - cas 1</field>
+            <field name="condition">value == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le point mort n'a pu être calculé : le chiffre d'affaires ou l'excédent brut d'exploitation est nul.</field>
+            <field name="recommendation_tpl">Vérifier la saisie du compte de résultat. Le seuil de rentabilité est calculé par le taux d'excédent brut d'exploitation : il exige un EBE positif.</field>
+        </record>
+
+        <record id="rule_d11_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d11"/>
+            <field name="sequence">20</field>
+            <field name="name">D11 - cas 2</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le point mort est atteint au bout de {value} (norme {norm}). Au-delà de 360 jours, l'activité d'un exercice complet ne suffit pas à couvrir les charges de structure : l'entreprise travaille à perte sur l'ensemble de la période.</field>
+            <field name="recommendation_tpl">Deux leviers, à actionner ensemble. Alléger les charges de structure : renégocier le coût de la dette, rééchelonner les emprunts, céder les immobilisations sous-employées dont l'amortissement pèse sans contrepartie. Et relever le taux de marge brute d'exploitation par la politique tarifaire et la maîtrise des consommations externes. Un point de taux d'EBE gagné abaisse le point mort de façon plus que proportionnelle.</field>
+        </record>
+
+        <record id="rule_d11_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d11"/>
+            <field name="sequence">30</field>
+            <field name="name">D11 - cas 3</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le point mort à {value} est tardif (norme {norm}) : la marge de sécurité est faible.</field>
+            <field name="recommendation_tpl">Alléger les charges de structure, en priorité le coût de l'endettement, et consolider le taux de marge brute d'exploitation.</field>
+        </record>
+
+        <record id="rule_d11_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d11"/>
+            <field name="sequence">40</field>
+            <field name="name">D11 - cas 4</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le point mort est atteint à {value} ({norm}), ce qui laisse une marge de sécurité confortable.</field>
+            <field name="recommendation_tpl">Structure de charges bien dimensionnée au regard du niveau d'activité.</field>
+        </record>
+
+        <record id="rule_d12_0" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d12"/>
+            <field name="sequence">5</field>
+            <field name="name">D12 - cas 0</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La marge de sécurité est négative ({value}) : le chiffre d'affaires réalisé se situe en dessous du seuil de rentabilité. L'activité de la période n'a pas couvert les charges de structure et l'exercice se solde par une perte d'exploitation structurelle, indépendamment de tout élément exceptionnel.</field>
+            <field name="recommendation_tpl">Chiffrer l'écart à combler pour revenir au point mort et le décliner en objectif commercial mensuel. Agir simultanément sur les charges de structure, seul levier qui abaisse le seuil sans dépendre du marché : renégociation du coût de la dette, rééchelonnement des emprunts, arbitrage sur les actifs sous-employés. Un plan de retour à l'équilibre daté doit être présenté aux associés.</field>
+        </record>
+
+        <record id="rule_d12_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d12"/>
+            <field name="sequence">10</field>
+            <field name="name">D12 - cas 1</field>
+            <field name="condition">value == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La marge de sécurité n'a pu être calculée : le seuil de rentabilité n'est pas déterminable.</field>
+            <field name="recommendation_tpl">Vérifier que l'excédent brut d'exploitation est positif.</field>
+        </record>
+
+        <record id="rule_d12_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d12"/>
+            <field name="sequence">20</field>
+            <field name="name">D12 - cas 2</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">La marge de sécurité n'est que de {value} (norme {norm}) : le chiffre d'affaires ne dépasse que de peu le seuil de rentabilité. Une baisse d'activité même limitée ferait basculer l'entreprise en perte.</field>
+            <field name="recommendation_tpl">Abaisser le point mort en réduisant les charges de structure, et diversifier le portefeuille clients : avec une marge de sécurité aussi mince, la perte d'un compte majeur suffit à basculer en perte.</field>
+        </record>
+
+        <record id="rule_d12_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d12"/>
+            <field name="sequence">30</field>
+            <field name="name">D12 - cas 3</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, la marge de sécurité reste sous la norme de {norm}.</field>
+            <field name="recommendation_tpl">Poursuivre l'allègement des charges de structure et consolider le taux de marge brute d'exploitation.</field>
+        </record>
+
+        <record id="rule_d12_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d12"/>
+            <field name="sequence">40</field>
+            <field name="name">D12 - cas 4</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La marge de sécurité de {value} est confortable ({norm}).</field>
+            <field name="recommendation_tpl">L'entreprise peut absorber un retournement conjoncturel.</field>
+        </record>
+
+        <record id="rule_e1_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="sequence">10</field>
+            <field name="name">E1 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Les charges de personnel absorbent {value} de la valeur ajoutée (norme {norm}) : il ne reste quasiment rien pour rémunérer le capital, l'État et financer le renouvellement de l'outil.</field>
+            <field name="recommendation_tpl">Deux voies : augmenter la valeur ajoutée par salarié (montée en gamme, productivité, révision tarifaire) ou ajuster les effectifs. La première est préférable et plus durable.</field>
+        </record>
+
+        <record id="rule_e1_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="sequence">20</field>
+            <field name="name">E1 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La part du personnel dans la valeur ajoutée ({value}) dépasse la norme de {norm}.</field>
+            <field name="recommendation_tpl">Rechercher des gains de productivité avant d'envisager toute mesure sur les effectifs.</field>
+        </record>
+
+        <record id="rule_e1_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="sequence">30</field>
+            <field name="name">E1 - cas 3</field>
+            <field name="condition">value &gt; 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La part du personnel dans la valeur ajoutée ({value}) est maîtrisée ({norm}).</field>
+            <field name="recommendation_tpl">Répartition équilibrée de la richesse créée.</field>
+        </record>
+
+        <record id="rule_e2_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e2"/>
+            <field name="sequence">10</field>
+            <field name="name">E2 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Les prélèvements fiscaux représentent {value} de la valeur ajoutée (norme {norm}).</field>
+            <field name="recommendation_tpl">Vérifier l'optimisation fiscale : régime d'imposition applicable, dispositifs d'incitation à l'investissement, et exactitude des bases déclarées.</field>
+        </record>
+
+        <record id="rule_e2_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e2"/>
+            <field name="sequence">20</field>
+            <field name="name">E2 - cas 2</field>
+            <field name="condition">value &gt;= 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">La part de l'État dans la valeur ajoutée s'établit à {value}.</field>
+            <field name="recommendation_tpl">Niveau de prélèvement conforme aux attentes.</field>
+        </record>
+
+        <record id="rule_e3_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e3"/>
+            <field name="sequence">10</field>
+            <field name="name">E3 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Les charges financières absorbent {value} de la valeur ajoutée (norme {norm}) : les prêteurs captent une part excessive de la richesse créée.</field>
+            <field name="recommendation_tpl">Renégocier les taux, rééchelonner la dette et engager un désendettement. Comparer les conditions obtenues avec celles du marché : un écart de deux points sur un encours important représente un enjeu significatif.</field>
+        </record>
+
+        <record id="rule_e3_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e3"/>
+            <field name="sequence">20</field>
+            <field name="name">E3 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le coût de la dette représente {value} de la valeur ajoutée ({norm}).</field>
+            <field name="recommendation_tpl">Renégocier les conditions bancaires et privilégier l'autofinancement.</field>
+        </record>
+
+        <record id="rule_e3_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e3"/>
+            <field name="sequence">30</field>
+            <field name="name">E3 - cas 3</field>
+            <field name="condition">value &gt;= 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Les charges financières ne pèsent que {value} de la valeur ajoutée ({norm}).</field>
+            <field name="recommendation_tpl">Coût du financement maîtrisé.</field>
+        </record>
+
+        <record id="rule_e4_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e4"/>
+            <field name="sequence">10</field>
+            <field name="name">E4 - cas 1</field>
+            <field name="condition">value &lt; 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'entreprise ne conserve aucune part de la valeur ajoutée : la capacité d'autofinancement est négative.</field>
+            <field name="recommendation_tpl">Reconstituer la capacité d'autofinancement par le redressement de l'exploitation ; sans elle, aucun développement autonome n'est possible.</field>
+        </record>
+
+        <record id="rule_e4_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e4"/>
+            <field name="sequence">20</field>
+            <field name="name">E4 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">L'entreprise ne conserve que {value} de la valeur ajoutée créée (norme {norm}).</field>
+            <field name="recommendation_tpl">Rééquilibrer la répartition de la valeur ajoutée en faveur de l'entreprise pour financer le renouvellement de l'outil.</field>
+        </record>
+
+        <record id="rule_e4_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_e4"/>
+            <field name="sequence">30</field>
+            <field name="name">E4 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'entreprise conserve {value} de la valeur ajoutée ({norm}), ce qui lui donne des moyens de développement autonomes.</field>
+            <field name="recommendation_tpl">Affecter cette ressource au désendettement et à l'investissement productif.</field>
+        </record>
+
+        <record id="rule_f1_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f1"/>
+            <field name="sequence">10</field>
+            <field name="name">F1 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Les charges financières représentent {value} du chiffre d'affaires (norme {norm}), niveau qui constitue un signal d'alerte pour tout partenaire financier.</field>
+            <field name="recommendation_tpl">Restructurer la dette : consolidation des découverts en emprunt à moyen terme, renégociation des taux, et cession d'actifs pour désendettement.</field>
+        </record>
+
+        <record id="rule_f1_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f1"/>
+            <field name="sequence">20</field>
+            <field name="name">F1 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Le poids des charges financières ({value}) dépasse la norme de {norm}.</field>
+            <field name="recommendation_tpl">Renégocier les conditions de financement et réduire le recours aux découverts, les plus coûteux.</field>
+        </record>
+
+        <record id="rule_f1_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f1"/>
+            <field name="sequence">30</field>
+            <field name="name">F1 - cas 3</field>
+            <field name="condition">value &gt;= 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Les charges financières ne représentent que {value} du chiffre d'affaires ({norm}).</field>
+            <field name="recommendation_tpl">Coût de l'endettement bien maîtrisé.</field>
+        </record>
+
+        <record id="rule_f2_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f2"/>
+            <field name="sequence">10</field>
+            <field name="name">F2 - cas 1</field>
+            <field name="condition">value &lt; 1</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'excédent brut d'exploitation ne couvre pas les charges financières ({value}, norme {norm}) : l'exploitation ne génère pas de quoi payer les intérêts de la dette.</field>
+            <field name="recommendation_tpl">Situation d'alerte majeure. Négocier un moratoire avec les créanciers et engager un plan de restructuration financière. Le maintien de l'activité en l'état conduit à l'aggravation du surendettement.</field>
+        </record>
+
+        <record id="rule_f2_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f2"/>
+            <field name="sequence">20</field>
+            <field name="name">F2 - cas 2</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La couverture des frais financiers de {value} est insuffisante (norme {norm}) : la marge de sécurité face à une hausse des taux ou une baisse d'activité est faible.</field>
+            <field name="recommendation_tpl">Réduire l'encours de dette et améliorer l'excédent brut d'exploitation.</field>
+        </record>
+
+        <record id="rule_f2_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f2"/>
+            <field name="sequence">30</field>
+            <field name="name">F2 - cas 3</field>
+            <field name="condition">value &gt;= t_watch</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'excédent brut d'exploitation couvre {value} fois les charges financières ({norm}).</field>
+            <field name="recommendation_tpl">Marge de sécurité satisfaisante vis-à-vis des créanciers.</field>
+        </record>
+
+        <record id="rule_f3_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f3"/>
+            <field name="sequence">10</field>
+            <field name="name">F3 - cas 1</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Plus de la moitié de l'excédent brut d'exploitation ({value}) est absorbée par les charges financières (norme {norm}).</field>
+            <field name="recommendation_tpl">Le désendettement devient la priorité stratégique : sans lui, l'entreprise travaille pour ses banquiers.</field>
+        </record>
+
+        <record id="rule_f3_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f3"/>
+            <field name="sequence">20</field>
+            <field name="name">F3 - cas 2</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Les charges financières absorbent {value} de l'excédent brut d'exploitation ({norm}).</field>
+            <field name="recommendation_tpl">Engager la réduction de l'encours et la renégociation des taux.</field>
+        </record>
+
+        <record id="rule_f3_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f3"/>
+            <field name="sequence">30</field>
+            <field name="name">F3 - cas 3</field>
+            <field name="condition">value &gt;= 0</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Les charges financières ne consomment que {value} de l'excédent brut d'exploitation ({norm}).</field>
+            <field name="recommendation_tpl">Le service de la dette est soutenable.</field>
+        </record>
+
+        <record id="rule_f4_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f4"/>
+            <field name="sequence">10</field>
+            <field name="name">F4 - cas 1</field>
+            <field name="condition">value == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Aucun investissement n'a été réalisé sur la période.</field>
+            <field name="recommendation_tpl">Un arrêt prolongé de l'investissement conduit au vieillissement de l'outil et à la perte de compétitivité. Établir un plan pluriannuel d'investissement.</field>
+        </record>
+
+        <record id="rule_f4_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f4"/>
+            <field name="sequence">20</field>
+            <field name="name">F4 - cas 2</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">L'effort d'investissement ne représente que {value} de la valeur ajoutée (norme {norm}) : il est probablement insuffisant pour assurer le simple renouvellement.</field>
+            <field name="recommendation_tpl">Comparer les investissements aux dotations aux amortissements : s'ils leur sont durablement inférieurs, l'outil se déprécie plus vite qu'il ne se renouvelle.</field>
+        </record>
+
+        <record id="rule_f4_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f4"/>
+            <field name="sequence">30</field>
+            <field name="name">F4 - cas 3</field>
+            <field name="condition">value &gt;= t_bad</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le taux d'investissement de {value} traduit un effort de renouvellement réel ({norm}).</field>
+            <field name="recommendation_tpl">Veiller à l'adéquation entre le financement mobilisé et la durée de vie des biens acquis.</field>
+        </record>
+
+        <record id="rule_f5_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f5"/>
+            <field name="sequence">10</field>
+            <field name="name">F5 - cas 1</field>
+            <field name="condition">value == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Ratio non significatif en l'absence d'investissement sur la période.</field>
+            <field name="recommendation_tpl">Renseigner le montant des investissements pour disposer de cet indicateur.</field>
+        </record>
+
+        <record id="rule_f5_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f5"/>
+            <field name="sequence">20</field>
+            <field name="name">F5 - cas 2</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">La capacité d'autofinancement ne couvre que {value} des investissements (norme {norm}) : ceux-ci reposent majoritairement sur des financements externes.</field>
+            <field name="recommendation_tpl">Vérifier que la durée des emprunts mobilisés correspond bien à la durée d'amortissement des biens financés, faute de quoi la trésorerie sera durablement tendue.</field>
+        </record>
+
+        <record id="rule_f5_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f5"/>
+            <field name="sequence">30</field>
+            <field name="name">F5 - cas 3</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">L'autofinancement couvre {value} des investissements ({norm}) : un complément externe reste nécessaire.</field>
+            <field name="recommendation_tpl">Situation usuelle ; veiller au maintien d'un apport propre d'au moins 20 à 30 % sur chaque projet.</field>
+        </record>
+
+        <record id="rule_f5_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_f5"/>
+            <field name="sequence">40</field>
+            <field name="name">F5 - cas 4</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Les investissements sont intégralement autofinancés ({value}, norme {norm}).</field>
+            <field name="recommendation_tpl">Autonomie financière remarquable en matière d'investissement.</field>
+        </record>
+
+        <record id="rule_d13_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="sequence">10</field>
+            <field name="name">D13 - cas 1</field>
+            <field name="condition">value &lt;= 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'excédent brut d'exploitation est négatif ou nul : il ne couvre aucune charge de structure. L'exploitation ne finance ni les amortissements, ni les intérêts, ni l'impôt.</field>
+            <field name="recommendation_tpl">Redressement d'urgence de l'exploitation. Tant que l'excédent brut est négatif, aucun aménagement financier ne suffira : c'est le modèle économique lui-même qu'il faut revoir, par les prix de vente, les coûts d'achat et le dimensionnement des charges de personnel.</field>
+        </record>
+
+        <record id="rule_d13_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="sequence">20</field>
+            <field name="name">D13 - cas 2</field>
+            <field name="condition">value &lt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">L'excédent brut d'exploitation ne couvre que {value} des charges de structure (norme {norm}). L'activité se situe en dessous de son seuil de rentabilité : chaque exercice creuse la situation nette.</field>
+            <field name="recommendation_tpl">Deux leviers agissent directement sur ce ratio. D'abord alléger les charges de structure : renégocier le coût de la dette, rééchelonner les emprunts, arbitrer sur les immobilisations sous-employées dont l'amortissement pèse sans contrepartie. Ensuite relever le taux de marge brute, par la politique tarifaire ou la maîtrise des consommations externes.</field>
+        </record>
+
+        <record id="rule_d13_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="sequence">30</field>
+            <field name="name">D13 - cas 3</field>
+            <field name="condition">value &lt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, la couverture des charges de structure est juste au-dessus de l'équilibre (norme {norm}). La marge de manœuvre est étroite : une baisse d'activité de quelques points ferait basculer l'entreprise sous son seuil.</field>
+            <field name="recommendation_tpl">Constituer une marge de sécurité en réduisant les charges de structure les plus compressibles, à commencer par le coût de l'endettement. Un suivi trimestriel de ce ratio est recommandé.</field>
+        </record>
+
+        <record id="rule_d13_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="sequence">40</field>
+            <field name="name">D13 - cas 4</field>
+            <field name="condition">value &lt; t_good</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">L'excédent brut d'exploitation couvre {value} les charges de structure ({norm}) : l'activité dégage un résultat au-delà du seuil de rentabilité.</field>
+            <field name="recommendation_tpl">Maintenir le niveau de marge brute et surveiller l'évolution des dotations lors des prochains investissements.</field>
+        </record>
+
+        <record id="rule_d13_5" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="sequence">50</field>
+            <field name="name">D13 - cas 5</field>
+            <field name="condition">value &gt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Avec {value}, l'excédent brut d'exploitation couvre largement les charges de structure ({norm}). L'entreprise dispose d'une réelle capacité d'absorption.</field>
+            <field name="recommendation_tpl">Cette marge autorise un programme d'investissement financé sur ressources propres, sans dégrader l'équilibre d'exploitation.</field>
+        </record>
+
+        <record id="rule_d14_1" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="sequence">10</field>
+            <field name="name">D14 - cas 1</field>
+            <field name="condition">value == 0</field>
+            <field name="force_appreciation" eval="True"/>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le seuil de rentabilité n'a pu être déterminé : le taux d'excédent brut d'exploitation est nul ou négatif.</field>
+            <field name="recommendation_tpl">Vérifier la saisie du compte de résultat. Un excédent brut d'exploitation positif est indispensable au calcul du seuil.</field>
+        </record>
+
+        <record id="rule_d14_2" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="sequence">20</field>
+            <field name="name">D14 - cas 2</field>
+            <field name="condition">value &gt; t_bad</field>
+            <field name="appreciation">bad</field>
+            <field name="priority">1</field>
+            <field name="comment_tpl">Le seuil de rentabilité représente {value} du chiffre d'affaires réalisé : l'activité de la période est restée en deçà du point mort. Il manque l'équivalent de {value} moins cent points de chiffre d'affaires pour atteindre l'équilibre d'exploitation.</field>
+            <field name="recommendation_tpl">Chiffrer précisément l'écart à combler et le traduire en objectif commercial mensuel. En parallèle, examiner ce qui peut être retiré des charges de structure : c'est le levier le plus rapide, car il abaisse le seuil sans dépendre du marché.</field>
+        </record>
+
+        <record id="rule_d14_3" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="sequence">30</field>
+            <field name="name">D14 - cas 3</field>
+            <field name="condition">value &gt; t_watch</field>
+            <field name="appreciation">watch</field>
+            <field name="priority">2</field>
+            <field name="comment_tpl">Avec {value}, le seuil de rentabilité absorbe la quasi-totalité du chiffre d'affaires (norme {norm}). Le résultat dégagé au-delà du point mort est ténu.</field>
+            <field name="recommendation_tpl">Travailler simultanément l'abaissement du seuil, par les charges de structure, et la progression du volume d'activité. Suivre mensuellement le chiffre d'affaires cumulé par rapport au seuil.</field>
+        </record>
+
+        <record id="rule_d14_4" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="sequence">40</field>
+            <field name="name">D14 - cas 4</field>
+            <field name="condition">value &gt; t_good</field>
+            <field name="appreciation">ok</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le seuil de rentabilité représente {value} du chiffre d'affaires ({norm}) : l'entreprise franchit son point mort avec une marge raisonnable.</field>
+            <field name="recommendation_tpl">Situation saine. Veiller à ce que les nouveaux investissements, qui alourdiront les dotations, restent proportionnés au surcroît de marge attendu.</field>
+        </record>
+
+        <record id="rule_d14_5" model="fa.comment.rule">
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="sequence">50</field>
+            <field name="name">D14 - cas 5</field>
+            <field name="condition">value &lt;= t_good</field>
+            <field name="appreciation">good</field>
+            <field name="priority">3</field>
+            <field name="comment_tpl">Le seuil de rentabilité n'absorbe que {value} du chiffre d'affaires ({norm}) : l'entreprise atteint son point mort tôt dans l'exercice.</field>
+            <field name="recommendation_tpl">Structure de charges bien dimensionnée au regard du niveau d'activité. Cette souplesse permet d'absorber un retournement de conjoncture ou de financer une croissance.</field>
+        </record>
+    </data>
+</odoo>

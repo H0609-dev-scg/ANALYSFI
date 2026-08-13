@@ -1,0 +1,58 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fa_analysis_ro,fa.analysis readonly,model_fa_analysis,group_fa_readonly,1,0,0,0
+access_fa_analysis_user,fa.analysis user,model_fa_analysis,group_fa_user,1,1,1,0
+access_fa_analysis_mgr,fa.analysis manager,model_fa_analysis,group_fa_manager,1,1,1,1
+access_fa_statement_ro,fa.statement readonly,model_fa_statement,group_fa_readonly,1,0,0,0
+access_fa_statement_user,fa.statement user,model_fa_statement,group_fa_user,1,1,1,0
+access_fa_statement_mgr,fa.statement manager,model_fa_statement,group_fa_manager,1,1,1,1
+access_fa_statement_line_ro,fa.statement.line readonly,model_fa_statement_line,group_fa_readonly,1,0,0,0
+access_fa_statement_line_user,fa.statement.line user,model_fa_statement_line,group_fa_user,1,1,1,1
+access_fa_statement_line_mgr,fa.statement.line manager,model_fa_statement_line,group_fa_manager,1,1,1,1
+access_fa_rubric_ro,fa.rubric readonly,model_fa_rubric,group_fa_readonly,1,0,0,0
+access_fa_rubric_user,fa.rubric user,model_fa_rubric,group_fa_user,1,0,0,0
+access_fa_rubric_mgr,fa.rubric manager,model_fa_rubric,group_fa_manager,1,1,1,1
+access_fa_ratio_ro,fa.ratio readonly,model_fa_ratio,group_fa_readonly,1,0,0,0
+access_fa_ratio_user,fa.ratio user,model_fa_ratio,group_fa_user,1,0,0,0
+access_fa_ratio_mgr,fa.ratio manager,model_fa_ratio,group_fa_manager,1,1,1,1
+access_fa_comment_rule_ro,fa.comment.rule readonly,model_fa_comment_rule,group_fa_readonly,1,0,0,0
+access_fa_comment_rule_user,fa.comment.rule user,model_fa_comment_rule,group_fa_user,1,0,0,0
+access_fa_comment_rule_mgr,fa.comment.rule manager,model_fa_comment_rule,group_fa_manager,1,1,1,1
+access_fa_aggregate_ro,fa.aggregate readonly,model_fa_aggregate,group_fa_readonly,1,0,0,0
+access_fa_aggregate_user,fa.aggregate user,model_fa_aggregate,group_fa_user,1,1,1,1
+access_fa_aggregate_mgr,fa.aggregate manager,model_fa_aggregate,group_fa_manager,1,1,1,1
+access_fa_ratio_result_ro,fa.ratio.result readonly,model_fa_ratio_result,group_fa_readonly,1,0,0,0
+access_fa_ratio_result_user,fa.ratio.result user,model_fa_ratio_result,group_fa_user,1,1,1,1
+access_fa_ratio_result_mgr,fa.ratio.result manager,model_fa_ratio_result,group_fa_manager,1,1,1,1
+access_fa_restatement_ro,fa.restatement.line readonly,model_fa_restatement_line,group_fa_readonly,1,0,0,0
+access_fa_restatement_user,fa.restatement.line user,model_fa_restatement_line,group_fa_user,1,1,1,1
+access_fa_restatement_mgr,fa.restatement.line manager,model_fa_restatement_line,group_fa_manager,1,1,1,1
+access_fa_comparison_ro,fa.comparison readonly,model_fa_comparison,group_fa_readonly,1,0,0,0
+access_fa_comparison_user,fa.comparison user,model_fa_comparison,group_fa_user,1,1,1,1
+access_fa_comparison_mgr,fa.comparison manager,model_fa_comparison,group_fa_manager,1,1,1,1
+access_fa_comparison_line_ro,fa.comparison.line readonly,model_fa_comparison_line,group_fa_readonly,1,0,0,0
+access_fa_comparison_line_user,fa.comparison.line user,model_fa_comparison_line,group_fa_user,1,1,1,1
+access_fa_comparison_line_mgr,fa.comparison.line manager,model_fa_comparison_line,group_fa_manager,1,1,1,1
+access_fa_export_wizard,fa.export.wizard,model_fa_export_wizard,group_fa_user,1,1,1,1
+access_fa_sector_ro,fa.sector readonly,model_fa_sector,group_fa_readonly,1,0,0,0
+access_fa_sector_user,fa.sector user,model_fa_sector,group_fa_user,1,0,0,0
+access_fa_sector_mgr,fa.sector manager,model_fa_sector,group_fa_manager,1,1,1,1
+access_fa_sector_norm_ro,fa.sector.norm readonly,model_fa_sector_norm,group_fa_readonly,1,0,0,0
+access_fa_sector_norm_user,fa.sector.norm user,model_fa_sector_norm,group_fa_user,1,0,0,0
+access_fa_sector_norm_mgr,fa.sector.norm manager,model_fa_sector_norm,group_fa_manager,1,1,1,1
+access_fa_sector_norm_copy,fa.sector.norm.copy,model_fa_sector_norm_copy,group_fa_manager,1,1,1,1
+access_fa_calibrate_wizard,fa.calibrate.wizard,model_fa_calibrate_wizard,group_fa_manager,1,1,1,1
+access_fa_calibrate_line,fa.calibrate.line,model_fa_calibrate_line,group_fa_manager,1,1,1,1
+access_fa_score_ro,fa.score readonly,model_fa_score,group_fa_readonly,1,0,0,0
+access_fa_score_user,fa.score user,model_fa_score,group_fa_user,1,1,1,1
+access_fa_score_mgr,fa.score manager,model_fa_score,group_fa_manager,1,1,1,1
+access_fa_conclusion_confirm,fa.conclusion.confirm,model_fa_conclusion_confirm,group_fa_user,1,1,1,1
+access_fa_cashflow_ro,fa.cashflow readonly,model_fa_cashflow,group_fa_readonly,1,0,0,0
+access_fa_cashflow_user,fa.cashflow user,model_fa_cashflow,group_fa_user,1,1,1,1
+access_fa_cashflow_mgr,fa.cashflow manager,model_fa_cashflow,group_fa_manager,1,1,1,1
+access_fa_equity_ro,fa.equity readonly,model_fa_equity,group_fa_readonly,1,0,0,0
+access_fa_equity_user,fa.equity user,model_fa_equity,group_fa_user,1,1,1,1
+access_fa_equity_mgr,fa.equity manager,model_fa_equity,group_fa_manager,1,1,1,1
+access_fa_reload_data,fa.reload.data,model_fa_reload_data,group_fa_manager,1,1,1,1
+access_fa_extra_check_ro,fa.extra.check readonly,model_fa_extra_check,group_fa_readonly,1,0,0,0
+access_fa_extra_check_user,fa.extra.check user,model_fa_extra_check,group_fa_user,1,1,1,1
+access_fa_extra_check_mgr,fa.extra.check manager,model_fa_extra_check,group_fa_manager,1,1,1,1

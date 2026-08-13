@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fa_equity_tree" model="ir.ui.view">
+        <field name="name">fa.equity.tree</field>
+        <field name="model">fa.equity</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" edit="0" default_order="sequence"
+                  decoration-bf="line_type == 'balance'"
+                  decoration-primary="code == 'EQ_CLOSING'"
+                  decoration-info="line_type == 'control'"
+                  decoration-warning="movement_type == 'method_change'">
+                <field name="sequence" invisible="1"/>
+                <field name="line_type" invisible="1"/>
+                <field name="code" invisible="1"/>
+                <field name="movement_type" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="statement_id" optional="hide"/>
+                <field name="name" string="Mouvement"/>
+                <field name="amount_capital" string="Capital" widget="monetary"/>
+                <field name="amount_primes" string="Primes et réserves" widget="monetary"/>
+                <field name="amount_ecart_eval" string="Écarts de réévaluation"
+                       widget="monetary" optional="show"/>
+                <field name="amount_ecart_equiv" string="Écarts d'équivalence"
+                       widget="monetary" optional="hide"/>
+                <field name="amount_report" string="Report à nouveau" widget="monetary"/>
+                <field name="amount_resultat" string="Résultat" widget="monetary"/>
+                <field name="amount_minoritaires" string="Minoritaires"
+                       widget="monetary" optional="hide"/>
+                <field name="amount_total" string="TOTAL" widget="monetary"/>
+                <field name="note" string="Précision" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_equity_search" model="ir.ui.view">
+        <field name="name">fa.equity.search</field>
+        <field name="model">fa.equity</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="statement_id"/>
+                <filter name="movements" string="Mouvements seuls"
+                        domain="[('line_type','=','movement')]"/>
+                <filter name="undocumented" string="Mouvements non documentés"
+                        domain="[('movement_type','=','method_change')]"/>
+                <group expand="1" string="Regrouper par">
+                    <filter name="g_stmt" string="Période" context="{'group_by':'statement_id'}"/>
+                    <filter name="g_type" string="Nature"
+                            context="{'group_by':'movement_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_equity" model="ir.actions.act_window">
+        <field name="name">Variation des capitaux propres</field>
+        <field name="res_model">fa.equity</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_g_stmt': 1}</field>
+    </record>
+</odoo>

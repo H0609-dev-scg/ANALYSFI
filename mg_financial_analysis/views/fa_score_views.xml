@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fa_score_tree" model="ir.ui.view">
+        <field name="name">fa.score.tree</field>
+        <field name="model">fa.score</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" edit="0" default_order="statement_id,sequence"
+                  decoration-danger="zone == 'distress'"
+                  decoration-warning="zone == 'grey'"
+                  decoration-success="zone == 'safe'"
+                  decoration-muted="is_na">
+                <field name="sequence" invisible="1"/>
+                <field name="is_na" invisible="1"/>
+                <field name="statement_id"/>
+                <field name="model" string="Modèle"/>
+                <field name="value_display" string="Score"/>
+                <field name="previous_value" string="N-1" optional="hide"/>
+                <field name="variation" string="Variation" optional="show"/>
+                <field name="zone" string="Zone" widget="badge"
+                       decoration-danger="zone == 'distress'"
+                       decoration-warning="zone == 'grey'"
+                       decoration-success="zone == 'safe'"/>
+                <field name="risk_level" string="Niveau de risque"/>
+                <field name="default_probability" string="Probabilité" optional="show"/>
+                <field name="na_reason" string="Motif" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_score_form" model="ir.ui.view">
+        <field name="name">fa.score.form</field>
+        <field name="model">fa.score</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="model" readonly="1"/></h1>
+                        <h2><field name="value_display" readonly="1"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="statement_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="zone" widget="badge" readonly="1"/>
+                            <field name="risk_level" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="value" readonly="1"/>
+                            <field name="previous_value" readonly="1"/>
+                            <field name="variation" readonly="1"/>
+                            <field name="default_probability" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Détail du calcul">
+                        <pre style="font-family: monospace; font-size: 11px;"><field
+                            name="detail" nolabel="1" readonly="1"/></pre>
+                    </group>
+                    <group string="Lecture du score">
+                        <field name="comment" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fa_score_search" model="ir.ui.view">
+        <field name="name">fa.score.search</field>
+        <field name="model">fa.score</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="statement_id"/>
+                <field name="partner_id"/>
+                <filter name="distress" string="Zone de danger"
+                        domain="[('zone','=','distress')]"/>
+                <filter name="grey" string="Zone d'incertitude" domain="[('zone','=','grey')]"/>
+                <filter name="safe" string="Zone de sécurité" domain="[('zone','=','safe')]"/>
+                <separator/>
+                <filter name="altman" string="Altman" domain="[('model','=','altman')]"/>
+                <filter name="conan" string="Conan-Holder" domain="[('model','=','conan')]"/>
+                <filter name="synth" string="Note de synthèse"
+                        domain="[('model','=','synthesis')]"/>
+                <group expand="1" string="Regrouper par">
+                    <filter name="g_stmt" string="Période" context="{'group_by':'statement_id'}"/>
+                    <filter name="g_model" string="Modèle" context="{'group_by':'model'}"/>
+                    <filter name="g_zone" string="Zone" context="{'group_by':'zone'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_score" model="ir.actions.act_window">
+        <field name="name">Scores de risque</field>
+        <field name="res_model">fa.score</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_g_stmt': 1}</field>
+    </record>
+
+    <record id="view_fa_conclusion_confirm_form" model="ir.ui.view">
+        <field name="name">fa.conclusion.confirm.form</field>
+        <field name="model">fa.conclusion.confirm</field>
+        <field name="arch" type="xml">
+            <form string="Générer la conclusion">
+                <div class="alert alert-warning" role="alert">
+                    Une conclusion est déjà rédigée pour ce dossier. Choisissez comment
+                    intégrer le projet généré.
+                </div>
+                <group>
+                    <field name="analysis_id" invisible="1"/>
+                    <field name="mode" widget="radio"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Générer" type="object"
+                            class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,964 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Secteurs d'activité et normes de ratios différenciées -->
+
+        <record id="sector_commerce" model="fa.sector">
+            <field name="code">commerce</field>
+            <field name="name">Commerce / Négoce</field>
+            <field name="sequence">10</field>
+            <field name="description">Activité d'achat-revente à faible intensité capitalistique. Le besoin en fonds de roulement est dominé par les stocks et le crédit client. La marge commerciale est l'indicateur central, avec des taux de marge structurellement modérés compensés par une rotation rapide. À Madagascar, les délais d'importation allongent la durée de stockage par rapport aux références internationales.</field>
+        </record>
+
+        <record id="sector_industry" model="fa.sector">
+            <field name="code">industry</field>
+            <field name="name">Industrie / Production</field>
+            <field name="sequence">20</field>
+            <field name="description">Forte intensité capitalistique : les immobilisations représentent une part élevée de l'actif et les dotations aux amortissements pèsent sur le résultat opérationnel. La valeur ajoutée et l'excédent brut d'exploitation sont structurellement plus élevés qu'en négoce, mais le cycle d'exploitation est plus long (matières, en-cours, produits finis).</field>
+        </record>
+
+        <record id="sector_service" model="fa.sector">
+            <field name="code">service</field>
+            <field name="name">Services / Prestations</field>
+            <field name="sequence">30</field>
+            <field name="description">Activité de main-d'œuvre : peu de stocks, peu d'immobilisations, mais une part de la valeur ajoutée absorbée par les charges de personnel nettement supérieure aux autres secteurs. Le besoin en fonds de roulement est concentré sur le crédit client.</field>
+        </record>
+
+        <record id="sector_btp" model="fa.sector">
+            <field name="code">btp</field>
+            <field name="name">BTP / Construction</field>
+            <field name="sequence">40</field>
+            <field name="description">Cycle d'exploitation long avec en-cours de chantiers, retenues de garantie et facturation à l'avancement. Le besoin en fonds de roulement est structurellement élevé et volatil. Les acomptes clients peuvent au contraire générer des ressources. Forte sensibilité au risque de contrepartie sur les marchés publics.</field>
+        </record>
+
+        <record id="sector_agro" model="fa.sector">
+            <field name="code">agro</field>
+            <field name="name">Agro-industrie</field>
+            <field name="sequence">50</field>
+            <field name="description">Activité saisonnière marquée : les stocks de campagne gonflent le besoin en fonds de roulement sur une partie de l'année. L'analyse d'une situation intermédiaire doit impérativement tenir compte du positionnement dans le cycle agricole. Intensité capitalistique élevée (installations de transformation, stockage).</field>
+        </record>
+
+        <record id="sector_transport" model="fa.sector">
+            <field name="code">transport</field>
+            <field name="name">Transport / Logistique</field>
+            <field name="sequence">60</field>
+            <field name="description">Très forte intensité capitalistique (flotte de véhicules), avec un recours fréquent au crédit-bail dont le retraitement est indispensable. Amortissements élevés, vétusté de l'outil à surveiller de près. Peu de stocks hors carburant et pièces.</field>
+        </record>
+
+        <record id="sector_microfinance" model="fa.sector">
+            <field name="code">microfinance</field>
+            <field name="name">Microfinance / Financier</field>
+            <field name="sequence">70</field>
+            <field name="description">Structure de bilan atypique : l'endettement est la matière première de l'activité, les ratios d'autonomie financière et d'endettement doivent donc être lus avec des normes prudentielles spécifiques et non selon les références des entreprises commerciales ou industrielles.</field>
+        </record>
+
+        <record id="sector_other" model="fa.sector">
+            <field name="code">other</field>
+            <field name="name">Autre secteur</field>
+            <field name="sequence">90</field>
+            <field name="description">Secteur non spécifié : les seuils génériques du référentiel s'appliquent.</field>
+        </record>
+
+        <!-- Normes : Commerce / Négoce -->
+        <record id="norm_commerce_a1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="threshold_bad">18</field>
+            <field name="threshold_watch">25</field>
+            <field name="threshold_good">35</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 25 % (négoce)</field>
+            <field name="sector_median">28</field>
+            <field name="comment">En négoce, un niveau de fonds propres plus faible qu'en industrie est admis, l'actif étant peu immobilisé et rapidement liquidable.</field>
+        </record>
+
+        <record id="norm_commerce_a9" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">10</field>
+            <field name="threshold_good">40</field>
+            <field name="threshold_max">40</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">10 à 40 % (négoce)</field>
+            <field name="sector_median">25</field>
+            <field name="comment">La faible part d'actif immobilisé est normale dans une activité de distribution.</field>
+        </record>
+
+        <record id="norm_commerce_c1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="threshold_bad">90</field>
+            <field name="threshold_watch">60</field>
+            <field name="threshold_good">40</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 60 jours (négoce)</field>
+            <field name="sector_median">55</field>
+            <field name="comment">Compte tenu des délais d'importation à Madagascar, un stock de 50 à 70 jours reste courant sur les produits importés.</field>
+        </record>
+
+        <record id="norm_commerce_c6" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="threshold_bad">0.8</field>
+            <field name="threshold_watch">1.5</field>
+            <field name="threshold_good">2.5</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,5 (négoce)</field>
+            <field name="sector_median">1.9</field>
+            <field name="comment">Le négoce se caractérise par une rotation d'actif élevée : c'est le volume, non la marge unitaire, qui crée la rentabilité.</field>
+        </record>
+
+        <record id="norm_commerce_d1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_d1"/>
+            <field name="threshold_bad">8</field>
+            <field name="threshold_watch">15</field>
+            <field name="threshold_good">25</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">15 à 25 % (négoce)</field>
+            <field name="sector_median">19</field>
+        </record>
+
+        <record id="norm_commerce_d2" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="threshold_bad">8</field>
+            <field name="threshold_watch">12</field>
+            <field name="threshold_good">20</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 12 % (négoce)</field>
+            <field name="sector_median">16</field>
+            <field name="comment">Le taux de valeur ajoutée est structurellement bas en négoce : l'essentiel du chiffre d'affaires est absorbé par le coût d'achat des marchandises.</field>
+        </record>
+
+        <record id="norm_commerce_d3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="threshold_bad">2</field>
+            <field name="threshold_watch">4</field>
+            <field name="threshold_good">8</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 5 % (négoce)</field>
+            <field name="sector_median">6</field>
+        </record>
+
+        <record id="norm_commerce_d5" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_d5"/>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">1</field>
+            <field name="threshold_good">3</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 2 % (négoce)</field>
+            <field name="sector_median">2.2</field>
+        </record>
+
+        <record id="norm_commerce_e1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="threshold_bad">75</field>
+            <field name="threshold_watch">55</field>
+            <field name="threshold_good">40</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 55 % (négoce)</field>
+            <field name="sector_median">48</field>
+        </record>
+
+        <!-- Normes : Industrie / Production -->
+        <record id="norm_industry_a1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="threshold_bad">25</field>
+            <field name="threshold_watch">35</field>
+            <field name="threshold_good">45</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 35 % (industrie)</field>
+            <field name="sector_median">38</field>
+            <field name="comment">L'industrie exige des fonds propres plus étoffés pour financer un outil de production lourd et peu liquidable en cas de difficulté.</field>
+        </record>
+
+        <record id="norm_industry_a10" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_a10"/>
+            <field name="threshold_bad">70</field>
+            <field name="threshold_watch">55</field>
+            <field name="threshold_good">35</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 55 % (industrie)</field>
+            <field name="sector_median">48</field>
+            <field name="comment">Le suivi de la vétusté est critique en industrie : un outil trop amorti annonce un cycle d'investissement lourd et des risques d'arrêt de production.</field>
+        </record>
+
+        <record id="norm_industry_a5" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_a5"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.2</field>
+            <field name="threshold_good">1.4</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,2 (industrie)</field>
+            <field name="sector_median">1.25</field>
+            <field name="comment">La règle d'or doit être respectée avec une marge de sécurité renforcée compte tenu du poids des immobilisations.</field>
+        </record>
+
+        <record id="norm_industry_a9" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">40</field>
+            <field name="threshold_good">75</field>
+            <field name="threshold_max">75</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">40 à 75 % (industrie)</field>
+            <field name="sector_median">55</field>
+        </record>
+
+        <record id="norm_industry_c1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="threshold_bad">150</field>
+            <field name="threshold_watch">100</field>
+            <field name="threshold_good">60</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 100 jours (industrie)</field>
+            <field name="sector_median">85</field>
+            <field name="comment">Le stock industriel cumule matières premières, en-cours et produits finis : des durées plus longues qu'en négoce sont structurelles.</field>
+        </record>
+
+        <record id="norm_industry_c6" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="threshold_bad">0.4</field>
+            <field name="threshold_watch">0.7</field>
+            <field name="threshold_good">1.2</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 0,7 (industrie)</field>
+            <field name="sector_median">0.9</field>
+            <field name="comment">La rotation d'actif est mécaniquement plus faible qu'en négoce en raison du poids des immobilisations.</field>
+        </record>
+
+        <record id="norm_industry_d2" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="threshold_bad">20</field>
+            <field name="threshold_watch">30</field>
+            <field name="threshold_good">40</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 30 % (industrie)</field>
+            <field name="sector_median">34</field>
+            <field name="comment">L'industrie transforme la matière et crée donc une valeur ajoutée élevée.</field>
+        </record>
+
+        <record id="norm_industry_d3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">10</field>
+            <field name="threshold_good">18</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 12 % (industrie)</field>
+            <field name="sector_median">14</field>
+            <field name="comment">L'excédent brut d'exploitation doit couvrir des dotations aux amortissements importantes : un niveau supérieur au négoce est indispensable.</field>
+        </record>
+
+        <record id="norm_industry_e1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="threshold_bad">80</field>
+            <field name="threshold_watch">62</field>
+            <field name="threshold_good">48</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 62 % (industrie)</field>
+            <field name="sector_median">55</field>
+        </record>
+
+        <record id="norm_industry_f4" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_f4"/>
+            <field name="threshold_bad">6</field>
+            <field name="threshold_watch">12</field>
+            <field name="threshold_good">18</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 12 % (industrie)</field>
+            <field name="sector_median">14</field>
+            <field name="comment">Un effort d'investissement soutenu est vital pour maintenir la compétitivité de l'outil industriel.</field>
+        </record>
+
+        <!-- Normes : Services / Prestations -->
+        <record id="norm_service_a1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="threshold_bad">15</field>
+            <field name="threshold_watch">25</field>
+            <field name="threshold_good">35</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 25 % (services)</field>
+            <field name="sector_median">30</field>
+        </record>
+
+        <record id="norm_service_a9" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">5</field>
+            <field name="threshold_good">35</field>
+            <field name="threshold_max">35</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">5 à 35 % (services)</field>
+            <field name="sector_median">18</field>
+        </record>
+
+        <record id="norm_service_c1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="threshold_bad">60</field>
+            <field name="threshold_watch">30</field>
+            <field name="threshold_good">15</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 30 jours (services)</field>
+            <field name="sector_median">12</field>
+            <field name="comment">Les stocks sont marginaux en prestation de services : un niveau élevé doit être expliqué.</field>
+        </record>
+
+        <record id="norm_service_c3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_c3"/>
+            <field name="threshold_bad">75</field>
+            <field name="threshold_watch">55</field>
+            <field name="threshold_good">35</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 55 jours (services)</field>
+            <field name="sector_median">48</field>
+        </record>
+
+        <record id="norm_service_c6" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="threshold_bad">0.6</field>
+            <field name="threshold_watch">1.0</field>
+            <field name="threshold_good">1.8</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,0 (services)</field>
+            <field name="sector_median">1.4</field>
+        </record>
+
+        <record id="norm_service_c8" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_c8"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">2</field>
+            <field name="threshold_good">3</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">à comparer au secteur</field>
+            <field name="comment">La valeur ajoutée par salarié est l'indicateur de performance central en services : c'est la ressource humaine qui produit la richesse.</field>
+        </record>
+
+        <record id="norm_service_d2" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="threshold_bad">30</field>
+            <field name="threshold_watch">45</field>
+            <field name="threshold_good">60</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 45 % (services)</field>
+            <field name="sector_median">52</field>
+            <field name="comment">Le taux de valeur ajoutée est très élevé en services, les consommations externes étant limitées.</field>
+        </record>
+
+        <record id="norm_service_d3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="threshold_bad">4</field>
+            <field name="threshold_watch">9</field>
+            <field name="threshold_good">16</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 10 % (services)</field>
+            <field name="sector_median">12</field>
+        </record>
+
+        <record id="norm_service_e1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="threshold_bad">88</field>
+            <field name="threshold_watch">75</field>
+            <field name="threshold_good">62</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 75 % (services)</field>
+            <field name="sector_median">68</field>
+            <field name="comment">La masse salariale absorbe structurellement l'essentiel de la valeur ajoutée en prestation de services : le seuil d'alerte est donc plus haut qu'ailleurs.</field>
+        </record>
+
+        <!-- Normes : BTP / Construction -->
+        <record id="norm_btp_a1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="threshold_bad">18</field>
+            <field name="threshold_watch">28</field>
+            <field name="threshold_good">38</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 28 % (BTP)</field>
+            <field name="sector_median">31</field>
+        </record>
+
+        <record id="norm_btp_a4" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_a4"/>
+            <field name="threshold_bad">6</field>
+            <field name="threshold_watch">4</field>
+            <field name="threshold_good">3</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 3 ans (BTP)</field>
+            <field name="sector_median">3.4</field>
+        </record>
+
+        <record id="norm_btp_b1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_b1"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.3</field>
+            <field name="threshold_good">1.6</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,3 (BTP)</field>
+            <field name="sector_median">1.35</field>
+            <field name="comment">Une liquidité renforcée est nécessaire pour absorber la volatilité des encaissements sur chantiers.</field>
+        </record>
+
+        <record id="norm_btp_b5" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_b5"/>
+            <field name="threshold_bad">120</field>
+            <field name="threshold_watch">85</field>
+            <field name="threshold_good">50</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 85 jours (BTP)</field>
+            <field name="sector_median">78</field>
+            <field name="comment">Le besoin en fonds de roulement du BTP est structurellement élevé : en-cours de chantiers, retenues de garantie et délais de règlement des marchés publics.</field>
+        </record>
+
+        <record id="norm_btp_c3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_c3"/>
+            <field name="threshold_bad">120</field>
+            <field name="threshold_watch">85</field>
+            <field name="threshold_good">55</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 85 jours (BTP)</field>
+            <field name="sector_median">92</field>
+            <field name="comment">Les délais de paiement sur marchés publics à Madagascar dépassent fréquemment 90 jours : ce point doit être intégré au plan de trésorerie.</field>
+        </record>
+
+        <record id="norm_btp_c5" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_c5"/>
+            <field name="threshold_bad">120</field>
+            <field name="threshold_watch">85</field>
+            <field name="threshold_good">50</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 85 jours (BTP)</field>
+            <field name="sector_median">75</field>
+        </record>
+
+        <record id="norm_btp_d3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="threshold_bad">4</field>
+            <field name="threshold_watch">8</field>
+            <field name="threshold_good">14</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 8 % (BTP)</field>
+            <field name="sector_median">10</field>
+        </record>
+
+        <record id="norm_btp_d4" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_d4"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">3</field>
+            <field name="threshold_good">6</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 3 % (BTP)</field>
+            <field name="sector_median">4.2</field>
+        </record>
+
+        <record id="norm_btp_e1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="threshold_bad">78</field>
+            <field name="threshold_watch">60</field>
+            <field name="threshold_good">45</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 60 % (BTP)</field>
+            <field name="sector_median">52</field>
+        </record>
+
+        <!-- Normes : Agro-industrie -->
+        <record id="norm_agro_a1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="threshold_bad">20</field>
+            <field name="threshold_watch">30</field>
+            <field name="threshold_good">40</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 30 % (agro)</field>
+            <field name="sector_median">33</field>
+        </record>
+
+        <record id="norm_agro_a9" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">35</field>
+            <field name="threshold_good">70</field>
+            <field name="threshold_max">70</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">35 à 70 % (agro)</field>
+            <field name="sector_median">48</field>
+        </record>
+
+        <record id="norm_agro_b5" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_b5"/>
+            <field name="threshold_bad">140</field>
+            <field name="threshold_watch">100</field>
+            <field name="threshold_good">60</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 100 jours (agro)</field>
+            <field name="sector_median">88</field>
+            <field name="comment">Le besoin en fonds de roulement varie fortement selon la position dans le cycle de campagne : une situation intermédiaire n'est comparable qu'à la même date de l'année précédente.</field>
+        </record>
+
+        <record id="norm_agro_c1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="threshold_bad">180</field>
+            <field name="threshold_watch">120</field>
+            <field name="threshold_good">70</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 120 jours (agro)</field>
+            <field name="sector_median">105</field>
+            <field name="comment">Les stocks de campagne justifient des durées d'écoulement élevées sur une partie de l'exercice.</field>
+        </record>
+
+        <record id="norm_agro_d2" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="threshold_bad">18</field>
+            <field name="threshold_watch">28</field>
+            <field name="threshold_good">38</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 28 % (agro)</field>
+            <field name="sector_median">31</field>
+        </record>
+
+        <record id="norm_agro_d3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">10</field>
+            <field name="threshold_good">17</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 10 % (agro)</field>
+            <field name="sector_median">13</field>
+        </record>
+
+        <record id="norm_agro_f4" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_f4"/>
+            <field name="threshold_bad">5</field>
+            <field name="threshold_watch">10</field>
+            <field name="threshold_good">16</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 10 % (agro)</field>
+            <field name="sector_median">12</field>
+        </record>
+
+        <!-- Normes : Transport / Logistique -->
+        <record id="norm_transport_a1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="threshold_bad">20</field>
+            <field name="threshold_watch">28</field>
+            <field name="threshold_good">38</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 28 % (transport)</field>
+            <field name="sector_median">30</field>
+        </record>
+
+        <record id="norm_transport_a10" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_a10"/>
+            <field name="threshold_bad">75</field>
+            <field name="threshold_watch">60</field>
+            <field name="threshold_good">40</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 60 % (transport)</field>
+            <field name="sector_median">52</field>
+            <field name="comment">La vétusté de la flotte est l'indicateur de risque majeur : elle conditionne les coûts de maintenance, la consommation et la disponibilité du parc.</field>
+        </record>
+
+        <record id="norm_transport_a9" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_a9"/>
+            <field name="threshold_bad">0</field>
+            <field name="threshold_watch">50</field>
+            <field name="threshold_good">85</field>
+            <field name="threshold_max">85</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">50 à 85 % (transport)</field>
+            <field name="sector_median">68</field>
+            <field name="comment">La flotte de véhicules constitue l'essentiel de l'actif : une part élevée d'immobilisations est structurelle.</field>
+        </record>
+
+        <record id="norm_transport_c1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_c1"/>
+            <field name="threshold_bad">60</field>
+            <field name="threshold_watch">35</field>
+            <field name="threshold_good">20</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 35 jours (transport)</field>
+            <field name="sector_median">25</field>
+            <field name="comment">Les stocks se limitent au carburant et aux pièces détachées.</field>
+        </record>
+
+        <record id="norm_transport_c6" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="threshold_bad">0.5</field>
+            <field name="threshold_watch">0.9</field>
+            <field name="threshold_good">1.4</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 0,9 (transport)</field>
+            <field name="sector_median">1.1</field>
+        </record>
+
+        <record id="norm_transport_d2" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_d2"/>
+            <field name="threshold_bad">25</field>
+            <field name="threshold_watch">38</field>
+            <field name="threshold_good">50</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 38 % (transport)</field>
+            <field name="sector_median">43</field>
+        </record>
+
+        <record id="norm_transport_d3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_d3"/>
+            <field name="threshold_bad">8</field>
+            <field name="threshold_watch">15</field>
+            <field name="threshold_good">25</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 15 % (transport)</field>
+            <field name="sector_median">19</field>
+            <field name="comment">L'excédent brut d'exploitation doit être élevé pour absorber des dotations aux amortissements très importantes sur la flotte.</field>
+        </record>
+
+        <record id="norm_transport_e1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_e1"/>
+            <field name="threshold_bad">80</field>
+            <field name="threshold_watch">62</field>
+            <field name="threshold_good">48</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 62 % (transport)</field>
+            <field name="sector_median">55</field>
+        </record>
+
+        <record id="norm_transport_f5" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_f5"/>
+            <field name="threshold_bad">0.4</field>
+            <field name="threshold_watch">0.7</field>
+            <field name="threshold_good">1.0</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 0,7 (transport)</field>
+            <field name="sector_median">0.8</field>
+            <field name="comment">Le renouvellement de flotte est fréquemment financé en crédit-bail : ce retraitement doit être renseigné pour fiabiliser le ratio.</field>
+        </record>
+
+        <!-- Normes : Microfinance / Financier -->
+        <record id="norm_microfinance_a1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_microfinance"/>
+            <field name="ratio_id" ref="ratio_a1"/>
+            <field name="threshold_bad">8</field>
+            <field name="threshold_watch">12</field>
+            <field name="threshold_good">20</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 12 % (norme prudentielle)</field>
+            <field name="sector_median">15</field>
+            <field name="comment">Les établissements financiers sont soumis à des ratios prudentiels spécifiques : le niveau de fonds propres s'apprécie au regard de la réglementation de la Commission de Supervision Bancaire et Financière, et non des normes applicables aux entreprises commerciales.</field>
+        </record>
+
+        <record id="norm_microfinance_a2" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_microfinance"/>
+            <field name="ratio_id" ref="ratio_a2"/>
+            <field name="threshold_bad">9</field>
+            <field name="threshold_watch">7</field>
+            <field name="threshold_good">5</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 7 (secteur financier)</field>
+            <field name="sector_median">6</field>
+            <field name="comment">L'endettement est la matière première de l'activité de crédit : un ratio élevé est structurel et non un signe de fragilité.</field>
+        </record>
+
+        <record id="norm_microfinance_a3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_microfinance"/>
+            <field name="ratio_id" ref="ratio_a3"/>
+            <field name="threshold_bad">92</field>
+            <field name="threshold_watch">88</field>
+            <field name="threshold_good">80</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 88 % (secteur financier)</field>
+            <field name="sector_median">85</field>
+        </record>
+
+        <record id="norm_microfinance_c6" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_microfinance"/>
+            <field name="ratio_id" ref="ratio_c6"/>
+            <field name="threshold_bad">0.05</field>
+            <field name="threshold_watch">0.12</field>
+            <field name="threshold_good">0.25</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 0,12 (secteur financier)</field>
+            <field name="sector_median">0.18</field>
+            <field name="comment">La rotation d'actif d'un établissement financier n'est pas comparable à celle d'une entreprise commerciale.</field>
+        </record>
+
+        <record id="norm_microfinance_e3" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_microfinance"/>
+            <field name="ratio_id" ref="ratio_e3"/>
+            <field name="threshold_bad">45</field>
+            <field name="threshold_watch">32</field>
+            <field name="threshold_good">20</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 32 % (secteur financier)</field>
+            <field name="sector_median">28</field>
+            <field name="comment">Le coût des ressources est un poste de charge normal et important dans l'activité de crédit.</field>
+        </record>
+
+        <record id="norm_microfinance_f1" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_microfinance"/>
+            <field name="ratio_id" ref="ratio_f1"/>
+            <field name="threshold_bad">12</field>
+            <field name="threshold_watch">8</field>
+            <field name="threshold_good">5</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 8 % (secteur financier)</field>
+            <field name="sector_median">7</field>
+        </record>
+
+        <record id="norm_commerce_d13" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.4</field>
+            <field name="threshold_good">2.2</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,4 (négoce)</field>
+            <field name="sector_median">1.8</field>
+            <field name="comment">Le négoce supporte peu de dotations aux amortissements : la couverture des charges de structure doit y être plus confortable qu'en industrie, faute de quoi la faiblesse vient du taux de marge lui-même.</field>
+        </record>
+
+        <record id="norm_commerce_d14" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="threshold_bad">100</field>
+            <field name="threshold_watch">88</field>
+            <field name="threshold_good">72</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 88 % (négoce)</field>
+            <field name="sector_median">80</field>
+            <field name="comment">En négoce, la rotation rapide permet d'atteindre le point mort tôt dans l'exercice : un seuil dépassant 90 pour cent du chiffre d'affaires signale une marge commerciale insuffisante.</field>
+        </record>
+
+        <record id="norm_industry_d13" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.25</field>
+            <field name="threshold_good">1.8</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,25 (industrie)</field>
+            <field name="sector_median">1.5</field>
+            <field name="comment">L'industrie supporte des dotations élevées : une couverture de 1,25 fois est déjà satisfaisante, alors qu'elle serait jugée juste en négoce.</field>
+        </record>
+
+        <record id="norm_industry_d14" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_industry"/>
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="threshold_bad">100</field>
+            <field name="threshold_watch">92</field>
+            <field name="threshold_good">80</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 92 % (industrie)</field>
+            <field name="sector_median">86</field>
+            <field name="comment">Le poids des amortissements repousse mécaniquement le point mort en industrie.</field>
+        </record>
+
+        <record id="norm_service_d13" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.5</field>
+            <field name="threshold_good">2.5</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,5 (services)</field>
+            <field name="sector_median">2.0</field>
+            <field name="comment">En services, les charges de structure sont légères : une couverture inférieure à 1,5 traduit une masse salariale mal calibrée plutôt qu'un problème d'investissement.</field>
+        </record>
+
+        <record id="norm_service_d14" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_service"/>
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="threshold_bad">100</field>
+            <field name="threshold_watch">85</field>
+            <field name="threshold_good">68</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 85 % (services)</field>
+            <field name="sector_median">76</field>
+        </record>
+
+        <record id="norm_btp_d13" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.3</field>
+            <field name="threshold_good">2.0</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,3 (BTP)</field>
+            <field name="sector_median">1.6</field>
+            <field name="comment">La volatilité des chantiers impose une couverture des charges de structure supérieure à l'équilibre strict, pour absorber les périodes creuses.</field>
+        </record>
+
+        <record id="norm_btp_d14" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_btp"/>
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="threshold_bad">100</field>
+            <field name="threshold_watch">90</field>
+            <field name="threshold_good">75</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 90 % (BTP)</field>
+            <field name="sector_median">83</field>
+        </record>
+
+        <record id="norm_transport_d13" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.2</field>
+            <field name="threshold_good">1.7</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,2 (transport)</field>
+            <field name="sector_median">1.4</field>
+            <field name="comment">Les dotations sur la flotte constituent l'essentiel des charges de structure : leur couverture doit être suivie de près lors des renouvellements de véhicules.</field>
+        </record>
+
+        <record id="norm_transport_d14" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_transport"/>
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="threshold_bad">100</field>
+            <field name="threshold_watch">93</field>
+            <field name="threshold_good">82</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 93 % (transport)</field>
+            <field name="sector_median">88</field>
+        </record>
+
+        <record id="norm_agro_d13" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_d13"/>
+            <field name="threshold_bad">1</field>
+            <field name="threshold_watch">1.3</field>
+            <field name="threshold_good">2.0</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&gt; 1,3 (agro)</field>
+            <field name="sector_median">1.6</field>
+        </record>
+
+        <record id="norm_agro_d14" model="fa.sector.norm">
+            <field name="sector_id" ref="sector_agro"/>
+            <field name="ratio_id" ref="ratio_d14"/>
+            <field name="threshold_bad">100</field>
+            <field name="threshold_watch">90</field>
+            <field name="threshold_good">76</field>
+            <field name="source">default</field>
+            <field name="source_note">Référence professionnelle générale ajustée au secteur - à recalibrer sur le portefeuille</field>
+            <field name="norm_label">&lt; 90 % (agro)</field>
+            <field name="sector_median">84</field>
+            <field name="comment">La saisonnalité déplace le point mort selon la position dans la campagne : ce ratio n'est comparable qu'à la même date d'un exercice à l'autre.</field>
+        </record>
+    </data>
+</odoo>

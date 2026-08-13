@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== DEFINITION DES RATIOS ===== -->
+    <record id="view_fa_ratio_tree" model="ir.ui.view">
+        <field name="name">fa.ratio.tree</field>
+        <field name="model">fa.ratio</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="family"/>
+                <field name="formula"/>
+                <field name="unit"/>
+                <field name="direction"/>
+                <field name="threshold_bad" string="Critique"/>
+                <field name="threshold_watch" string="Vigilance"/>
+                <field name="threshold_good" string="Confort"/>
+                <field name="norm_label" string="Norme affichée"/>
+                <field name="threshold_summary" string="Grille de lecture" optional="show"/>
+                <field name="annualize" string="Annualiser"/>
+                <field name="active" widget="boolean_toggle" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_ratio_form" model="ir.ui.view">
+        <field name="name">fa.ratio.form</field>
+        <field name="model">fa.ratio</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="code"/>
+                            <field name="family"/>
+                            <field name="sequence"/>
+                            <field name="unit"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Seuils d'appréciation">
+                            <field name="direction"/>
+                            <field name="threshold_bad" string="Seuil critique"/>
+                            <field name="threshold_watch" string="Seuil de vigilance"/>
+                            <field name="threshold_good" string="Seuil de confort"/>
+                            <field name="threshold_max"
+                                   attrs="{'invisible': [('direction','!=','range')]}"/>
+                            <field name="norm_label"/>
+                            <field name="annualize"/>
+                        </group>
+                    </group>
+                    <group string="Formule de calcul">
+                        <field name="formula" nolabel="1" placeholder="Ex. ST_AC / ST_PC"/>
+                        <div class="text-muted">
+                            Variables disponibles : les codes de rubriques (ST_CP, AC_STOCK, PA_FOURN...)
+                            et les agrégats calculés (FRNG, BFR, TN, VA, EBE, REX, CAF, CA, AI,
+                            CAPITAUX_PERMANENTS, DETTES_FIN, CAPITAUX_EMPLOYES...).
+                            Protégez les divisions : <code>X / Y if Y else 0</code>.
+                        </div>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Grille de lecture</strong>
+                        <field name="threshold_summary" nolabel="1" readonly="1"/>
+                        <div class="text-muted mt-1">
+                            La <em>norme affichée</em> dans les rapports doit désigner le
+                            seuil de vigilance : c'est la frontière à partir de laquelle
+                            l'indicateur cesse d'être un point d'attention.
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="Documentation" name="doc">
+                            <group string="Ce que mesure le ratio">
+                                <field name="interpretation" nolabel="1"
+                                       placeholder="Définition accessible à un lecteur non financier : que représente cet indicateur, à quelle question répond-il ?"/>
+                            </group>
+                            <group string="Précisions de calcul">
+                                <field name="calculation_note" nolabel="1"
+                                       placeholder="Numérateur et dénominateur détaillés, retraitements appliqués, données complémentaires nécessaires."/>
+                            </group>
+                            <group string="Justification des seuils">
+                                <field name="threshold_rationale" nolabel="1"
+                                       placeholder="Pourquoi ces valeurs de seuil ? Que traduit leur franchissement ? D'où proviennent-elles ?"/>
+                            </group>
+                            <group string="Limites d'interprétation">
+                                <field name="limits" nolabel="1"
+                                       placeholder="Dans quelles configurations ce ratio perd-il sa pertinence ? Quels biais connaît-il ?"/>
+                            </group>
+                        </page>
+                        <page string="Règles de commentaire" name="rules">
+                            <field name="rule_ids" nolabel="1">
+                                <tree editable="bottom"
+                                      decoration-danger="appreciation == 'bad'"
+                                      decoration-warning="appreciation == 'watch'"
+                                      decoration-success="appreciation == 'good'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="condition"/>
+                                    <field name="appreciation"/>
+                                    <field name="priority"/>
+                                    <field name="force_appreciation" string="Imposer"
+                                           optional="hide"/>
+                                    <field name="comment_tpl" string="Commentaire"/>
+                                    <field name="recommendation_tpl" string="Recommandation"/>
+                                </tree>
+                            </field>
+                            <div class="text-muted mt-2">
+                                Les règles sont évaluées dans l'ordre : la première dont la condition
+                                est vraie s'applique. Variables : <code>value</code>, <code>prev</code>,
+                                <code>variation</code>. Dans les textes, utilisez
+                                <code>{value}</code>, <code>{prev}</code>, <code>{norm}</code>,
+                                <code>{company}</code>, <code>{period}</code>.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fa_ratio_search" model="ir.ui.view">
+        <field name="name">fa.ratio.search</field>
+        <field name="model">fa.ratio</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <filter name="f_struct" string="Structure" domain="[('family','=','structure')]"/>
+                <filter name="f_liq" string="Liquidité" domain="[('family','=','liquidity')]"/>
+                <filter name="f_act" string="Activité" domain="[('family','=','activity')]"/>
+                <filter name="f_prof" string="Rentabilité" domain="[('family','=','profitability')]"/>
+                <group expand="1" string="Regrouper par">
+                    <filter name="g_family" string="Famille" context="{'group_by': 'family'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_ratio" model="ir.actions.act_window">
+        <field name="name">Ratios &amp; seuils</field>
+        <field name="res_model">fa.ratio</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_g_family': 1}</field>
+    </record>
+
+    <!-- ===== RESULTATS DE RATIOS ===== -->
+    <record id="view_fa_ratio_result_tree" model="ir.ui.view">
+        <field name="name">fa.ratio.result.tree</field>
+        <field name="model">fa.ratio.result</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" default_order="family,sequence"
+                  decoration-danger="appreciation == 'bad'"
+                  decoration-warning="appreciation == 'watch'"
+                  decoration-success="appreciation == 'good'"
+                  decoration-muted="is_na">
+                <field name="sequence" invisible="1"/>
+                <field name="is_na" invisible="1"/>
+                <field name="statement_id" optional="show"/>
+                <field name="family"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="value_display" string="Valeur"/>
+                <field name="value" string="Valeur num." optional="hide"/>
+                <field name="previous_value" string="N-1" optional="hide"/>
+                <field name="variation" string="Variation" optional="hide"/>
+                <field name="trend" string="Tendance" optional="show"/>
+                <field name="norm_applied" string="Norme appliquée"/>
+                <field name="is_sector_norm" string="Sectorielle" optional="hide"
+                       widget="boolean_toggle"/>
+                <field name="sector_id" string="Secteur" optional="hide"/>
+                <field name="sector_median" string="Médiane secteur" optional="hide"/>
+                <field name="appreciation" widget="badge"
+                       decoration-danger="appreciation == 'bad'"
+                       decoration-warning="appreciation == 'watch'"
+                       decoration-info="appreciation == 'ok'"
+                       decoration-success="appreciation == 'good'"/>
+                <field name="interpretation" string="Ce que mesure le ratio" optional="hide"/>
+                <field name="comment" string="Commentaire" optional="show"/>
+                <field name="recommendation" string="Recommandation" optional="show"/>
+                <field name="priority_final" string="Priorité" optional="hide"/>
+                <field name="hide_in_report" string="Masqué au rapport" optional="hide"
+                       widget="boolean_toggle"/>
+                <field name="is_customized" string="Modifié" optional="hide"
+                       widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- ===== VUE D'EDITION DES COMMENTAIRES ET RECOMMANDATIONS ===== -->
+    <record id="view_fa_ratio_result_edit_tree" model="ir.ui.view">
+        <field name="name">fa.ratio.result.edit.tree</field>
+        <field name="model">fa.ratio.result</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" editable="bottom" default_order="family,sequence"
+                  decoration-danger="appreciation == 'bad'"
+                  decoration-warning="appreciation == 'watch'"
+                  decoration-success="appreciation == 'good'"
+                  decoration-muted="is_na">
+                <field name="sequence" invisible="1"/>
+                <field name="is_na" invisible="1"/>
+                <field name="code" string="Code" readonly="1"/>
+                <field name="name" string="Ratio" readonly="1"/>
+                <field name="value_display" string="Valeur" readonly="1"/>
+                <field name="norm_applied" string="Norme" readonly="1"/>
+                <field name="appreciation" string="Appréciation" widget="badge"
+                       decoration-danger="appreciation == 'bad'"
+                       decoration-warning="appreciation == 'watch'"
+                       decoration-info="appreciation == 'ok'"
+                       decoration-success="appreciation == 'good'"/>
+                <field name="priority" string="Priorité"/>
+                <field name="interpretation" string="Ce que mesure le ratio" readonly="1"
+                       optional="show"/>
+                <field name="comment_auto" string="Commentaire généré" readonly="1"
+                       optional="show"/>
+                <field name="comment_manual" string="Votre commentaire" widget="text"
+                       placeholder="Remplace le texte généré dans le rapport..."/>
+                <field name="recommendation_auto" string="Recommandation générée" readonly="1"
+                       optional="show"/>
+                <field name="recommendation_manual" string="Votre recommandation" widget="text"
+                       placeholder="Remplace la recommandation générée..."/>
+                <field name="priority_manual" string="Priorité"/>
+                <field name="hide_in_report" string="Masquer au rapport"
+                       widget="boolean_toggle"/>
+                <field name="is_customized" string="Modifié" widget="boolean_toggle" readonly="1"/>
+                <button name="action_copy_auto_to_manual" type="object" icon="fa-copy"
+                        title="Recopier le texte généré dans le champ éditable pour l'adapter"/>
+                <button name="action_reset_text" type="object" icon="fa-undo"
+                        title="Rétablir le texte généré"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_fa_ratio_result_edit" model="ir.actions.act_window">
+        <field name="name">Réviser les commentaires</field>
+        <field name="res_model">fa.ratio.result</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_fa_ratio_result_edit_tree"/>
+        <field name="context">{'search_default_group_family': 1}</field>
+    </record>
+
+    <record id="view_fa_ratio_result_form" model="ir.ui.view">
+        <field name="name">fa.ratio.result.form</field>
+        <field name="model">fa.ratio.result</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_copy_auto_to_manual" type="object"
+                            string="Partir du texte généré" class="btn-secondary"
+                            help="Recopie le texte généré dans les champs éditables pour l'adapter."/>
+                    <button name="action_reset_text" type="object"
+                            string="Rétablir le texte généré" class="btn-secondary"
+                            attrs="{'invisible': [('is_customized','=',False)]}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Texte personnalisé" bg_color="bg-info"
+                            attrs="{'invisible': ['|', ('is_customized','=',False),
+                                                       ('hide_in_report','=',True)]}"/>
+                    <widget name="web_ribbon" title="Masqué au rapport" bg_color="bg-warning"
+                            attrs="{'invisible': [('hide_in_report','=',False)]}"/>
+                    <field name="is_customized" invisible="1"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="value_display" readonly="1"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="statement_id" readonly="1"/>
+                            <field name="code" readonly="1"/>
+                            <field name="family" readonly="1"/>
+                            <field name="formula" readonly="1"/>
+                            <field name="annualized" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="value" readonly="1"/>
+                            <field name="previous_value" readonly="1"/>
+                            <field name="variation" readonly="1"/>
+                            <field name="trend" readonly="1"/>
+                            <field name="norm_applied" readonly="1"/>
+                            <field name="is_sector_norm" readonly="1"/>
+                            <field name="sector_id" readonly="1"/>
+                            <field name="sector_median" readonly="1"/>
+                            <field name="vs_median" readonly="1"/>
+                            <field name="appreciation" widget="badge" readonly="1"/>
+                            <field name="priority" string="Priorité automatique" readonly="1"/>
+                            <field name="priority_manual"/>
+                            <field name="hide_in_report"/>
+                            <field name="is_na" readonly="1"/>
+                            <field name="na_reason" readonly="1"
+                                   attrs="{'invisible': [('is_na','=',False)]}"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert"
+                         attrs="{'invisible': [('interpretation','=',False)]}">
+                        <strong>Ce que mesure ce ratio</strong>
+                        <field name="interpretation" nolabel="1" readonly="1"/>
+                        <div class="text-muted mt-1">
+                            Calcul : <field name="formula" readonly="1" nolabel="1"
+                                            class="oe_inline"/>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page string="Commentaire" name="comment">
+                            <group string="Généré automatiquement">
+                                <field name="comment_auto" nolabel="1" readonly="1"/>
+                            </group>
+                            <group string="Version du consultant (remplace le texte généré)">
+                                <field name="comment_manual" nolabel="1"
+                                       placeholder="Saisir ici pour surcharger le commentaire automatique dans le rapport."/>
+                            </group>
+                        </page>
+                        <page string="Recommandation" name="reco">
+                            <group string="Générée automatiquement">
+                                <field name="recommendation_auto" nolabel="1" readonly="1"/>
+                            </group>
+                            <group string="Version du consultant">
+                                <field name="recommendation_manual" nolabel="1"
+                                       placeholder="Saisir ici pour surcharger la recommandation automatique."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fa_ratio_result_graph" model="ir.ui.view">
+        <field name="name">fa.ratio.result.graph</field>
+        <field name="model">fa.ratio.result</field>
+        <field name="arch" type="xml">
+            <graph string="Ratios" type="bar" sample="1">
+                <field name="name"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_fa_ratio_result_pivot" model="ir.ui.view">
+        <field name="name">fa.ratio.result.pivot</field>
+        <field name="model">fa.ratio.result</field>
+        <field name="arch" type="xml">
+            <pivot string="Ratios" sample="1">
+                <field name="name" type="row"/>
+                <field name="statement_id" type="col"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_fa_ratio_result_search" model="ir.ui.view">
+        <field name="name">fa.ratio.result.search</field>
+        <field name="model">fa.ratio.result</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="statement_id"/>
+                <field name="partner_id"/>
+                <filter name="bad" string="Critique" domain="[('appreciation','=','bad')]"/>
+                <filter name="watch" string="À surveiller" domain="[('appreciation','=','watch')]"/>
+                <filter name="good" string="Solide" domain="[('appreciation','=','good')]"/>
+                <separator/>
+                <filter name="alerts" string="Points d'attention"
+                        domain="[('appreciation','in',['bad','watch'])]"/>
+                <filter name="calculable" string="Calculables" domain="[('is_na','=',False)]"/>
+                <filter name="customized" string="Textes personnalisés"
+                        domain="[('is_customized','=',True)]"/>
+                <filter name="sector_norm" string="Évalués sur norme sectorielle"
+                        domain="[('is_sector_norm','=',True)]"/>
+                <separator/>
+                <filter name="hidden" string="Masqués au rapport"
+                        domain="[('hide_in_report','=',True)]"/>
+                <filter name="printed" string="Inclus au rapport"
+                        domain="[('hide_in_report','=',False)]"/>
+                <group expand="1" string="Regrouper par">
+                    <filter name="group_family" string="Famille" context="{'group_by': 'family'}"/>
+                    <filter name="group_statement" string="Période" context="{'group_by': 'statement_id'}"/>
+                    <filter name="group_appr" string="Appréciation" context="{'group_by': 'appreciation'}"/>
+                    <filter name="group_partner" string="Client" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_sector" string="Secteur" context="{'group_by': 'sector_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_ratio_result" model="ir.actions.act_window">
+        <field name="name">Ratios &amp; marges</field>
+        <field name="res_model">fa.ratio.result</field>
+        <field name="view_mode">tree,graph,pivot,form</field>
+        <field name="context">{'search_default_group_family': 1}</field>
+    </record>
+
+    <!-- ===== AGREGATS ===== -->
+    <record id="view_fa_aggregate_tree" model="ir.ui.view">
+        <field name="name">fa.aggregate.tree</field>
+        <field name="model">fa.aggregate</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" edit="0" default_order="sequence">
+                <field name="sequence" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="unit" invisible="1"/>
+                <field name="statement_id"/>
+                <field name="category"/>
+                <field name="code" optional="hide"/>
+                <field name="name"/>
+                <field name="value_display" string="Valeur"/>
+                <field name="amount" widget="monetary" sum="Total" optional="hide"/>
+                <field name="amount_annualized" widget="monetary" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_aggregate_pivot" model="ir.ui.view">
+        <field name="name">fa.aggregate.pivot</field>
+        <field name="model">fa.aggregate</field>
+        <field name="arch" type="xml">
+            <pivot string="Agrégats" sample="1">
+                <field name="name" type="row"/>
+                <field name="statement_id" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_fa_aggregate_search" model="ir.ui.view">
+        <field name="name">fa.aggregate.search</field>
+        <field name="model">fa.aggregate</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="statement_id"/>
+                <filter name="c_bal" string="Bilan financier" domain="[('category','=','balance')]"/>
+                <filter name="c_eq" string="Équilibre financier" domain="[('category','=','equilibrium')]"/>
+                <filter name="c_sig" string="SIG" domain="[('category','=','sig')]"/>
+                <filter name="c_caf" string="CAF" domain="[('category','=','caf')]"/>
+                <filter name="c_be" string="Seuil de rentabilité"
+                        domain="[('category','=','breakeven')]"/>
+                <group expand="1" string="Regrouper par">
+                    <filter name="g_cat" string="Catégorie" context="{'group_by': 'category'}"/>
+                    <filter name="g_stmt" string="Période" context="{'group_by': 'statement_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_balance_sheet" model="ir.actions.act_window">
+        <field name="name">Bilan financier</field>
+        <field name="res_model">fa.aggregate</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="domain">[('category','in',['balance','equilibrium'])]</field>
+        <field name="context">{'search_default_g_stmt': 1}</field>
+    </record>
+
+    <record id="action_fa_income_statement" model="ir.actions.act_window">
+        <field name="name">Compte de résultat / SIG</field>
+        <field name="res_model">fa.aggregate</field>
+        <field name="view_mode">tree,pivot</field>
+        <field name="domain">[('category','in',['sig','caf','breakeven'])]</field>
+        <field name="context">{'search_default_g_stmt': 1}</field>
+    </record>
+
+</odoo>

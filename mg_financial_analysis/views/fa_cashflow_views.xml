@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fa_cashflow_tree" model="ir.ui.view">
+        <field name="name">fa.cashflow.tree</field>
+        <field name="model">fa.cashflow</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" edit="0" default_order="method,sequence"
+                  decoration-bf="line_type in ('subtotal','total')"
+                  decoration-primary="line_type == 'total'"
+                  decoration-info="line_type == 'control'">
+                <field name="sequence" invisible="1"/>
+                <field name="line_type" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="statement_id" optional="hide"/>
+                <field name="method" string="Méthode" optional="hide"/>
+                <field name="category" string="Catégorie"/>
+                <field name="code" string="Code" optional="hide"/>
+                <field name="name" string="Libellé"/>
+                <field name="amount" string="Montant" widget="monetary" sum="Total"/>
+                <field name="note" string="Précision" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_cashflow_search" model="ir.ui.view">
+        <field name="name">fa.cashflow.search</field>
+        <field name="model">fa.cashflow</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="statement_id"/>
+                <filter name="indirect" string="Méthode indirecte"
+                        domain="[('method','=','indirect')]"/>
+                <filter name="direct" string="Méthode directe"
+                        domain="[('method','=','direct')]"/>
+                <separator/>
+                <filter name="operating" string="Opérationnel"
+                        domain="[('category','=','operating')]"/>
+                <filter name="investing" string="Investissement"
+                        domain="[('category','=','investing')]"/>
+                <filter name="financing" string="Financement"
+                        domain="[('category','=','financing')]"/>
+                <group expand="1" string="Regrouper par">
+                    <filter name="g_cat" string="Catégorie" context="{'group_by':'category'}"/>
+                    <filter name="g_stmt" string="Période" context="{'group_by':'statement_id'}"/>
+                    <filter name="g_method" string="Méthode" context="{'group_by':'method'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_cashflow" model="ir.actions.act_window">
+        <field name="name">Tableau des flux de trésorerie</field>
+        <field name="res_model">fa.cashflow</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'search_default_indirect': 1, 'search_default_g_stmt': 1}</field>
+    </record>
+</odoo>

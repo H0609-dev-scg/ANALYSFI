@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_fa_statement" model="ir.actions.report">
+        <field name="name">Rapport d'analyse financière</field>
+        <field name="model">fa.statement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mg_financial_analysis.report_fa_statement</field>
+        <field name="report_file">mg_financial_analysis.report_fa_statement</field>
+        <field name="print_report_name">"Analyse financiere - %s" % (object.name or '')</field>
+        <field name="binding_model_id" ref="model_fa_statement"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- Format paysage : nécessaire pour loger N colonnes de périodes -->
+    <record id="paperformat_fa_landscape" model="report.paperformat">
+        <field name="name">Analyse financière - paysage A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">28</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">6</field>
+        <field name="margin_right">6</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">22</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_fa_comparison" model="ir.actions.report">
+        <field name="name">Rapport comparatif multi-périodes</field>
+        <field name="model">fa.comparison</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mg_financial_analysis.report_fa_comparison</field>
+        <field name="report_file">mg_financial_analysis.report_fa_comparison</field>
+        <field name="print_report_name">"Analyse comparative - %s" % (object.partner_id.name or '')</field>
+        <field name="binding_model_id" ref="model_fa_comparison"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_fa_landscape"/>
+    </record>
+</odoo>

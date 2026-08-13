@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fa_reload_data_form" model="ir.ui.view">
+        <field name="name">fa.reload.data.form</field>
+        <field name="model">fa.reload.data</field>
+        <field name="arch" type="xml">
+            <form string="Recharger le référentiel">
+                <div class="alert alert-info" role="alert"
+                     attrs="{'invisible': [('state','!=','draft')]}">
+                    Les fichiers de données du module sont protégés contre l'écrasement
+                    afin que vos personnalisations survivent aux mises à jour. En
+                    contrepartie, les <strong>corrections apportées au référentiel livré</strong>
+                    — seuils rectifiés, nouvelles règles, textes de documentation —
+                    ne sont pas reprises automatiquement.
+                    <br/><br/>
+                    Cet assistant les récupère. Commencez par l'aperçu pour voir
+                    précisément ce qui va changer.
+                </div>
+                <group attrs="{'invisible': [('state','!=','draft')]}">
+                    <field name="scope" widget="radio"/>
+                    <field name="keep_thresholds"/>
+                    <field name="keep_manual_texts" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                </group>
+                <div attrs="{'invisible': [('state','!=','preview')]}">
+                    <div class="alert alert-warning" role="alert">
+                        Vérifiez la liste ci-dessous avant de confirmer. Les commentaires
+                        et recommandations que vous avez personnalisés sur vos analyses
+                        ne sont pas concernés : ils sont conservés.
+                    </div>
+                    <pre style="font-family: monospace; font-size: 11px;
+                                max-height: 400px; overflow: auto;"><field
+                        name="preview" nolabel="1" readonly="1"/></pre>
+                </div>
+                <footer>
+                    <button name="action_preview" string="Aperçu des changements"
+                            type="object" class="btn-primary"
+                            attrs="{'invisible': [('state','!=','draft')]}"/>
+                    <button name="action_reload" string="Recharger le référentiel"
+                            type="object" class="btn-primary"
+                            attrs="{'invisible': [('state','!=','preview')]}"
+                            confirm="Le référentiel livré va remplacer les valeurs en base pour les éléments listés. Confirmer ?"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fa_reload_data" model="ir.actions.act_window">
+        <field name="name">Recharger le référentiel livré</field>
+        <field name="res_model">fa.reload.data</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

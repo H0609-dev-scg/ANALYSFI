@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Jeu de démonstration : 3 périodes comparées -->
+
+        <record id="demo_partner" model="res.partner">
+            <field name="name">SOCIETE MALAGASY DE DISTRIBUTION (DEMO)</field>
+            <field name="is_company" eval="True"/>
+            <field name="city">Antananarivo</field>
+            <field name="street">Lot II M 45 Bis, Analakely</field>
+        </record>
+
+        <record id="demo_analysis" model="fa.analysis">
+            <field name="partner_id" ref="demo_partner"/>
+            <field name="sector_id" ref="sector_commerce"/>
+            <field name="activity_mode">mixed</field>
+            <field name="nif">3000123456</field>
+            <field name="stat">46900 11 2018 0 12345</field>
+            <field name="scale">unit</field>
+            <field name="show_gross" eval="True"/>
+            <field name="state">progress</field>
+            <field name="note" type="html"><![CDATA[<p>Mission d'analyse financiere portant sur trois periodes : les exercices 2024 et 2025 puis le premier semestre 2026. Societe de distribution de produits de grande consommation implantee a Antananarivo. L'objectif est d'apprecier la trajectoire financiere sur la periode et d'identifier les leviers de redressement.</p>]]></field>
+        </record>
+
+        <record id="demo_stmt_2024" model="fa.statement">
+            <field name="name">Exercice 2024</field>
+            <field name="analysis_id" ref="demo_analysis"/>
+            <field name="period_type">annual</field>
+            <field name="date_from">2024-01-01</field>
+            <field name="date_to">2024-12-31</field>
+            <field name="is_audited" eval="True"/>
+        </record>
+
+        <record id="demo_stmt_2025" model="fa.statement">
+            <field name="name">Exercice 2025</field>
+            <field name="analysis_id" ref="demo_analysis"/>
+            <field name="period_type">annual</field>
+            <field name="date_from">2025-01-01</field>
+            <field name="date_to">2025-12-31</field>
+            <field name="is_audited" eval="True"/>
+            <field name="previous_statement_id" ref="demo_stmt_2024"/>
+        </record>
+
+        <record id="demo_stmt_s1_2026" model="fa.statement">
+            <field name="name">S1 2026</field>
+            <field name="analysis_id" ref="demo_analysis"/>
+            <field name="period_type">semester</field>
+            <field name="date_from">2026-01-01</field>
+            <field name="date_to">2026-06-30</field>
+            <field name="previous_statement_id" ref="demo_stmt_2025"/>
+            <field name="seasonality_note">Activite de distribution presentant une saisonnalite moderee : le second semestre represente historiquement 55 pour cent du chiffre d'affaires annuel. L'annualisation du premier semestre sous-estime donc legerement l'activite annuelle attendue.</field>
+        </record>
+
+        <record id="line_demo_stmt_2024_ac_aut_creance" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_aut_creance"/>
+            <field name="amount_net">39000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_cca" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_cca"/>
+            <field name="amount_net">7000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_client" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_client"/>
+            <field name="amount_net">292000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_immo_corp" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp"/>
+            <field name="amount_net">405000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_immo_corp_aut" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_aut"/>
+            <field name="amount_net">115000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_immo_corp_bat" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_bat"/>
+            <field name="amount_net">195000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_immo_corp_ter" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_ter"/>
+            <field name="amount_net">95000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_immo_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_immo_fin"/>
+            <field name="amount_net">12000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_immo_inc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_immo_inc"/>
+            <field name="amount_net">21000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_stock" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_stock"/>
+            <field name="amount_net">248000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_treso" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_treso"/>
+            <field name="amount_net">94000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_ac_tva" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_ac_tva"/>
+            <field name="amount_net">18000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_achats_ttc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_achats_ttc"/>
+            <field name="amount_net">1310000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_amort_cumul" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_amort_cumul"/>
+            <field name="amount_net">222000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_ca_ttc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_ca_ttc"/>
+            <field name="amount_net">1778400000</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_effectif" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_effectif"/>
+            <field name="amount_net">44</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_emprunt_moins_1an" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_emprunt_moins_1an"/>
+            <field name="amount_net">45000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_immo_brut" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_immo_brut"/>
+            <field name="amount_net">648000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_investissements" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_investissements"/>
+            <field name="amount_net">52000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_in_stock_moyen" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_in_stock_moyen"/>
+            <field name="amount_net">239000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_autres_cp" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_autres_cp"/>
+            <field name="amount_net">18000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_aut_dette_c" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_aut_dette_c"/>
+            <field name="amount_net">139000000.0</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_capital" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_capital"/>
+            <field name="amount_net">200000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_emprunt_nc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_emprunt_nc"/>
+            <field name="amount_net">235000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_fourn" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_fourn"/>
+            <field name="amount_net">318000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_impots" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_impots"/>
+            <field name="amount_net">38000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_primes" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_primes"/>
+            <field name="amount_net">70000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_prov_nc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_prov_nc"/>
+            <field name="amount_net">12000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_resultat" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_resultat"/>
+            <field name="amount_net">36000000.0</field>
+        </record>
+        <record id="line_demo_stmt_2024_pa_treso_passif" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pa_treso_passif"/>
+            <field name="amount_net">45000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_achats" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_achats"/>
+            <field name="amount_net">55000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_achat_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_achat_mse"/>
+            <field name="amount_net">905000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_aut_ch_op" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_aut_ch_op"/>
+            <field name="amount_net">7000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_aut_prod_op" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_aut_prod_op"/>
+            <field name="amount_net">5000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_ca_prod" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_ca_prod"/>
+            <field name="amount_net">162000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_ch_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_ch_fin"/>
+            <field name="amount_net">33000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_dotations" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_dotations"/>
+            <field name="amount_net">61000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_impots_taxes" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_impots_taxes"/>
+            <field name="amount_net">29000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_imp_exig" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_imp_exig"/>
+            <field name="amount_net">21000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_personnel" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_personnel"/>
+            <field name="amount_net">232000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_prod_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_prod_fin"/>
+            <field name="amount_net">3000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_reprises" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_reprises"/>
+            <field name="amount_net">3000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_serv_ext" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_serv_ext"/>
+            <field name="amount_net">132000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_var_stock_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_var_stock_mse"/>
+            <field name="amount_net">-18000000</field>
+        </record>
+        <record id="line_demo_stmt_2024_pl_vente_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2024"/>
+            <field name="rubric_id" ref="rubric_pl_vente_mse"/>
+            <field name="amount_net">1320000000</field>
+        </record>
+
+        <record id="line_demo_stmt_2025_ac_aut_creance" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_aut_creance"/>
+            <field name="amount_net">45000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_cca" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_cca"/>
+            <field name="amount_net">8000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_client" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_client"/>
+            <field name="amount_net">340000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_immo_corp" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp"/>
+            <field name="amount_net">420000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_immo_corp_aut" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_aut"/>
+            <field name="amount_net">115000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_immo_corp_bat" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_bat"/>
+            <field name="amount_net">210000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_immo_corp_ter" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_ter"/>
+            <field name="amount_net">95000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_immo_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_immo_fin"/>
+            <field name="amount_net">12000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_immo_inc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_immo_inc"/>
+            <field name="amount_net">18000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_stock" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_stock"/>
+            <field name="amount_net">285000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_treso" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_treso"/>
+            <field name="amount_net">62000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_ac_tva" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_ac_tva"/>
+            <field name="amount_net">22000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_achats_ttc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_achats_ttc"/>
+            <field name="amount_net">1470000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_amort_cumul" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_amort_cumul"/>
+            <field name="amount_net">270000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_ca_ttc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_ca_ttc"/>
+            <field name="amount_net">1953000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_effectif" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_effectif"/>
+            <field name="amount_net">48</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_emprunt_moins_1an" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_emprunt_moins_1an"/>
+            <field name="amount_net">48000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_immo_brut" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_immo_brut"/>
+            <field name="amount_net">690000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_investissements" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_investissements"/>
+            <field name="amount_net">45000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_in_stock_moyen" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_in_stock_moyen"/>
+            <field name="amount_net">272000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_autres_cp" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_autres_cp"/>
+            <field name="amount_net">39000000.0</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_aut_dette_c" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_aut_dette_c"/>
+            <field name="amount_net">118000000.0</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_capital" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_capital"/>
+            <field name="amount_net">200000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_emprunt_nc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_emprunt_nc"/>
+            <field name="amount_net">210000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_fourn" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_fourn"/>
+            <field name="amount_net">395000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_impots" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_impots"/>
+            <field name="amount_net">42000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_primes" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_primes"/>
+            <field name="amount_net">85000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_prov_nc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_prov_nc"/>
+            <field name="amount_net">15000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_resultat" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_resultat"/>
+            <field name="amount_net">6000000.0</field>
+        </record>
+        <record id="line_demo_stmt_2025_pa_treso_passif" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pa_treso_passif"/>
+            <field name="amount_net">72000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_achats" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_achats"/>
+            <field name="amount_net">62000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_achat_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_achat_mse"/>
+            <field name="amount_net">1015000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_aut_ch_op" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_aut_ch_op"/>
+            <field name="amount_net">9000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_aut_prod_op" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_aut_prod_op"/>
+            <field name="amount_net">6000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_ca_prod" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_ca_prod"/>
+            <field name="amount_net">180000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_ch_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_ch_fin"/>
+            <field name="amount_net">38000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_dotations" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_dotations"/>
+            <field name="amount_net">68000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_impots_taxes" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_impots_taxes"/>
+            <field name="amount_net">32000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_imp_exig" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_imp_exig"/>
+            <field name="amount_net">24000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_personnel" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_personnel"/>
+            <field name="amount_net">265000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_prod_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_prod_fin"/>
+            <field name="amount_net">2000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_reprises" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_reprises"/>
+            <field name="amount_net">4000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_serv_ext" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_serv_ext"/>
+            <field name="amount_net">148000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_var_stock_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_var_stock_mse"/>
+            <field name="amount_net">-25000000</field>
+        </record>
+        <record id="line_demo_stmt_2025_pl_vente_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_2025"/>
+            <field name="rubric_id" ref="rubric_pl_vente_mse"/>
+            <field name="amount_net">1450000000</field>
+        </record>
+
+        <record id="line_demo_stmt_s1_2026_ac_aut_creance" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_aut_creance"/>
+            <field name="amount_net">51000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_cca" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_cca"/>
+            <field name="amount_net">9000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_client" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_client"/>
+            <field name="amount_net">378000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_immo_corp" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp"/>
+            <field name="amount_net">398000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_immo_corp_aut" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_aut"/>
+            <field name="amount_net">105000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_immo_corp_bat" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_bat"/>
+            <field name="amount_net">198000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_immo_corp_ter" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_immo_corp_ter"/>
+            <field name="amount_net">95000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_immo_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_immo_fin"/>
+            <field name="amount_net">12000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_immo_inc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_immo_inc"/>
+            <field name="amount_net">16000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_stock" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_stock"/>
+            <field name="amount_net">312000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_treso" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_treso"/>
+            <field name="amount_net">38000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_ac_tva" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_ac_tva"/>
+            <field name="amount_net">25000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_achats_ttc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_achats_ttc"/>
+            <field name="amount_net">745000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_amort_cumul" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_amort_cumul"/>
+            <field name="amount_net">302000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_ca_ttc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_ca_ttc"/>
+            <field name="amount_net">957600000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_effectif" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_effectif"/>
+            <field name="amount_net">50</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_emprunt_moins_1an" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_emprunt_moins_1an"/>
+            <field name="amount_net">48000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_immo_brut" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_immo_brut"/>
+            <field name="amount_net">700000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_investissements" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_investissements"/>
+            <field name="amount_net">12000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_in_stock_moyen" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_in_stock_moyen"/>
+            <field name="amount_net">298000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_autres_cp" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_autres_cp"/>
+            <field name="amount_net">45000000.0</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_aut_dette_c" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_aut_dette_c"/>
+            <field name="amount_net">140200000.0</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_capital" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_capital"/>
+            <field name="amount_net">200000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_emprunt_nc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_emprunt_nc"/>
+            <field name="amount_net">185000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_fourn" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_fourn"/>
+            <field name="amount_net">421000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_impots" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_impots"/>
+            <field name="amount_net">38000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_primes" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_primes"/>
+            <field name="amount_net">85000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_prov_nc" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_prov_nc"/>
+            <field name="amount_net">15000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_resultat" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_resultat"/>
+            <field name="amount_net">-18200000.0</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pa_treso_passif" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pa_treso_passif"/>
+            <field name="amount_net">94000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_achats" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_achats"/>
+            <field name="amount_net">31000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_achat_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_achat_mse"/>
+            <field name="amount_net">511000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_aut_ch_op" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_aut_ch_op"/>
+            <field name="amount_net">4500000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_aut_prod_op" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_aut_prod_op"/>
+            <field name="amount_net">2000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_ca_prod" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_ca_prod"/>
+            <field name="amount_net">88000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_ch_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_ch_fin"/>
+            <field name="amount_net">21000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_dotations" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_dotations"/>
+            <field name="amount_net">35000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_impots_taxes" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_impots_taxes"/>
+            <field name="amount_net">16500000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_imp_exig" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_imp_exig"/>
+            <field name="amount_net">8000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_personnel" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_personnel"/>
+            <field name="amount_net">141000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_prod_fin" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_prod_fin"/>
+            <field name="amount_net">800000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_reprises" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_reprises"/>
+            <field name="amount_net">1000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_serv_ext" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_serv_ext"/>
+            <field name="amount_net">79000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_var_stock_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_var_stock_mse"/>
+            <field name="amount_net">-27000000</field>
+        </record>
+        <record id="line_demo_stmt_s1_2026_pl_vente_mse" model="fa.statement.line">
+            <field name="statement_id" ref="demo_stmt_s1_2026"/>
+            <field name="rubric_id" ref="rubric_pl_vente_mse"/>
+            <field name="amount_net">710000000</field>
+        </record>
+    </data>
+</odoo>

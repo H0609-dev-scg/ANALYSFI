@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_fa" model="ir.module.category">
+            <field name="name">Analyse Financière</field>
+            <field name="description">Gestion des droits du module d'analyse financière</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="group_fa_readonly" model="res.groups">
+            <field name="name">Lecture seule</field>
+            <field name="category_id" ref="module_category_fa"/>
+            <field name="comment">Consultation des dossiers et impression des rapports.</field>
+        </record>
+
+        <record id="group_fa_user" model="res.groups">
+            <field name="name">Consultant</field>
+            <field name="category_id" ref="module_category_fa"/>
+            <field name="implied_ids" eval="[(4, ref('group_fa_readonly'))]"/>
+            <field name="comment">Création et saisie des dossiers, lancement des analyses.</field>
+        </record>
+
+        <record id="group_fa_manager" model="res.groups">
+            <field name="name">Manager / Associé</field>
+            <field name="category_id" ref="module_category_fa"/>
+            <field name="implied_ids" eval="[(4, ref('group_fa_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+            <field name="comment">Paramétrage du référentiel, des ratios et des seuils, suppression.</field>
+        </record>
+
+        <!-- Cloisonnement multi-sociétés -->
+        <record id="fa_analysis_company_rule" model="ir.rule">
+            <field name="name">Dossier d'analyse : multi-sociétés</field>
+            <field name="model_id" ref="model_fa_analysis"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="fa_statement_company_rule" model="ir.rule">
+            <field name="name">État financier : multi-sociétés</field>
+            <field name="model_id" ref="model_fa_statement"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+    </data>
+</odoo>

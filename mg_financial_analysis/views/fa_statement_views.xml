@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============ TREE ============ -->
+    <record id="view_fa_statement_tree" model="ir.ui.view">
+        <field name="name">fa.statement.tree</field>
+        <field name="model">fa.statement</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="not is_balanced" decoration-success="state == 'analyzed'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="analysis_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="period_type"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="duration_months" string="Mois"/>
+                <field name="total_asset" sum="Total Actif" widget="monetary"/>
+                <field name="net_result_pl" string="Résultat net" widget="monetary"/>
+                <field name="is_balanced" string="Équilibré" widget="boolean_toggle"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'confirmed'"
+                       decoration-success="state == 'analyzed'"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============ LIGNES DE SAISIE : BILAN AVEC BRUT/AMORT ============ -->
+    <record id="view_fa_statement_line_tree_gross" model="ir.ui.view">
+        <field name="name">fa.statement.line.tree.gross</field>
+        <field name="model">fa.statement.line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="0" delete="0"
+                  decoration-bf="line_type in ('subtotal','total')"
+                  decoration-muted="is_detail"
+                  decoration-primary="line_type == 'total'">
+                <field name="sequence" invisible="1"/>
+                <field name="line_type" invisible="1"/>
+                <field name="is_detail" invisible="1"/>
+                <field name="has_gross" invisible="1"/>
+                <field name="show_gross" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="code" string="Code" optional="hide" readonly="1"/>
+                <field name="rubric_id" string="Rubrique" readonly="1" options="{'no_open': True}"/>
+                <field name="amount_gross" string="Brut" sum="Brut" optional="hide"
+                       attrs="{'readonly': [('has_gross','=',False)]}"/>
+                <field name="amount_deprec" string="Amort./Prov." sum="Amort." optional="hide"
+                       attrs="{'readonly': [('has_gross','=',False)]}"/>
+                <field name="amount_net" string="Net" sum="Net"/>
+                <field name="amount_previous" string="Net N-1" optional="show"/>
+                <field name="variation" string="Variation" optional="hide" readonly="1"/>
+                <field name="variation_pct" string="Var. %" optional="hide" readonly="1"
+                       widget="percentage" digits="[16,1]"/>
+                <field name="note" string="Commentaire" optional="hide"/>
+                <field name="rubric_note" string="Aide à la saisie" optional="hide" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============ LIGNES DE SAISIE : MONTANT SIMPLE ============ -->
+    <record id="view_fa_statement_line_tree_simple" model="ir.ui.view">
+        <field name="name">fa.statement.line.tree.simple</field>
+        <field name="model">fa.statement.line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="0" delete="0"
+                  decoration-bf="line_type in ('subtotal','total')"
+                  decoration-muted="is_detail"
+                  decoration-primary="line_type == 'total'">
+                <field name="sequence" invisible="1"/>
+                <field name="line_type" invisible="1"/>
+                <field name="is_detail" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="code" string="Code" optional="hide" readonly="1"/>
+                <field name="rubric_id" string="Rubrique" readonly="1" options="{'no_open': True}"/>
+                <field name="amount_net" string="Montant" sum="Total"/>
+                <field name="amount_previous" string="N-1" optional="show"/>
+                <field name="variation" string="Variation" optional="hide" readonly="1"/>
+                <field name="variation_pct" string="Var. %" optional="hide" readonly="1"
+                       widget="percentage" digits="[16,1]"/>
+                <field name="note" string="Commentaire" optional="hide"/>
+                <field name="rubric_note" string="Aide à la saisie" optional="hide" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============ FORMULAIRE PRINCIPAL DE SAISIE ============ -->
+    <record id="view_fa_statement_form" model="ir.ui.view">
+        <field name="name">fa.statement.form</field>
+        <field name="model">fa.statement</field>
+        <field name="arch" type="xml">
+            <form string="État financier">
+                <header>
+                    <button name="action_confirm" string="Valider" type="object"
+                            class="oe_highlight" states="draft"/>
+                    <button name="action_analyze" string="Analyser" type="object"
+                            class="oe_highlight" states="draft,confirmed"
+                            help="Calcule le bilan financier, les SIG, les ratios et les commentaires."/>
+                    <button name="action_analyze" string="Relancer l'analyse" type="object"
+                            states="analyzed"/>
+                    <button name="action_draft" string="Remettre en brouillon" type="object"
+                            states="confirmed,analyzed"/>
+                    <button name="action_generate_lines" string="Générer les rubriques manquantes"
+                            type="object" states="draft"
+                            help="Ajoute les lignes correspondant aux rubriques du référentiel non encore présentes."/>
+                    <button name="action_copy_structure" string="Dupliquer la structure"
+                            type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,analyzed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_ratios" type="object" class="oe_stat_button"
+                                icon="fa-line-chart" states="analyzed">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Ratios</span>
+                            </div>
+                        </button>
+                        <button name="action_open_cashflow" type="object"
+                                class="oe_stat_button" icon="fa-exchange" states="analyzed">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Flux de</span>
+                                <span class="o_stat_text">trésorerie</span>
+                            </div>
+                        </button>
+                        <button name="action_open_equity" type="object"
+                                class="oe_stat_button" icon="fa-balance-scale"
+                                states="analyzed">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Capitaux</span>
+                                <span class="o_stat_text">propres</span>
+                            </div>
+                        </button>
+                        <button name="action_open_scores" type="object" class="oe_stat_button"
+                                icon="fa-shield" states="analyzed">
+                            <field name="score_synthesis" widget="statinfo"
+                                   string="Note / 100"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Non équilibré" bg_color="bg-danger"
+                            attrs="{'invisible': [('is_balanced', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Risque élevé" bg_color="bg-warning"
+                            attrs="{'invisible': ['|', ('risk_zone', '!=', 'distress'),
+                                                       ('is_balanced', '=', False)]}"/>
+                    <field name="risk_zone" invisible="1"/>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Ex. Exercice 2025"/></h1>
+                    </div>
+
+                    <group>
+                        <group string="Identification">
+                            <field name="analysis_id" options="{'no_create': True}"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="period_type"/>
+                            <field name="sector_id" readonly="1"/>
+                            <field name="is_audited"/>
+                        </group>
+                        <group string="Période">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="duration_months"/>
+                            <field name="previous_statement_id" options="{'no_create': True}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="show_gross" invisible="1"/>
+                            <field name="activity_mode" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Bandeau de contrôle permanent -->
+                    <group string="Contrôles d'équilibre" col="4">
+                        <field name="total_asset" widget="monetary" readonly="1"/>
+                        <field name="total_liability" widget="monetary" readonly="1"/>
+                        <field name="balance_check" widget="monetary" readonly="1"
+                               decoration-danger="not is_balanced" decoration-bf="1"/>
+                        <field name="is_balanced" widget="boolean_toggle" readonly="1"/>
+                        <field name="net_result_pl" widget="monetary" readonly="1"/>
+                        <field name="net_result_bs" widget="monetary" readonly="1"/>
+                        <field name="result_check" widget="monetary" readonly="1"
+                               decoration-danger="not is_result_ok" decoration-bf="1"/>
+                        <field name="is_result_ok" widget="boolean_toggle" readonly="1"/>
+                    </group>
+
+                    <div class="alert alert-danger" role="alert"
+                         attrs="{'invisible': [('extra_error_count','=',0)]}">
+                        <strong>Informations complémentaires :</strong>
+                        <field name="extra_error_count" readonly="1" class="oe_inline"/>
+                        incohérence(s) détectée(s). Ces données faussent les ratios qui
+                        en dépendent — corrigez-les avant de diffuser le rapport.
+                    </div>
+
+                    <div class="alert alert-warning" role="alert"
+                         attrs="{'invisible': [('warning_message', '=', False)]}">
+                        <field name="warning_message" nolabel="1" readonly="1"/>
+                    </div>
+
+                    <notebook>
+                        <!-- ONGLET 1 : BILAN ACTIF -->
+                        <page string="Bilan - Actif" name="asset">
+                            <field name="asset_line_ids" nolabel="1"
+                                   context="{'show_gross': show_gross}">
+                                <tree editable="bottom" create="0" delete="0"
+                                      decoration-bf="line_type in ('subtotal','total')"
+                                      decoration-muted="is_detail">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="line_type" invisible="1"/>
+                                    <field name="is_detail" invisible="1"/>
+                                    <field name="has_gross" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="section" string="Section" optional="show" readonly="1"/>
+                                    <field name="rubric_id" string="Rubrique" readonly="1"
+                                           options="{'no_open': True}"/>
+                                    <field name="amount_gross" string="Brut" sum="Total brut"
+                                           attrs="{'readonly': [('has_gross','=',False)]}"/>
+                                    <field name="amount_deprec" string="Amort./Pertes de valeur"
+                                           sum="Total amort."
+                                           attrs="{'readonly': [('has_gross','=',False)]}"/>
+                                    <field name="amount_net" string="Net" sum="Total net"/>
+                                    <field name="amount_previous" string="Net N-1" optional="show"/>
+                                    <field name="variation_pct" string="Var. %" optional="hide"
+                                           readonly="1" digits="[16,1]"/>
+                                    <field name="rubric_note" string="Aide" optional="hide" readonly="1"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_asset" widget="monetary"
+                                       string="TOTAL GÉNÉRAL ACTIF" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ONGLET 2 : BILAN PASSIF -->
+                        <page string="Bilan - Passif" name="liability">
+                            <field name="liability_line_ids" nolabel="1">
+                                <tree editable="bottom" create="0" delete="0"
+                                      decoration-bf="line_type in ('subtotal','total')"
+                                      decoration-muted="is_detail">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="line_type" invisible="1"/>
+                                    <field name="is_detail" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="section" string="Section" optional="show" readonly="1"/>
+                                    <field name="rubric_id" string="Rubrique" readonly="1"
+                                           options="{'no_open': True}"/>
+                                    <field name="amount_net" string="Montant" sum="Total"/>
+                                    <field name="amount_previous" string="N-1" optional="show"/>
+                                    <field name="variation_pct" string="Var. %" optional="hide"
+                                           readonly="1" digits="[16,1]"/>
+                                    <field name="rubric_note" string="Aide" optional="hide" readonly="1"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_liability" widget="monetary"
+                                       string="TOTAL GÉNÉRAL PASSIF" readonly="1"/>
+                                <field name="balance_check" widget="monetary"
+                                       string="Écart Actif - Passif" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ONGLET 3 : COMPTE DE RESULTAT -->
+                        <page string="Compte de résultat" name="pl">
+                            <div class="alert alert-info" role="alert">
+                                Saisir les charges en <b>positif</b> : elles sont automatiquement
+                                soustraites dans le calcul des soldes intermédiaires de gestion.
+                                Les lignes en gras sont calculées.
+                            </div>
+                            <field name="pl_line_ids" nolabel="1">
+                                <tree editable="bottom" create="0" delete="0"
+                                      decoration-bf="line_type in ('subtotal','total')"
+                                      decoration-muted="is_detail">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="line_type" invisible="1"/>
+                                    <field name="is_detail" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="section" string="Section" optional="show" readonly="1"/>
+                                    <field name="rubric_id" string="Rubrique" readonly="1"
+                                           options="{'no_open': True}"/>
+                                    <field name="amount_net" string="Montant" sum="Total"/>
+                                    <field name="amount_previous" string="N-1" optional="show"/>
+                                    <field name="variation_pct" string="Var. %" optional="hide"
+                                           readonly="1" digits="[16,1]"/>
+                                    <field name="rubric_note" string="Aide" optional="hide" readonly="1"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="net_result_pl" widget="monetary"
+                                       string="RÉSULTAT NET DE L'EXERCICE" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <!-- ONGLET 4 : INFOS COMPLEMENTAIRES -->
+                        <page string="Informations complémentaires" name="extra">
+                            <div class="alert alert-info" role="alert">
+                                Ces données ne figurent pas au bilan mais conditionnent la qualité
+                                de l'analyse : elles alimentent les retraitements financiers et
+                                certains ratios. Aucune égalité comptable ne les contraint, d'où
+                                les contrôles de vraisemblance ci-dessous.
+                            </div>
+                            <button name="action_suggest_extra" type="object"
+                                    string="Pré-remplir depuis les états financiers"
+                                    class="btn-primary mb-2" icon="fa-magic"
+                                    help="Déduit les valeurs calculables du bilan et du compte de résultat. Ne remplace jamais une saisie existante."/>
+                            <button name="action_check_extra" type="object"
+                                    string="Contrôler la vraisemblance"
+                                    class="btn-secondary mb-2" icon="fa-check-circle"/>
+
+                            <div class="alert alert-danger" role="alert"
+                                 attrs="{'invisible': [('extra_error_count','=',0)]}">
+                                <strong>
+                                    <field name="extra_error_count" readonly="1"
+                                           class="oe_inline"/> incohérence(s) détectée(s)
+                                </strong> — voir le détail sous le tableau de saisie.
+                            </div>
+                            <div class="alert alert-warning" role="alert"
+                                 attrs="{'invisible': ['|', ('extra_warning_count','=',0),
+                                                            ('extra_error_count','>',0)]}">
+                                <field name="extra_warning_count" readonly="1"
+                                       class="oe_inline"/> point(s) à vérifier.
+                            </div>
+                            <field name="extra_line_ids" nolabel="1">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="code" string="Code" optional="hide"
+                                           readonly="1"/>
+                                    <field name="rubric_id" string="Donnée" readonly="1"
+                                           options="{'no_open': True}"/>
+                                    <field name="amount_net" string="Valeur"/>
+                                    <field name="amount_previous" string="N-1"
+                                           optional="show"/>
+                                    <field name="note" string="Commentaire de saisie"
+                                           optional="show"/>
+                                    <field name="rubric_note" string="Utilité" readonly="1"/>
+                                </tree>
+                            </field>
+
+                            <separator string="Contrôles de vraisemblance"
+                                       attrs="{'invisible': [('extra_check_ids','=',[])]}"/>
+                            <field name="extra_check_ids" nolabel="1" readonly="1"
+                                   attrs="{'invisible': [('extra_check_ids','=',[])]}">
+                                <tree create="0" delete="0" edit="0"
+                                      decoration-danger="severity == 'error'"
+                                      decoration-warning="severity == 'warning'"
+                                      decoration-muted="severity == 'info'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="severity" string="Niveau" widget="badge"
+                                           decoration-danger="severity == 'error'"
+                                           decoration-warning="severity == 'warning'"/>
+                                    <field name="name" string="Donnée"/>
+                                    <field name="value_entered" string="Saisi"
+                                           widget="monetary"/>
+                                    <field name="value_expected" string="Attendu"
+                                           widget="monetary"/>
+                                    <field name="gap_pct" string="Écart %"
+                                           optional="hide"/>
+                                    <field name="message" string="Constat"/>
+                                    <field name="suggestion" string="Que faire"/>
+                                    <field name="impact" string="Ratios impactés"
+                                           optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ONGLET 5 : BILAN FINANCIER ET SIG -->
+                        <page string="Bilan financier &amp; SIG" name="aggregates"
+                              attrs="{'invisible': [('state', '!=', 'analyzed')]}">
+                            <field name="aggregate_ids" nolabel="1" readonly="1">
+                                <tree default_order="sequence" create="0" delete="0" edit="0">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="unit" invisible="1"/>
+                                    <field name="category" string="Catégorie"/>
+                                    <field name="code" string="Code" optional="hide"/>
+                                    <field name="name" string="Agrégat"/>
+                                    <field name="value_display" string="Valeur"/>
+                                    <field name="amount" string="Montant période"
+                                           widget="monetary" optional="hide"/>
+                                    <field name="amount_annualized" string="Annualisé (12 mois)"
+                                           widget="monetary" optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ONGLET 6 : RATIOS, COMMENTAIRES ET RECOMMANDATIONS -->
+                        <page string="Ratios &amp; recommandations" name="ratios"
+                              attrs="{'invisible': [('state', '!=', 'analyzed')]}">
+                            <div class="alert alert-info" role="alert">
+                                Chaque ratio porte un <strong>commentaire</strong> et une
+                                <strong>recommandation</strong> générés selon sa valeur et les
+                                normes du secteur
+                                « <field name="sector_id" readonly="1" nolabel="1" class="oe_inline"/> ».
+                                Les deux colonnes de droite sont <strong>directement éditables</strong> :
+                                votre texte remplace alors le texte généré dans le rapport.
+                                Le bouton <em>Réviser les commentaires</em> ouvre une vue plein écran
+                                plus confortable pour la rédaction.
+                                <br/>La colonne <strong>Masquer au rapport</strong> exclut un ratio
+                                des documents imprimés sans le supprimer de l'analyse.
+                                Vos textes et ces réglages sont <strong>conservés</strong>
+                                si vous relancez l'analyse.
+                            </div>
+                            <button name="action_review_comments" type="object"
+                                    string="Réviser les commentaires" class="btn-primary mb-2"
+                                    icon="fa-pencil"/>
+                            <button name="action_reset_comments" type="object"
+                                    string="Restaurer les textes générés" class="btn-secondary mb-2"
+                                    icon="fa-undo"
+                                    confirm="Cette action efface tous vos textes personnalisés sur cette période et rétablit les commentaires générés automatiquement. Confirmer ?"/>
+                            <button name="action_hide_good_ratios" type="object"
+                                    string="Masquer les ratios bien orientés"
+                                    class="btn-secondary mb-2" icon="fa-eye-slash"
+                                    help="Exclut des rapports imprimés les ratios jugés solides, pour resserrer le livrable sur les points d'attention."/>
+                            <button name="action_show_all_ratios" type="object"
+                                    string="Tout réafficher" class="btn-secondary mb-2"
+                                    icon="fa-eye"/>
+                            <field name="ratio_result_ids" nolabel="1">
+                                <tree default_order="family,sequence" create="0" delete="0"
+                                      editable="bottom"
+                                      decoration-danger="appreciation == 'bad'"
+                                      decoration-warning="appreciation == 'watch'"
+                                      decoration-success="appreciation == 'good'"
+                                      decoration-muted="is_na">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="is_na" invisible="1"/>
+                                    <field name="family" string="Famille" readonly="1"/>
+                                    <field name="code" string="Code" readonly="1"/>
+                                    <field name="name" string="Ratio" readonly="1"/>
+                                    <field name="value_display" string="Valeur" readonly="1"/>
+                                    <field name="previous_value" string="N-1" optional="hide"
+                                           readonly="1"/>
+                                    <field name="norm_applied" string="Norme" readonly="1"/>
+                                    <field name="is_sector_norm" string="Sect." optional="hide"
+                                           widget="boolean_toggle" readonly="1"/>
+                                    <field name="sector_median" string="Médiane" optional="hide"
+                                           readonly="1"/>
+                                    <field name="appreciation" string="Appréciation" widget="badge"
+                                           decoration-danger="appreciation == 'bad'"
+                                           decoration-warning="appreciation == 'watch'"
+                                           decoration-info="appreciation == 'ok'"
+                                           decoration-success="appreciation == 'good'"/>
+                                    <field name="priority" string="Prio. auto" readonly="1"
+                                           optional="hide"/>
+                                    <field name="priority_manual" string="Prio."
+                                           help="Remplace la priorité automatique pour le classement des recommandations."/>
+                                    <field name="hide_in_report" string="Masquer au rapport"
+                                           widget="boolean_toggle"/>
+                                    <field name="comment" string="Commentaire retenu"
+                                           readonly="1" optional="show"/>
+                                    <field name="comment_manual" string="Modifier le commentaire"
+                                           widget="text" optional="show"
+                                           placeholder="Saisir pour remplacer le texte généré..."/>
+                                    <field name="interpretation" string="Ce que mesure le ratio"
+                                           readonly="1" optional="hide"/>
+                                    <field name="recommendation" string="Recommandation retenue"
+                                           readonly="1" optional="show"/>
+                                    <field name="recommendation_manual"
+                                           string="Modifier la recommandation" widget="text"
+                                           optional="show"
+                                           placeholder="Saisir pour remplacer la recommandation générée..."/>
+                                    <field name="is_customized" string="Modifié" optional="show"
+                                           widget="boolean_toggle" readonly="1"/>
+                                    <field name="na_reason" string="Motif" optional="hide"
+                                           readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ONGLET : FLUX DE TRESORERIE -->
+                        <page string="Flux de trésorerie" name="cashflow"
+                              attrs="{'invisible': [('state', '!=', 'analyzed')]}">
+                            <div class="alert alert-info" role="alert">
+                                Tableau des flux de trésorerie conforme au chapitre 5 du
+                                PCG 2005 (articles 250-1 à 250-5), présenté selon les
+                                <strong>deux méthodes</strong> prévues à l'article 250-3.
+                                Le calcul dérive de l'équation du bilan : le bouclage avec
+                                la variation de trésorerie constatée est donc garanti.
+                            </div>
+                            <group col="4" string="Synthèse">
+                                <field name="cf_operating" widget="monetary" readonly="1"/>
+                                <field name="cf_investing" widget="monetary" readonly="1"/>
+                                <field name="cf_financing" widget="monetary" readonly="1"/>
+                                <field name="cf_free_cashflow" widget="monetary" readonly="1"/>
+                                <field name="cf_variation" widget="monetary" readonly="1"/>
+                                <field name="cf_variation_bs" widget="monetary" readonly="1"/>
+                                <field name="cf_gap" widget="monetary" readonly="1"
+                                       decoration-danger="not cf_is_balanced"
+                                       decoration-bf="1"/>
+                                <field name="cf_is_balanced" widget="boolean_toggle"
+                                       readonly="1"/>
+                            </group>
+                            <separator string="Méthode indirecte"/>
+                            <field name="cashflow_ids" nolabel="1" readonly="1"
+                                   domain="[('method','=','indirect')]"
+                                   context="{'default_method':'indirect'}">
+                                <tree create="0" delete="0" edit="0" default_order="sequence"
+                                      decoration-bf="line_type in ('subtotal','total')"
+                                      decoration-primary="line_type == 'total'"
+                                      decoration-info="line_type == 'control'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="line_type" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="category" string="Catégorie"/>
+                                    <field name="name" string="Libellé"/>
+                                    <field name="amount" string="Montant" widget="monetary"/>
+                                    <field name="note" string="Précision" optional="show"/>
+                                </tree>
+                            </field>
+                            <separator string="Méthode directe"/>
+                            <field name="cashflow_ids" nolabel="1" readonly="1"
+                                   domain="[('method','=','direct')]"
+                                   context="{'default_method':'direct'}">
+                                <tree create="0" delete="0" edit="0" default_order="sequence"
+                                      decoration-bf="line_type in ('subtotal','total')"
+                                      decoration-primary="line_type == 'total'"
+                                      decoration-info="line_type == 'control'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="line_type" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="name" string="Libellé"/>
+                                    <field name="amount" string="Montant" widget="monetary"/>
+                                    <field name="note" string="Précision" optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ONGLET : VARIATION DES CAPITAUX PROPRES -->
+                        <page string="Variation des capitaux propres" name="equity"
+                              attrs="{'invisible': [('state', '!=', 'analyzed')]}">
+                            <div class="alert alert-info" role="alert">
+                                Tableau conforme au chapitre 4 du PCG 2005
+                                (articles 240-1 et 240-2) : analyse des mouvements ayant
+                                affecté chaque rubrique des capitaux propres.
+                                Les cinq catégories minimales exigées sont couvertes —
+                                résultat, changements de méthode, produits et charges
+                                imputés directement, opérations en capital, distributions.
+                            </div>
+                            <group col="4" string="Synthèse">
+                                <field name="eq_opening" widget="monetary" readonly="1"/>
+                                <field name="eq_closing" widget="monetary" readonly="1"/>
+                                <field name="eq_variation" widget="monetary" readonly="1"/>
+                                <field name="eq_is_documented" widget="boolean_toggle"
+                                       readonly="1"/>
+                                <field name="eq_unexplained" widget="monetary" readonly="1"/>
+                                <field name="eq_unexplained_gross" widget="monetary"
+                                       readonly="1"
+                                       decoration-warning="not eq_is_documented"
+                                       decoration-bf="1"/>
+                            </group>
+                            <field name="equity_ids" nolabel="1" readonly="1">
+                                <tree create="0" delete="0" edit="0" default_order="sequence"
+                                      decoration-bf="line_type == 'balance'"
+                                      decoration-primary="code == 'EQ_CLOSING'"
+                                      decoration-info="line_type == 'control'"
+                                      decoration-warning="movement_type == 'method_change'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="line_type" invisible="1"/>
+                                    <field name="code" invisible="1"/>
+                                    <field name="movement_type" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="name" string="Mouvement"/>
+                                    <field name="amount_capital" string="Capital"
+                                           widget="monetary"/>
+                                    <field name="amount_primes" string="Primes et réserves"
+                                           widget="monetary"/>
+                                    <field name="amount_ecart_eval" string="Écarts de rééval."
+                                           widget="monetary" optional="show"/>
+                                    <field name="amount_ecart_equiv" string="Écarts d'équiv."
+                                           widget="monetary" optional="hide"/>
+                                    <field name="amount_report" string="Report à nouveau"
+                                           widget="monetary"/>
+                                    <field name="amount_resultat" string="Résultat"
+                                           widget="monetary"/>
+                                    <field name="amount_minoritaires" string="Minoritaires"
+                                           widget="monetary" optional="hide"/>
+                                    <field name="amount_total" string="TOTAL"
+                                           widget="monetary"/>
+                                    <field name="note" string="Précision" optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ONGLET : SCORE DE RISQUE -->
+                        <page string="Risque de défaillance" name="scores"
+                              attrs="{'invisible': [('state', '!=', 'analyzed')]}">
+                            <div class="alert alert-info" role="alert">
+                                Trois modèles indépendants de détection du risque.
+                                Ils sont <strong>convergents ou divergents</strong> : une
+                                divergence est en soi une information, elle signale une
+                                situation contrastée selon l'angle d'analyse.
+                                <br/>Ces scores ont été calibrés sur des populations
+                                d'entreprises étrangères et n'ont pas été validés sur un
+                                échantillon malgache : ce sont des signaux d'alerte,
+                                pas des diagnostics.
+                            </div>
+                            <field name="score_ids" nolabel="1" readonly="1">
+                                <tree create="0" delete="0"
+                                      decoration-danger="zone == 'distress'"
+                                      decoration-warning="zone == 'grey'"
+                                      decoration-success="zone == 'safe'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="model" string="Modèle"/>
+                                    <field name="value_display" string="Score"/>
+                                    <field name="previous_value" string="N-1"/>
+                                    <field name="variation" string="Variation"/>
+                                    <field name="zone" widget="badge"
+                                           decoration-danger="zone == 'distress'"
+                                           decoration-warning="zone == 'grey'"
+                                           decoration-success="zone == 'safe'"/>
+                                    <field name="risk_level" string="Niveau"/>
+                                    <field name="default_probability" string="Probabilité"/>
+                                    <field name="comment" string="Lecture" optional="show"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ONGLET 7 : RETRAITEMENTS -->
+                        <page string="Retraitements" name="restatements">
+                            <div class="alert alert-info" role="alert">
+                                Journal des retraitements de passage du bilan comptable au bilan
+                                financier. Les montants saisis dans l'onglet « Informations
+                                complémentaires » (crédit-bail, effets escomptés, actifs fictifs...)
+                                sont automatiquement pris en compte dans les agrégats.
+                                Ce tableau sert à documenter et justifier ces retraitements
+                                dans le rapport.
+                            </div>
+                            <field name="restatement_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="restatement_type" string="Type"/>
+                                    <field name="name" string="Libellé"/>
+                                    <field name="amount" string="Montant" widget="monetary"/>
+                                    <field name="account_debit" string="Poste augmenté"/>
+                                    <field name="account_credit" string="Poste diminué"/>
+                                    <field name="note" string="Justification" optional="hide"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- ONGLET 8 : NOTES -->
+                        <page string="Notes" name="notes">
+                            <group>
+                                <field name="seasonality_note" nolabel="1"
+                                       placeholder="Note de saisonnalité : l'activité est-elle régulière sur l'année ? Cette précision est indispensable pour interpréter une période infra-annuelle annualisée."/>
+                            </group>
+                            <separator string="Faits marquants de la période"/>
+                            <field name="note" nolabel="1"
+                                   placeholder="Événements significatifs, changements de méthode, litiges, opérations exceptionnelles..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============ SEARCH ============ -->
+    <record id="view_fa_statement_search" model="ir.ui.view">
+        <field name="name">fa.statement.search</field>
+        <field name="model">fa.statement</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="analysis_id"/>
+                <field name="partner_id"/>
+                <filter name="draft" string="Brouillon" domain="[('state','=','draft')]"/>
+                <filter name="analyzed" string="Analysé" domain="[('state','=','analyzed')]"/>
+                <separator/>
+                <filter name="unbalanced" string="Non équilibré" domain="[('is_balanced','=',False)]"/>
+                <separator/>
+                <filter name="annual" string="Annuel" domain="[('period_type','=','annual')]"/>
+                <filter name="interim" string="Infra-annuel" domain="[('period_type','!=','annual')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_analysis" string="Dossier" context="{'group_by': 'analysis_id'}"/>
+                    <filter name="group_partner" string="Client" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                    <filter name="group_type" string="Type de période" context="{'group_by': 'period_type'}"/>
+                    <filter name="group_sector" string="Secteur" context="{'group_by': 'sector_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_fa_statement" model="ir.actions.act_window">
+        <field name="name">États financiers</field>
+        <field name="res_model">fa.statement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Saisir un nouvel état financier</p>
+            <p>Créez une période (exercice annuel, semestre...) puis saisissez le bilan
+               et le compte de résultat conformes au PCG 2005.</p>
+        </field>
+    </record>
+
+</odoo>

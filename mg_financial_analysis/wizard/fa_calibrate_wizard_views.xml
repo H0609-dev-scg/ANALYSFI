@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fa_calibrate_wizard_form" model="ir.ui.view">
+        <field name="name">fa.calibrate.wizard.form</field>
+        <field name="model">fa.calibrate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Calibrer les normes sur le portefeuille">
+                <div class="alert alert-info" role="alert"
+                     attrs="{'invisible': [('state','!=','config')]}">
+                    Les seuils livrés avec le module sont des références professionnelles
+                    générales. <strong>Votre portefeuille de dossiers est la seule source de
+                    données réellement malgache dont vous disposez.</strong> Cet assistant
+                    calcule les quartiles observés sur les périodes déjà analysées du secteur
+                    et vous propose de les convertir en seuils. Plus vous traitez de dossiers,
+                    plus les normes deviennent pertinentes pour votre marché.
+                </div>
+                <group attrs="{'invisible': [('state','!=','config')]}">
+                    <group>
+                        <field name="sector_id" options="{'no_create': True}"/>
+                        <field name="method"/>
+                        <field name="min_sample"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="only_annual"/>
+                    </group>
+                </group>
+                <field name="state" invisible="1"/>
+
+                <div attrs="{'invisible': [('state','!=','preview')]}">
+                    <div class="alert alert-secondary" role="alert">
+                        <field name="summary" nolabel="1" readonly="1"
+                               style="white-space: pre-line;"/>
+                    </div>
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom" create="0" delete="0"
+                              default_order="ratio_family">
+                            <field name="ratio_family" string="Famille" readonly="1"/>
+                            <field name="ratio_code" string="Code" readonly="1"/>
+                            <field name="ratio_id" string="Ratio" readonly="1"/>
+                            <field name="unit" string="Unité" readonly="1"/>
+                            <field name="direction" string="Sens" readonly="1" optional="hide"/>
+                            <field name="sample_size" string="Éch." readonly="1"/>
+                            <field name="observed_min" string="Min" readonly="1" optional="hide"/>
+                            <field name="observed_q1" string="Q1" readonly="1"/>
+                            <field name="observed_median" string="Médiane" readonly="1"/>
+                            <field name="observed_q3" string="Q3" readonly="1"/>
+                            <field name="observed_max" string="Max" readonly="1" optional="hide"/>
+                            <field name="current_watch" string="Vigilance actuel" readonly="1"/>
+                            <field name="new_bad" string="Critique proposé"/>
+                            <field name="new_watch" string="Vigilance proposé"/>
+                            <field name="new_good" string="Confort proposé"/>
+                            <field name="apply" string="Appliquer" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                </div>
+
+                <footer>
+                    <button name="action_preview" string="Analyser le portefeuille"
+                            type="object" class="btn-primary"
+                            attrs="{'invisible': [('state','!=','config')]}"/>
+                    <button name="action_apply" string="Appliquer les seuils retenus"
+                            type="object" class="btn-primary"
+                            attrs="{'invisible': [('state','!=','preview')]}"
+                            confirm="Les seuils du secteur vont être remplacés par les valeurs proposées. Confirmer ?"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fa_calibrate_wizard" model="ir.actions.act_window">
+        <field name="name">Calibrer sur mon portefeuille</field>
+        <field name="res_model">fa.calibrate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

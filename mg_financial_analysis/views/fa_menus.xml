@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_fa_root" name="Analyse Financière"
+              web_icon="mg_financial_analysis,static/description/icon.png"
+              sequence="55" groups="group_fa_readonly"/>
+
+    <menuitem id="menu_fa_analysis" name="Dossiers"
+              parent="menu_fa_root" action="action_fa_analysis" sequence="10"/>
+
+    <menuitem id="menu_fa_statement" name="États financiers"
+              parent="menu_fa_root" action="action_fa_statement" sequence="20"/>
+
+    <menuitem id="menu_fa_results" name="Analyses" parent="menu_fa_root" sequence="30"/>
+    <menuitem id="menu_fa_balance_sheet" name="Bilan financier"
+              parent="menu_fa_results" action="action_fa_balance_sheet" sequence="10"/>
+    <menuitem id="menu_fa_income" name="Compte de résultat / SIG"
+              parent="menu_fa_results" action="action_fa_income_statement" sequence="20"/>
+    <menuitem id="menu_fa_equity" name="Variation des capitaux propres"
+              parent="menu_fa_results" action="action_fa_equity" sequence="27"/>
+    <menuitem id="menu_fa_cashflow" name="Flux de trésorerie"
+              parent="menu_fa_results" action="action_fa_cashflow" sequence="25"/>
+    <menuitem id="menu_fa_ratios_result" name="Ratios &amp; marges"
+              parent="menu_fa_results" action="action_fa_ratio_result" sequence="30"/>
+    <menuitem id="menu_fa_comparison" name="Comparatif multi-périodes"
+              parent="menu_fa_results" action="action_fa_comparison" sequence="40"/>
+    <menuitem id="menu_fa_extra_check" name="Contrôles de saisie"
+              parent="menu_fa_results" action="action_fa_extra_check" sequence="47"/>
+    <menuitem id="menu_fa_score" name="Scores de risque"
+              parent="menu_fa_results" action="action_fa_score" sequence="45"/>
+    <menuitem id="menu_fa_review" name="Réviser les commentaires"
+              parent="menu_fa_results" action="action_fa_ratio_result_edit" sequence="50"/>
+
+    <menuitem id="menu_fa_config" name="Configuration" parent="menu_fa_root"
+              sequence="90" groups="group_fa_manager"/>
+    <menuitem id="menu_fa_rubric" name="Rubriques PCG 2005"
+              parent="menu_fa_config" action="action_fa_rubric" sequence="10"/>
+    <menuitem id="menu_fa_ratio" name="Ratios &amp; seuils"
+              parent="menu_fa_config" action="action_fa_ratio" sequence="20"/>
+    <menuitem id="menu_fa_sector" name="Secteurs d'activité"
+              parent="menu_fa_config" action="action_fa_sector" sequence="30"/>
+    <menuitem id="menu_fa_sector_norm" name="Normes sectorielles"
+              parent="menu_fa_config" action="action_fa_sector_norm" sequence="40"/>
+    <menuitem id="menu_fa_reload" name="Recharger le référentiel livré"
+              parent="menu_fa_config" action="action_fa_reload_data" sequence="60"/>
+    <menuitem id="menu_fa_calibrate" name="Calibrer sur mon portefeuille"
+              parent="menu_fa_config" action="action_fa_calibrate_wizard" sequence="50"/>
+</odoo>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_fa_comparison_form" model="ir.ui.view">
+        <field name="name">fa.comparison.form</field>
+        <field name="model">fa.comparison</field>
+        <field name="arch" type="xml">
+            <form string="Comparatif multi-périodes">
+                <header>
+                    <button name="action_compute" string="Calculer le comparatif" type="object"
+                            class="oe_highlight"/>
+                    <button name="action_print_report" string="Imprimer le rapport"
+                            type="object" class="oe_highlight"
+                            help="Rapport PDF en format paysage, toutes les périodes en colonnes."/>
+                    <button name="action_open_lines" string="Vue pivot / graphique"
+                            type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Ex. 2024 - 2025 - S1 2026"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="analysis_id" options="{'no_create': True}"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="sector_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="mode"/>
+                            <field name="show_vertical"/>
+                            <field name="statement_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Périodes comparées (2 à 5, classées de la plus ancienne à la plus récente)">
+                        <field name="statement_ids" nolabel="1" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+
+                    <div class="alert alert-warning" role="alert"
+                         attrs="{'invisible': [('methodology_note','=',False)]}">
+                        <strong>Réserve méthodologique</strong>
+                        <field name="methodology_note" nolabel="1" readonly="1"/>
+                    </div>
+
+                    <field name="col1_label" invisible="1"/>
+                    <field name="col2_label" invisible="1"/>
+                    <field name="col3_label" invisible="1"/>
+                    <field name="col4_label" invisible="1"/>
+                    <field name="col5_label" invisible="1"/>
+
+                    <notebook>
+                        <page string="Bilan financier &amp; SIG" name="agg">
+                            <field name="aggregate_line_ids" nolabel="1" readonly="1">
+                                <tree create="0" delete="0" edit="0" default_order="sequence"
+                                      decoration-success="trend == 'up'"
+                                      decoration-danger="trend == 'down'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="category_label" string="Rubrique"/>
+                                    <field name="name" string="Agrégat"/>
+                                    <field name="value1" widget="monetary"
+                                           string="Période 1"/>
+                                    <field name="value2" widget="monetary"
+                                           string="Période 2"/>
+                                    <field name="value3" widget="monetary"
+                                           string="Période 3"/>
+                                    <field name="value4" widget="monetary"
+                                           string="Période 4" optional="hide"/>
+                                    <field name="value5" widget="monetary"
+                                           string="Période 5" optional="hide"/>
+                                    <field name="variation" string="Évolution" widget="monetary"/>
+                                    <field name="variation_pct" string="Évol. %" digits="[16,1]"/>
+                                    <field name="trend" string="Tendance"/>
+                                    <field name="trend_comment" string="Analyse" optional="show"/>
+                                </tree>
+                            </field>
+                            <div class="text-muted mt-2">
+                                Les colonnes sont ordonnées de la période la plus ancienne à la
+                                plus récente : <field name="col1_label" readonly="1" nolabel="1"
+                                class="oe_inline"/> ·
+                                <field name="col2_label" readonly="1" nolabel="1" class="oe_inline"/>
+                                <span attrs="{'invisible': [('col3_label','=',False)]}"> ·
+                                    <field name="col3_label" readonly="1" nolabel="1" class="oe_inline"/>
+                                </span>
+                                <span attrs="{'invisible': [('col4_label','=',False)]}"> ·
+                                    <field name="col4_label" readonly="1" nolabel="1" class="oe_inline"/>
+                                </span>
+                                <span attrs="{'invisible': [('col5_label','=',False)]}"> ·
+                                    <field name="col5_label" readonly="1" nolabel="1" class="oe_inline"/>
+                                </span>
+                            </div>
+                        </page>
+
+                        <page string="Ratios" name="ratios">
+                            <field name="ratio_line_ids" nolabel="1" readonly="1">
+                                <tree create="0" delete="0" edit="0" default_order="sequence"
+                                      decoration-danger="appreciation == 'bad'"
+                                      decoration-warning="appreciation == 'watch'"
+                                      decoration-success="appreciation == 'good'">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="category_label" string="Famille"/>
+                                    <field name="code" string="Code"/>
+                                    <field name="name" string="Ratio"/>
+                                    <field name="value1" string="Période 1" digits="[16,2]"/>
+                                    <field name="value2" string="Période 2" digits="[16,2]"/>
+                                    <field name="value3" string="Période 3" digits="[16,2]"/>
+                                    <field name="value4" string="Période 4" optional="hide"
+                                           digits="[16,2]"/>
+                                    <field name="value5" string="Période 5" optional="hide"
+                                           digits="[16,2]"/>
+                                    <field name="variation" string="Évolution" digits="[16,2]"/>
+                                    <field name="trend" string="Tendance"/>
+                                    <field name="norm_label" string="Norme"/>
+                                    <field name="sector_median" string="Médiane secteur"
+                                           optional="hide" digits="[16,2]"/>
+                                    <field name="appreciation" string="Appréciation" widget="badge"
+                                           decoration-danger="appreciation == 'bad'"
+                                           decoration-warning="appreciation == 'watch'"
+                                           decoration-info="appreciation == 'ok'"
+                                           decoration-success="appreciation == 'good'"/>
+                                    <field name="trend_comment" string="Analyse de la tendance"
+                                           optional="show"/>
+                                    <field name="interpretation" string="Ce que mesure le ratio"
+                                           optional="hide"/>
+                                    <field name="formula_text" string="Formule" optional="hide"/>
+                                    <field name="comment" string="Commentaire" optional="show"/>
+                                    <field name="recommendation" string="Recommandation"
+                                           optional="show"/>
+                                    <field name="priority_final" string="Priorité" optional="hide"/>
+                                    <field name="hide_in_report" string="Masqué" optional="hide"
+                                           widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fa_comparison_tree" model="ir.ui.view">
+        <field name="name">fa.comparison.tree</field>
+        <field name="model">fa.comparison</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="analysis_id"/>
+                <field name="partner_id"/>
+                <field name="sector_id"/>
+                <field name="statement_count" string="Nb périodes"/>
+                <field name="mode"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_comparison_line_tree" model="ir.ui.view">
+        <field name="name">fa.comparison.line.tree</field>
+        <field name="model">fa.comparison.line</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" edit="0" default_order="sequence">
+                <field name="sequence" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="line_kind" string="Nature"/>
+                <field name="category_label" string="Rubrique"/>
+                <field name="name" string="Libellé"/>
+                <field name="value1" string="P1" digits="[16,2]"/>
+                <field name="value2" string="P2" digits="[16,2]"/>
+                <field name="value3" string="P3" digits="[16,2]"/>
+                <field name="variation" string="Évolution" digits="[16,2]"/>
+                <field name="variation_pct" string="%" digits="[16,1]"/>
+                <field name="trend"/>
+                <field name="trend_comment" string="Analyse" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fa_comparison_line_pivot" model="ir.ui.view">
+        <field name="name">fa.comparison.line.pivot</field>
+        <field name="model">fa.comparison.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Comparatif" sample="1">
+                <field name="name" type="row"/>
+                <field name="value1" type="measure"/>
+                <field name="value2" type="measure"/>
+                <field name="value3" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_fa_comparison_line_graph" model="ir.ui.view">
+        <field name="name">fa.comparison.line.graph</field>
+        <field name="model">fa.comparison.line</field>
+        <field name="arch" type="xml">
+            <graph string="Évolution" type="bar" sample="1">
+                <field name="name"/>
+                <field name="value1" type="measure"/>
+                <field name="value2" type="measure"/>
+                <field name="value3" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_fa_comparison" model="ir.actions.act_window">
+        <field name="name">Comparatif multi-périodes</field>
+        <field name="res_model">fa.comparison</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer un comparatif</p>
+            <p>Comparez deux à cinq périodes : par exemple les exercices 2024 et 2025
+               puis le premier semestre 2026. Les flux des périodes infra-annuelles
+               sont annualisés automatiquement.</p>
+        </field>
+    </record>
+
+</odoo>
