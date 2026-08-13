@@ -3,6 +3,8 @@
 Module Odoo 16 pour cabinets de conseil : saisie des états financiers, bilan financier,
 soldes intermédiaires de gestion, ratios, commentaires et recommandations automatiques.
 
+**Manuel d’utilisation (consultants)** : [doc/MANUEL_UTILISATION.md](doc/MANUEL_UTILISATION.md)
+
 ## Installation
 
 ```bash

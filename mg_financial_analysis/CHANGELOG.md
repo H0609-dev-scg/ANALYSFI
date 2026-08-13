@@ -1,5 +1,12 @@
 # Journal des versions
 
+## 16.0.1.12.1
+
+**Manuel d’utilisation**
+
+- Guide consultant : `doc/MANUEL_UTILISATION.md` (parcours de mission, saisie et
+  import, lecture des ratios, options de rapport, configuration, FAQ).
+
 ## 16.0.1.12.0
 
 **Lecture croisée des ratios**

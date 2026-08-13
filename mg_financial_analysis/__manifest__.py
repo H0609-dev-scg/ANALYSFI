@@ -36,7 +36,7 @@ Analyse avancée
     'author': "Cabinet de conseil financier",
     'website': "https://www.example.mg",
     'category': 'Accounting/Accounting',
-    'version': '16.0.1.12.0',
+    'version': '16.0.1.12.1',
     'license': 'LGPL-3',
     'depends': ['base', 'mail', 'web'],
     'data': [
