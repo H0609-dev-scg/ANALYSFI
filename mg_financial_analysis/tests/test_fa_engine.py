@@ -2100,3 +2100,82 @@ class TestFaEngine(TransactionCase):
             if rubric.code not in sources and rubric.code not in formulas:
                 dead.append(rubric.code)
         self.assertFalse(dead, "Rubriques jamais exploitées : %s" % dead)
+
+    # ==================================================================
+    # Import de la saisie depuis un tableur
+    # ==================================================================
+    def _import_csv(self, text, overwrite=False):
+        import base64
+        wiz = self.env['fa.import.wizard'].create({
+            'statement_id': self.stmt.id,
+            'file_name': 'saisie.csv',
+            'file_data': base64.b64encode(text.encode('utf-8')),
+            'overwrite': overwrite,
+        })
+        wiz.action_preview()
+        return wiz
+
+    def test_151_import_preview_matches_codes(self):
+        """L'aperçu reconnaît les codes du référentiel."""
+        csv_text = (
+            "Code;Rubrique;Brut;Amort.;Net;N-1\n"
+            "AC_STOCK;Stocks;;;250;200\n"
+            "PL_VENTE_MSE;Ventes;;;2000;1800\n"
+            "FOO_BAR;Inconnu;;;1;0\n"
+        )
+        wiz = self._import_csv(csv_text)
+        self.assertEqual(wiz.state, 'preview')
+        stock = wiz.line_ids.filtered(lambda l: l.code == 'AC_STOCK')
+        self.assertEqual(stock.status, 'ok')
+        self.assertAlmostEqual(stock.amount_net, 250)
+        self.assertAlmostEqual(stock.amount_previous, 200)
+        unknown = wiz.line_ids.filtered(lambda l: l.code == 'FOO_BAR')
+        self.assertEqual(unknown.status, 'unknown')
+        self.assertFalse(unknown.apply)
+
+    def test_152_import_apply_writes_amounts(self):
+        """L'import renseigne les lignes de saisie."""
+        csv_text = (
+            "Code;Net\n"
+            "AC_IMMO_CORP;400\n"
+            "AC_STOCK;250\n"
+            "PA_CAPITAL;300\n"
+        )
+        wiz = self._import_csv(csv_text, overwrite=True)
+        wiz.action_apply()
+        self.assertEqual(wiz.state, 'done')
+        self.assertAlmostEqual(self.stmt._get_values_dict()['AC_STOCK'], 250)
+        self.assertAlmostEqual(self.stmt._get_values_dict()['PA_CAPITAL'], 300)
+
+    def test_153_import_does_not_overwrite_by_default(self):
+        """Sans option, une saisie existante est conservée."""
+        self._set('AC_STOCK', 999)
+        csv_text = "Code;Net\nAC_STOCK;10\nAC_TRESO;50\n"
+        wiz = self._import_csv(csv_text, overwrite=False)
+        stock = wiz.line_ids.filtered(lambda l: l.code == 'AC_STOCK')
+        self.assertFalse(stock.apply)
+        treso = wiz.line_ids.filtered(lambda l: l.code == 'AC_TRESO')
+        self.assertTrue(treso.apply)
+        wiz.action_apply()
+        self.assertAlmostEqual(self.stmt._get_values_dict()['AC_STOCK'], 999)
+        self.assertAlmostEqual(self.stmt._get_values_dict()['AC_TRESO'], 50)
+
+    def test_154_import_template_lists_input_codes(self):
+        """Le modèle CSV contient toutes les rubriques de saisie."""
+        import base64
+        wiz = self.env['fa.import.wizard'].create({
+            'statement_id': self.stmt.id,
+            'file_data': base64.b64encode(b'x'),
+            'file_name': 'x.csv',
+        })
+        wiz.action_download_template()
+        content = base64.b64decode(wiz.file_data).decode('utf-8-sig')
+        inputs = self.env['fa.rubric'].search([('line_type', '=', 'input')])
+        missing = [r.code for r in inputs if r.code not in content]
+        self.assertFalse(missing, "Codes absents du modèle : %s" % missing)
+
+    def test_155_import_opens_from_statement(self):
+        """Le bouton de la période ouvre l'assistant pré-rempli."""
+        action = self.stmt.action_open_import()
+        self.assertEqual(action['res_model'], 'fa.import.wizard')
+        self.assertEqual(action['context']['default_statement_id'], self.stmt.id)

@@ -105,6 +105,9 @@
                             help="Ajoute les lignes correspondant aux rubriques du référentiel non encore présentes."/>
                     <button name="action_copy_structure" string="Dupliquer la structure"
                             type="object"/>
+                    <button name="action_open_import" string="Importer un tableur"
+                            type="object" states="draft,confirmed"
+                            help="Charge un CSV ou Excel dont la première colonne porte les codes de rubrique."/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,analyzed"/>
                 </header>
                 <sheet>

@@ -33,6 +33,8 @@ access_fa_comparison_line_ro,fa.comparison.line readonly,model_fa_comparison_lin
 access_fa_comparison_line_user,fa.comparison.line user,model_fa_comparison_line,group_fa_user,1,1,1,1
 access_fa_comparison_line_mgr,fa.comparison.line manager,model_fa_comparison_line,group_fa_manager,1,1,1,1
 access_fa_export_wizard,fa.export.wizard,model_fa_export_wizard,group_fa_user,1,1,1,1
+access_fa_import_wizard,fa.import.wizard,model_fa_import_wizard,group_fa_user,1,1,1,1
+access_fa_import_line,fa.import.line,model_fa_import_line,group_fa_user,1,1,1,1
 access_fa_sector_ro,fa.sector readonly,model_fa_sector,group_fa_readonly,1,0,0,0
 access_fa_sector_user,fa.sector user,model_fa_sector,group_fa_user,1,0,0,0
 access_fa_sector_mgr,fa.sector manager,model_fa_sector,group_fa_manager,1,1,1,1
